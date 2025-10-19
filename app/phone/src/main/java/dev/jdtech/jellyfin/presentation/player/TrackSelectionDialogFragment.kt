@@ -32,12 +32,15 @@ class TrackSelectionDialogFragment(
             builder
                 .setTitle(getString(titleResource))
                 .setSingleChoiceItems(
-                    arrayOf(getString(R.string.none)) + tracksGroups.getTrackNames(), // Add "None" at the top of the list
-                    tracksGroups.indexOfFirst { it.isSelected } + 1, // Add 1 to the index to account for the "None" item
+                    arrayOf(getString(R.string.none)) + tracksGroups.getTrackNames(),
+                    // Add "None" at the top of the list
+                    tracksGroups.indexOfFirst { it.isSelected } + 1,
+                    // Add 1 to the index to account for the "None" item
                 ) { dialog, which ->
                     viewModel.switchToTrack(
                         type,
-                        which - 1, // Minus 1 to get the correct group without the "None" item. "None" becomes -1
+                        which - 1,
+                        // Minus 1 to get the correct group without the "None" item. "None" becomes -1
                     )
                     dialog.dismiss()
                 }

@@ -40,10 +40,13 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file(System.getenv("JELLYCAST_KEYSTORE") ?: "")
-            storePassword = System.getenv("JELLYCAST_KEYSTORE_PASSWORD") ?: ""
-            keyAlias = System.getenv("JELLYCAST_KEY_ALIAS") ?: ""
-            keyPassword = System.getenv("JELLYCAST_KEY_PASSWORD") ?: ""
+            val keystorePath = System.getenv("JELLYCAST_KEYSTORE")
+            if (!keystorePath.isNullOrBlank()) {
+                storeFile = file(keystorePath)
+                storePassword = System.getenv("JELLYCAST_KEYSTORE_PASSWORD") ?: ""
+                keyAlias = System.getenv("JELLYCAST_KEY_ALIAS") ?: ""
+                keyPassword = System.getenv("JELLYCAST_KEY_PASSWORD") ?: ""
+            }
         }
     }
     buildTypes {

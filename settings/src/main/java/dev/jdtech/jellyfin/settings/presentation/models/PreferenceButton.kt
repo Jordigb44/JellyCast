@@ -6,7 +6,8 @@ import dev.jdtech.jellyfin.settings.domain.models.Preference as PreferenceBacken
 data class PreferenceButton(
     override val nameStringResource: Int,
     override val descriptionStringRes: Int? = null,
-    val descriptionString: String? = null, // Dynamic description
+    val descriptionString: String? = null,
+    // Dynamic description
     override val iconDrawableId: Int? = null,
     override val enabled: Boolean = true,
     override val dependencies: List<PreferenceBackend<Boolean>> = emptyList(),

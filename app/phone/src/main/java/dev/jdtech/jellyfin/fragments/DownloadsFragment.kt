@@ -17,7 +17,6 @@ import dev.jdtech.jellyfin.adapters.FavoritesListAdapter
 import dev.jdtech.jellyfin.databinding.FragmentDownloadsBinding
 import dev.jdtech.jellyfin.models.JellyCastItem
 import dev.jdtech.jellyfin.models.JellyCastSourceType
-import dev.jdtech.jellyfin.models.isDownloaded
 import dev.jdtech.jellyfin.models.isDownloading
 import dev.jdtech.jellyfin.settings.domain.AppPreferences
 import dev.jdtech.jellyfin.utils.Downloader
@@ -166,7 +165,8 @@ class DownloadsFragment : Fragment() {
                     val child = binding.downloadsRecyclerView.getChildAt(i)
                     android.util.Log.d(
                         "DownloadsUI",
-                        "  Item $i: visible=${child.visibility}, alpha=${child.alpha}, width=${child.width}, height=${child.height}, background=${child.background}",
+                        "  Item $i: visible=${child.visibility}, alpha=${child.alpha}, " +
+                            "width=${child.width}, height=${child.height}, background=${child.background}",
                     )
                 }
 
@@ -183,7 +183,8 @@ class DownloadsFragment : Fragment() {
                     binding.root.post {
                         android.util.Log.d(
                             "DownloadsUI",
-                            "RecyclerView size after forced params: ${binding.downloadsRecyclerView.width}x${binding.downloadsRecyclerView.height}",
+                            "RecyclerView size after forced params: " +
+                                "${binding.downloadsRecyclerView.width}x${binding.downloadsRecyclerView.height}",
                         )
                     }
                 }
@@ -197,7 +198,8 @@ class DownloadsFragment : Fragment() {
                     val child = it.getChildAt(i)
                     android.util.Log.d(
                         "DownloadsUI",
-                        "  Child $i: ${child.javaClass.simpleName}, visibility=${child.visibility}, z=${child.z}, isShown=${child.isShown}",
+                        "  Child $i: ${child.javaClass.simpleName}, visibility=${child.visibility}, " +
+                            "z=${child.z}, isShown=${child.isShown}",
                     )
                 }
             }
@@ -205,7 +207,8 @@ class DownloadsFragment : Fragment() {
             android.util.Log.d("DownloadsUI", "Forced root view to front, isShown now: ${binding.root.isShown}, z=${binding.root.z}")
             android.util.Log.d(
                 "DownloadsUI",
-                "RecyclerView AFTER forcing: visibility=${binding.downloadsRecyclerView.visibility}, isShown=${binding.downloadsRecyclerView.isShown}, alpha=${binding.downloadsRecyclerView.alpha}",
+                "RecyclerView AFTER forcing: visibility=${binding.downloadsRecyclerView.visibility}, " +
+                    "isShown=${binding.downloadsRecyclerView.isShown}, alpha=${binding.downloadsRecyclerView.alpha}",
             )
         }
     }
@@ -281,7 +284,8 @@ class DownloadsFragment : Fragment() {
 
         android.util.Log.d(
             "DownloadsUI",
-            "Visibility set: RecyclerView=${binding.downloadsRecyclerView.visibility}, Loading=${binding.loadingIndicator.visibility}, Error=${binding.errorLayout.errorPanel.visibility}",
+            "Visibility set: RecyclerView=${binding.downloadsRecyclerView.visibility}, " +
+                "Loading=${binding.loadingIndicator.visibility}, Error=${binding.errorLayout.errorPanel.visibility}",
         )
 
         val adapter = binding.downloadsRecyclerView.adapter as FavoritesListAdapter
@@ -295,7 +299,8 @@ class DownloadsFragment : Fragment() {
         adapter.submitList(uiState.sections) {
             android.util.Log.d(
                 "DownloadsUI",
-                "submitList completed: adapter.itemCount=${adapter.itemCount}, RecyclerView.childCount=${binding.downloadsRecyclerView.childCount}",
+                "submitList completed: adapter.itemCount=${adapter.itemCount}, " +
+                    "RecyclerView.childCount=${binding.downloadsRecyclerView.childCount}",
             )
 
             // Force RecyclerView to layout and measure
@@ -305,7 +310,8 @@ class DownloadsFragment : Fragment() {
 
                 android.util.Log.d(
                     "DownloadsUI",
-                    "After forced layout: RecyclerView size=${binding.downloadsRecyclerView.width}x${binding.downloadsRecyclerView.height}, childCount=${binding.downloadsRecyclerView.childCount}",
+                    "After forced layout: RecyclerView size=${binding.downloadsRecyclerView.width}x" +
+                        "${binding.downloadsRecyclerView.height}, childCount=${binding.downloadsRecyclerView.childCount}",
                 )
             }
         }

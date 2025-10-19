@@ -1,6 +1,5 @@
 package dev.jdtech.jellyfin.presentation.film
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
@@ -181,7 +180,8 @@ fun EpisodeScreen(
                                         intent.setDataAndType(Uri.parse(streamUrl), "video/*")
                                         intent.putExtra(
                                             "title",
-                                            "${episode.seriesName} - S${episode.parentIndexNumber}E${episode.indexNumber} - ${episode.name}",
+                                            "${episode.seriesName} - S${episode.parentIndexNumber}E${episode.indexNumber} - " +
+                                                episode.name,
                                         )
                                         intent.putExtra(
                                             "position",

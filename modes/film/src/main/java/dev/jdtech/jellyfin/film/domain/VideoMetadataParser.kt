@@ -69,11 +69,6 @@ class VideoMetadataParser {
                              * Match dynamic range from [MediaStream.videoRangeType]
                              */
                             displayProfile.add(
-                                /**
-                                 * Since [MediaStream.videoRangeType] is [DisplayProfile.HDR10]
-                                 * Check if [MediaStream.videoDoViTitle] is not null and return
-                                 * [DisplayProfile.DOLBY_VISION] accordingly
-                                 */
                                 if (stream.videoDoViTitle != null) {
                                     DisplayProfile.DOLBY_VISION
                                 } else {

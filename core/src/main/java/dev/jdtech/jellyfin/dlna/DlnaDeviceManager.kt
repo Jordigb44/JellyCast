@@ -106,7 +106,8 @@ object DlnaDeviceManager {
         val hasMediaCapability = hasAVTransport || hasRenderingControl
 
         Timber.d(
-            "Device ${device.displayString}: isRenderer=$isRenderer, hasAVTransport=$hasAVTransport, hasRenderingControl=$hasRenderingControl",
+            "Device ${device.displayString}: isRenderer=$isRenderer, " +
+                "hasAVTransport=$hasAVTransport, hasRenderingControl=$hasRenderingControl",
         )
 
         // Accept device if it's a renderer OR has media capabilities

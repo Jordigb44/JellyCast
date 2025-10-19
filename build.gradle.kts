@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.aboutlibraries) apply false
     alias(libs.plugins.aboutlibraries.android) apply false
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.ktlint) apply false
 }
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -17,6 +18,19 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+    }
+    
+    // Apply ktlint plugin to all projects
+    plugins.apply("org.jlleitschuh.gradle.ktlint")
+    
+    // Configure ktlint
+    configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+        filter {
+            exclude { element ->
+                element.file.path.contains("build.gradle.kts") ||
+                element.file.path.contains("settings.gradle.kts")
+            }
+        }
     }
 }
 

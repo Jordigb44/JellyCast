@@ -1,7 +1,6 @@
 package dev.jdtech.jellyfin.settings.presentation.settings
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings
 import androidx.lifecycle.ViewModel
