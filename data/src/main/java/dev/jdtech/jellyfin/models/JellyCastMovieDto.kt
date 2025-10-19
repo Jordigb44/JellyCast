@@ -23,8 +23,8 @@ data class JellyCastMovieDto(
     val chapters: List<JellyCastChapter>?,
 )
 
-fun JellyCastMovie.toJellyCastMovieDto(serverId: String? = null): JellyCastMovieDto {
-    return JellyCastMovieDto(
+fun JellyCastMovie.toJellyCastMovieDto(serverId: String? = null): JellyCastMovieDto =
+    JellyCastMovieDto(
         id = id,
         serverId = serverId,
         name = name,
@@ -39,4 +39,3 @@ fun JellyCastMovie.toJellyCastMovieDto(serverId: String? = null): JellyCastMovie
         endDate = endDate,
         chapters = chapters,
     )
-}

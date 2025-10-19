@@ -25,23 +25,21 @@ fun ProgressBar(
         modifier = modifier,
     ) {
         Box(
-            modifier = Modifier
-                .height(4.dp)
-                .width(
-                    item.playbackPositionTicks
-                        .div(
-                            item.runtimeTicks.toFloat(),
-                        )
-                        .times(
-                            width - 16,
-                        ).dp,
-                )
-                .clip(
-                    MaterialTheme.shapes.extraSmall,
-                )
-                .background(
-                    MaterialTheme.colorScheme.primary,
-                ),
+            modifier =
+                Modifier
+                    .height(4.dp)
+                    .width(
+                        item.playbackPositionTicks
+                            .div(
+                                item.runtimeTicks.toFloat(),
+                            ).times(
+                                width - 16,
+                            ).dp,
+                    ).clip(
+                        MaterialTheme.shapes.extraSmall,
+                    ).background(
+                        MaterialTheme.colorScheme.primary,
+                    ),
         )
     }
 }

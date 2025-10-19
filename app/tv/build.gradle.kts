@@ -6,13 +6,21 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.ktlint)
 }
 
 android {
     namespace = "dev.jdtech.jellyfin"
     compileSdk = Versions.COMPILE_SDK
     buildToolsVersion = Versions.BUILD_TOOLS
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(System.getenv("JELLYCAST_KEYSTORE") ?: "")
+            storePassword = System.getenv("JELLYCAST_KEYSTORE_PASSWORD") ?: ""
+            keyAlias = System.getenv("JELLYCAST_KEY_ALIAS") ?: ""
+            keyPassword = System.getenv("JELLYCAST_KEY_PASSWORD") ?: ""
+        }
+    }
 
     defaultConfig {
         applicationId = "dev.jdtech.jellycast"
@@ -21,6 +29,8 @@ android {
 
         versionCode = Versions.APP_CODE
         versionName = Versions.APP_NAME
+
+        multiDexEnabled = true
     }
 
     applicationVariants.all {
@@ -33,15 +43,6 @@ android {
                     output.outputFileName = outputFileName
                 }
             }
-    }
-
-    signingConfigs {
-        create("release") {
-            storeFile = file(System.getProperty("user.home") + "/.android/debug.keystore")
-            storePassword = "android"
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
-        }
     }
 
     buildTypes {
@@ -107,11 +108,6 @@ android {
     }
 }
 
-ktlint {
-    version.set(Versions.KTLINT)
-    android.set(true)
-    ignoreFailures.set(false)
-}
 
 dependencies {
     implementation(projects.core)
@@ -144,6 +140,7 @@ dependencies {
     implementation(libs.media3.ffmpeg.decoder)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.navigation.compose)
+    implementation("androidx.multidex:multidex:2.0.1")
 
     coreLibraryDesugaring(libs.android.desugar.jdk)
 

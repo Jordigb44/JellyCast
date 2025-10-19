@@ -14,7 +14,7 @@ import javax.inject.Singleton
 object SharedPreferencesModule {
     @Singleton
     @Provides
-    fun provideSharedPreferences(@ApplicationContext application: Context): SharedPreferences {
-        return application.getSharedPreferences(application.packageName + "_preferences", Context.MODE_PRIVATE)
-    }
+    fun provideSharedPreferences(
+        @ApplicationContext application: Context,
+    ): SharedPreferences = application.getSharedPreferences(application.packageName + "_preferences", Context.MODE_PRIVATE)
 }

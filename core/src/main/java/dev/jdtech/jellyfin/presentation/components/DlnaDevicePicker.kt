@@ -53,58 +53,62 @@ import timber.log.Timber
 @Composable
 fun DlnaDevicePicker(
     onDeviceSelected: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
     val devices = remember { mutableStateListOf<Device<*, *, *>>() }
     val rokuDevices = remember { mutableStateListOf<RokuDevice>() }
     var isSearching by remember { mutableStateOf(true) }
-    
-    val deviceListener = remember {
-        object : DlnaDeviceManager.DeviceListener {
-            override fun onDeviceAdded(device: Device<*, *, *>) {
-                // Only add devices that have AVTransport service (required for DLNA media control)
-                val hasAVTransport = device.services.any { 
-                    it.serviceType.type == "AVTransport" || 
-                    it.serviceType.toString().contains("AVTransport")
+
+    val deviceListener =
+        remember {
+            object : DlnaDeviceManager.DeviceListener {
+                override fun onDeviceAdded(device: Device<*, *, *>) {
+                    // Only add devices that have AVTransport service (required for DLNA media control)
+                    val hasAVTransport =
+                        device.services.any {
+                            it.serviceType.type == "AVTransport" ||
+                                it.serviceType.toString().contains("AVTransport")
+                        }
+
+                    if (hasAVTransport && !devices.any { it.identity.udn == device.identity.udn }) {
+                        Timber.d("Device has AVTransport service: ${device.details.friendlyName}")
+                        devices.add(device)
+                    } else if (!hasAVTransport) {
+                        Timber.w("Device does not have AVTransport service, skipping: ${device.details.friendlyName}")
+                    }
+                    isSearching = false
                 }
-                
-                if (hasAVTransport && !devices.any { it.identity.udn == device.identity.udn }) {
-                    Timber.d("Device has AVTransport service: ${device.details.friendlyName}")
-                    devices.add(device)
-                } else if (!hasAVTransport) {
-                    Timber.w("Device does not have AVTransport service, skipping: ${device.details.friendlyName}")
+
+                override fun onDeviceRemoved(device: Device<*, *, *>) {
+                    devices.removeAll { it.identity.udn == device.identity.udn }
                 }
-                isSearching = false
-            }
-            
-            override fun onDeviceRemoved(device: Device<*, *, *>) {
-                devices.removeAll { it.identity.udn == device.identity.udn }
             }
         }
-    }
-    
+
     DisposableEffect(Unit) {
         // Initialize DLNA manager if not already initialized
         if (!DlnaDeviceManager.isInitialized()) {
             DlnaDeviceManager.initialize(context)
         }
-        
+
         // Load initial devices and filter only those with AVTransport service
         devices.clear()
         val allDevices = DlnaDeviceManager.getDiscoveredDevices()
-        val compatibleDevices = allDevices.filter { device ->
-            val hasAVTransport = device.services.any { 
-                it.serviceType.type == "AVTransport" || 
-                it.serviceType.toString().contains("AVTransport")
+        val compatibleDevices =
+            allDevices.filter { device ->
+                val hasAVTransport =
+                    device.services.any {
+                        it.serviceType.type == "AVTransport" ||
+                            it.serviceType.toString().contains("AVTransport")
+                    }
+                if (!hasAVTransport) {
+                    Timber.w("Filtering out device without AVTransport: ${device.details.friendlyName}")
+                }
+                hasAVTransport
             }
-            if (!hasAVTransport) {
-                Timber.w("Filtering out device without AVTransport: ${device.details.friendlyName}")
-            }
-            hasAVTransport
-        }
         devices.addAll(compatibleDevices)
-        
+
         // Search for Roku devices
         rokuDevices.clear()
         CoroutineScope(Dispatchers.IO).launch {
@@ -118,76 +122,77 @@ fun DlnaDevicePicker(
                 Timber.e(e, "Error discovering Roku devices")
             }
         }
-        
+
         if (devices.isNotEmpty()) {
             isSearching = false
         }
-        
+
         // Add device listener
         DlnaDeviceManager.addDeviceListener(deviceListener)
-        
+
         // Refresh devices
         DlnaDeviceManager.refreshDevices()
-        
+
         onDispose {
             DlnaDeviceManager.removeDeviceListener(deviceListener)
         }
     }
-    
+
     // Repeated search with delays - some devices take time to respond
     LaunchedEffect(Unit) {
         // Wait for service to fully initialize before first search
         delay(1000)
-        
+
         // Check if service is ready
         if (DlnaDeviceManager.getUpnpService() != null) {
             Timber.d("Service ready, starting searches")
             DlnaDeviceManager.refreshDevices()
-            
+
             // Search again after 2 seconds
             delay(2000)
             DlnaDeviceManager.refreshDevices()
-            
+
             // Search again after 4 seconds
             delay(2000)
             DlnaDeviceManager.refreshDevices()
-            
+
             // Final search after 6 seconds
             delay(2000)
             DlnaDeviceManager.refreshDevices()
         } else {
             Timber.w("UPnP service not ready after 1 second")
         }
-        
+
         // Stop showing "searching" indicator after searches complete
         delay(1000)
         if (devices.isEmpty()) {
             isSearching = false
         }
     }
-    
+
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             shape = RoundedCornerShape(16.dp),
             color = MaterialTheme.colorScheme.surface,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Column(
-                modifier = Modifier.padding(24.dp)
+                modifier = Modifier.padding(24.dp),
             ) {
                 // Header
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(
                         text = "Dispositivos DLNA y Roku",
                         style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
-                    
+
                     IconButton(
                         onClick = {
                             isSearching = true
@@ -205,75 +210,78 @@ fun DlnaDevicePicker(
                                     isSearching = false
                                 }
                             }
-                        }
+                        },
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_rotate_ccw),
-                            contentDescription = "Refresh"
+                            contentDescription = "Refresh",
                         )
                     }
-                    
+
                     IconButton(onClick = onDismiss) {
                         Icon(
                             painter = painterResource(R.drawable.ic_x),
-                            contentDescription = "Close"
+                            contentDescription = "Close",
                         )
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Device list or loading indicator
                 if (isSearching && devices.isEmpty() && rokuDevices.isEmpty()) {
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp),
-                        contentAlignment = Alignment.Center
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(200.dp),
+                        contentAlignment = Alignment.Center,
                     ) {
                         Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             CircularProgressIndicator()
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
                                 text = "Buscando dispositivos DLNA y Roku...",
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
                     }
                 } else if (devices.isEmpty() && rokuDevices.isEmpty()) {
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .padding(16.dp),
+                        contentAlignment = Alignment.Center,
                     ) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
+                            verticalArrangement = Arrangement.Center,
                         ) {
                             Text(
                                 text = "No se encontraron dispositivos DLNA ni Roku",
                                 style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = "Asegúrate de que tu TV está encendida y conectada a la misma red WiFi",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
                             )
                         }
                     }
                 } else {
                     LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(300.dp),
                     ) {
                         // Show DLNA devices first
                         items(devices) { device ->
@@ -283,10 +291,10 @@ fun DlnaDevicePicker(
                                     DlnaHelper.setCurrentDevice(device)
                                     onDeviceSelected()
                                     onDismiss()
-                                }
+                                },
                             )
                         }
-                        
+
                         // Then show Roku devices
                         items(rokuDevices) { rokuDevice ->
                             RokuDeviceItemInList(
@@ -295,7 +303,7 @@ fun DlnaDevicePicker(
                                     RokuHelper.setCurrentDevice(rokuDevice)
                                     onDeviceSelected()
                                     onDismiss()
-                                }
+                                },
                             )
                         }
                     }
@@ -308,43 +316,44 @@ fun DlnaDevicePicker(
 @Composable
 private fun DlnaDeviceItem(
     device: Device<*, *, *>,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(vertical = 12.dp, horizontal = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(vertical = 12.dp, horizontal = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_tv),
             contentDescription = null,
             modifier = Modifier.size(40.dp),
-            tint = MaterialTheme.colorScheme.primary
+            tint = MaterialTheme.colorScheme.primary,
         )
-        
+
         Spacer(modifier = Modifier.width(16.dp))
-        
+
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = device.details.friendlyName,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
             )
-            
+
             device.details.manufacturerDetails?.manufacturer?.let { manufacturer ->
                 Text(
                     text = manufacturer,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
-        
+
         Icon(
             painter = painterResource(R.drawable.ic_arrow_right),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -352,62 +361,63 @@ private fun DlnaDeviceItem(
 @Composable
 private fun RokuDeviceItemInList(
     device: RokuDevice,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(vertical = 12.dp, horizontal = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(vertical = 12.dp, horizontal = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_tv),
             contentDescription = null,
             modifier = Modifier.size(40.dp),
-            tint = MaterialTheme.colorScheme.primary
+            tint = MaterialTheme.colorScheme.primary,
         )
-        
+
         Spacer(modifier = Modifier.width(16.dp))
-        
+
         Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = device.name,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Surface(
                     shape = RoundedCornerShape(4.dp),
-                    color = MaterialTheme.colorScheme.tertiaryContainer
+                    color = MaterialTheme.colorScheme.tertiaryContainer,
                 ) {
                     Text(
                         text = "ROKU",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                     )
                 }
             }
-            
+
             if (device.modelName.isNotEmpty()) {
                 Text(
                     text = device.modelName,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
             Text(
                 text = device.ipAddress,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
-        
+
         Icon(
             painter = painterResource(R.drawable.ic_arrow_right),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }

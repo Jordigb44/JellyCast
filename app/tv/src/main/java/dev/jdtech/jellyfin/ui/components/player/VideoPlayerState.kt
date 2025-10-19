@@ -29,17 +29,18 @@ class VideoPlayerState internal constructor(
 
     @OptIn(FlowPreview::class)
     suspend fun observe() {
-        channel.consumeAsFlow()
+        channel
+            .consumeAsFlow()
             .debounce { it.toLong() * 1000 }
             .collect { _controlsVisible = false }
     }
 }
 
 @Composable
-fun rememberVideoPlayerState(@IntRange(from = 0) hideSeconds: Int = 2) =
-    remember {
-        VideoPlayerState(hideSeconds = hideSeconds)
-    }
-        .also {
-            LaunchedEffect(it) { it.observe() }
-        }
+fun rememberVideoPlayerState(
+    @IntRange(from = 0) hideSeconds: Int = 2,
+) = remember {
+    VideoPlayerState(hideSeconds = hideSeconds)
+}.also {
+    LaunchedEffect(it) { it.observe() }
+}

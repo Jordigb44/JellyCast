@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.aboutlibraries)
     alias(libs.plugins.aboutlibraries.android)
-    alias(libs.plugins.ktlint)
 }
 
 android {
@@ -39,6 +38,14 @@ android {
             }
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file(System.getenv("JELLYCAST_KEYSTORE") ?: "")
+            storePassword = System.getenv("JELLYCAST_KEYSTORE_PASSWORD") ?: ""
+            keyAlias = System.getenv("JELLYCAST_KEY_ALIAS") ?: ""
+            keyPassword = System.getenv("JELLYCAST_KEY_PASSWORD") ?: ""
+        }
+    }
     buildTypes {
         named("debug") {
             applicationIdSuffix = ".debug"
@@ -46,8 +53,7 @@ android {
         named("release") {
             isMinifyEnabled = true
             isShrinkResources = true
-            // Sign release with debug keystore for local installation (not for distribution)
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
@@ -99,12 +105,6 @@ android {
 }
 
 // No explicit Kotlin jvmTarget configured here; rely on project defaults and per-module settings.
-
-ktlint {
-    version.set(Versions.KTLINT)
-    android.set(true)
-    ignoreFailures.set(false)
-}
 
 dependencies {
     implementation(projects.core)

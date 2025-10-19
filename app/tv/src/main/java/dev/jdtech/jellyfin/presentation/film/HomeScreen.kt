@@ -74,13 +74,15 @@ private fun HomeScreenLayout(
     state: HomeState,
     onAction: (HomeAction) -> Unit,
 ) {
-    val itemsPadding = PaddingValues(
-        horizontal = MaterialTheme.spacings.large,
-    )
+    val itemsPadding =
+        PaddingValues(
+            horizontal = MaterialTheme.spacings.large,
+        )
 
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize(),
         contentPadding = PaddingValues(top = MaterialTheme.spacings.extraSmall, bottom = MaterialTheme.spacings.large),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.large),
     ) {
@@ -89,9 +91,10 @@ private fun HomeScreenLayout(
                 HomeCarousel(
                     items = section.items,
                     onAction = onAction,
-                    modifier = Modifier
-                        .animateItem()
-                        .padding(itemsPadding),
+                    modifier =
+                        Modifier
+                            .animateItem()
+                            .padding(itemsPadding),
                 )
             }
         }
@@ -131,11 +134,12 @@ private fun HomeScreenLayout(
 private fun HomeScreenLayoutPreview() {
     JellyCastTheme {
         HomeScreenLayout(
-            state = HomeState(
-                suggestionsSection = dummyHomeSuggestions,
-                resumeSection = dummyHomeSection,
-                views = listOf(dummyHomeView),
-            ),
+            state =
+                HomeState(
+                    suggestionsSection = dummyHomeSuggestions,
+                    resumeSection = dummyHomeSection,
+                    views = listOf(dummyHomeView),
+                ),
             onAction = {},
         )
     }

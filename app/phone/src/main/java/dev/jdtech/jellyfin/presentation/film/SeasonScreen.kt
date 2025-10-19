@@ -105,8 +105,9 @@ private fun SeasonScreenLayout(
     ) {
         state.season?.let { season ->
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
                 state = lazyListState,
                 contentPadding = PaddingValues(bottom = paddingBottom),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.default),
@@ -117,20 +118,22 @@ private fun SeasonScreenLayout(
                         lazyListState = lazyListState,
                         content = {
                             Row(
-                                modifier = Modifier
-                                    .align(Alignment.BottomStart)
-                                    .padding(
-                                        start = paddingStart,
-                                        end = paddingEnd,
-                                    ),
+                                modifier =
+                                    Modifier
+                                        .align(Alignment.BottomStart)
+                                        .padding(
+                                            start = paddingStart,
+                                            end = paddingEnd,
+                                        ),
                                 verticalAlignment = Alignment.Bottom,
                             ) {
                                 ItemPoster(
                                     item = season,
                                     direction = Direction.VERTICAL,
-                                    modifier = Modifier
-                                        .width(120.dp)
-                                        .clip(MaterialTheme.shapes.small),
+                                    modifier =
+                                        Modifier
+                                            .width(120.dp)
+                                            .clip(MaterialTheme.shapes.small),
                                 )
                                 Spacer(Modifier.width(MaterialTheme.spacings.medium))
                                 Column(
@@ -172,12 +175,12 @@ private fun SeasonScreenLayout(
                         },
                         onTrailerClick = {},
                         onDownloadClick = {},
-                        modifier = Modifier
-                            .padding(
-                                start = paddingStart,
-                                end = paddingEnd,
-                            )
-                            .fillMaxWidth(),
+                        modifier =
+                            Modifier
+                                .padding(
+                                    start = paddingStart,
+                                    end = paddingEnd,
+                                ).fillMaxWidth(),
                     )
                 }
                 items(
@@ -189,38 +192,43 @@ private fun SeasonScreenLayout(
                         onClick = {
                             onAction(SeasonAction.NavigateToItem(episode))
                         },
-                        modifier = Modifier
-                            .padding(
-                                start = paddingStart,
-                                end = paddingEnd,
-                            ),
+                        modifier =
+                            Modifier
+                                .padding(
+                                    start = paddingStart,
+                                    end = paddingEnd,
+                                ),
                     )
                 }
             }
         } ?: run {
             CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
+                modifier =
+                    Modifier
+                        .align(Alignment.Center),
             )
         }
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = safePadding.start + MaterialTheme.spacings.small,
-                    top = safePadding.top + MaterialTheme.spacings.small,
-                    end = safePadding.end + MaterialTheme.spacings.small,
-                ),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = safePadding.start + MaterialTheme.spacings.small,
+                        top = safePadding.top + MaterialTheme.spacings.small,
+                        end = safePadding.end + MaterialTheme.spacings.small,
+                    ),
         ) {
             IconButton(
                 onClick = { onAction(SeasonAction.OnBackClick) },
-                modifier = Modifier
-                    .alpha(0.7f),
-                colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White,
-                ),
+                modifier =
+                    Modifier
+                        .alpha(0.7f),
+                colors =
+                    IconButtonDefaults.iconButtonColors(
+                        containerColor = Color.Black,
+                        contentColor = Color.White,
+                    ),
             ) {
                 Icon(
                     painter = painterResource(CoreR.drawable.ic_arrow_left),
@@ -236,9 +244,10 @@ private fun SeasonScreenLayout(
 private fun SeasonScreenLayoutPreview() {
     JellyCastTheme {
         SeasonScreenLayout(
-            state = SeasonState(
-                season = dummySeason,
-            ),
+            state =
+                SeasonState(
+                    season = dummySeason,
+                ),
             onAction = {},
         )
     }

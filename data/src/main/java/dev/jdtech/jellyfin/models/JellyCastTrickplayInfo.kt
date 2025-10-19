@@ -12,8 +12,8 @@ data class JellyCastTrickplayInfo(
     val bandwidth: Int,
 )
 
-fun TrickplayInfo.toJellyCastTrickplayInfo(): JellyCastTrickplayInfo {
-    return JellyCastTrickplayInfo(
+fun TrickplayInfo.toJellyCastTrickplayInfo(): JellyCastTrickplayInfo =
+    JellyCastTrickplayInfo(
         width = width,
         height = height,
         tileWidth = tileWidth,
@@ -22,10 +22,9 @@ fun TrickplayInfo.toJellyCastTrickplayInfo(): JellyCastTrickplayInfo {
         interval = interval,
         bandwidth = bandwidth,
     )
-}
 
-fun JellyCastTrickplayInfoDto.toJellyCastTrickplayInfo(): JellyCastTrickplayInfo {
-    return JellyCastTrickplayInfo(
+fun JellyCastTrickplayInfoDto.toJellyCastTrickplayInfo(): JellyCastTrickplayInfo =
+    JellyCastTrickplayInfo(
         width = width,
         height = height,
         tileWidth = tileWidth,
@@ -34,4 +33,3 @@ fun JellyCastTrickplayInfoDto.toJellyCastTrickplayInfo(): JellyCastTrickplayInfo
         interval = interval,
         bandwidth = bandwidth,
     )
-}

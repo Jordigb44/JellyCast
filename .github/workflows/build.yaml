@@ -9,6 +9,24 @@ jobs:
     name: Lint
     runs-on: ubuntu-24.04
     steps:
+      - name: Cache Gradle files
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+      - name: Cache JDK
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.sdkman/candidates/java
+            ~/.java
+          key: jdk-${{ runner.os }}-21
+          restore-keys: |
+            jdk-${{ runner.os }}-
       - name: Checkout repository
         uses: actions/checkout@v5
       - name: Set up JDK 21
@@ -24,6 +42,24 @@ jobs:
     name: Assemble
     runs-on: ubuntu-24.04
     steps:
+      - name: Cache Gradle files
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+      - name: Cache JDK
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.sdkman/candidates/java
+            ~/.java
+          key: jdk-${{ runner.os }}-21
+          restore-keys: |
+            jdk-${{ runner.os }}-
       - name: Checkout repository
         uses: actions/checkout@v5
       - name: Set up JDK 21

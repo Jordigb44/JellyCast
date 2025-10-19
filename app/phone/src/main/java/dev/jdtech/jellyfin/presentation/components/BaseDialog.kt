@@ -37,20 +37,23 @@ fun BaseDialog(
         onDismissRequest = onDismiss,
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 540.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 540.dp),
             shape = RoundedCornerShape(28.dp),
         ) {
             Column(
-                modifier = Modifier
-                    .padding(top = MaterialTheme.spacings.default),
+                modifier =
+                    Modifier
+                        .padding(top = MaterialTheme.spacings.default),
             ) {
                 Text(
                     text = title,
-                    modifier = Modifier
-                        .padding(horizontal = MaterialTheme.spacings.default)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(horizontal = MaterialTheme.spacings.default)
+                            .fillMaxWidth(),
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.headlineSmall,
                 )
@@ -76,9 +79,10 @@ fun BaseDialog(
         content(contentPadding)
         Spacer(modifier = Modifier.height(MaterialTheme.spacings.default))
         Row(
-            modifier = Modifier
-                .padding(horizontal = MaterialTheme.spacings.default)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(horizontal = MaterialTheme.spacings.default)
+                    .fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
         ) {
             negativeButton()
@@ -97,9 +101,10 @@ private fun BaseDialogPreview() {
             onDismiss = {},
         ) {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Red),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(Color.Red),
             )
         }
     }
@@ -132,10 +137,11 @@ private fun BaseDialogButtonsPreview() {
             onDismiss = {},
         ) {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f, fill = false)
-                    .background(Color.Red),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .weight(1f, fill = false)
+                        .background(Color.Red),
             )
         }
     }

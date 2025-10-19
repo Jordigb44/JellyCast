@@ -98,35 +98,39 @@ private fun MovieScreenLayout(
                 mutableStateOf(Size.Zero)
             }
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .onGloballyPositioned { coordinates ->
-                        size = coordinates.size.toSize()
-                    },
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .onGloballyPositioned { coordinates ->
+                            size = coordinates.size.toSize()
+                        },
             ) {
                 AsyncImage(
                     model = movie.images.backdrop,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier =
+                        Modifier
+                            .fillMaxSize(),
                 )
                 if (size != Size.Zero) {
                     Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                Brush.radialGradient(
-                                    listOf(Color.Black.copy(alpha = .2f), Color.Black),
-                                    center = Offset(size.width, 0f),
-                                    radius = size.width * .8f,
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .background(
+                                    Brush.radialGradient(
+                                        listOf(Color.Black.copy(alpha = .2f), Color.Black),
+                                        center = Offset(size.width, 0f),
+                                        radius = size.width * .8f,
+                                    ),
                                 ),
-                            ),
                     )
                 }
                 Column(
-                    modifier = Modifier
-                        .padding(start = MaterialTheme.spacings.default * 2, end = MaterialTheme.spacings.default * 2),
+                    modifier =
+                        Modifier
+                            .padding(start = MaterialTheme.spacings.default * 2, end = MaterialTheme.spacings.default * 2),
                 ) {
                     Spacer(modifier = Modifier.height(112.dp))
                     Text(
@@ -230,7 +234,12 @@ private fun MovieScreenLayout(
                                 tint = if (movie.played) Color.Red else LocalContentColor.current,
                             )
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text(text = stringResource(id = if (movie.played) CoreR.string.unmark_as_played else CoreR.string.mark_as_played))
+                            Text(
+                                text =
+                                    stringResource(
+                                        id = if (movie.played) CoreR.string.unmark_as_played else CoreR.string.mark_as_played,
+                                    ),
+                            )
                         }
                         Button(
                             onClick = {
@@ -241,12 +250,20 @@ private fun MovieScreenLayout(
                             },
                         ) {
                             Icon(
-                                painter = painterResource(id = if (movie.favorite) CoreR.drawable.ic_heart_filled else CoreR.drawable.ic_heart),
+                                painter =
+                                    painterResource(
+                                        id = if (movie.favorite) CoreR.drawable.ic_heart_filled else CoreR.drawable.ic_heart,
+                                    ),
                                 contentDescription = null,
                                 tint = if (movie.favorite) Color.Red else LocalContentColor.current,
                             )
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text(text = stringResource(id = if (movie.favorite) CoreR.string.remove_from_favorites else CoreR.string.add_to_favorites))
+                            Text(
+                                text =
+                                    stringResource(
+                                        id = if (movie.favorite) CoreR.string.remove_from_favorites else CoreR.string.add_to_favorites,
+                                    ),
+                            )
                         }
                     }
                     Spacer(modifier = Modifier.height(MaterialTheme.spacings.default))
@@ -302,8 +319,9 @@ private fun MovieScreenLayout(
             }
         } ?: run {
             CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
+                modifier =
+                    Modifier
+                        .align(Alignment.Center),
             )
         }
     }
@@ -314,10 +332,11 @@ private fun MovieScreenLayout(
 private fun MovieScreenLayoutPreview() {
     JellyCastTheme {
         MovieScreenLayout(
-            state = MovieState(
-                movie = dummyMovie,
-                videoMetadata = dummyVideoMetadata,
-            ),
+            state =
+                MovieState(
+                    movie = dummyMovie,
+                    videoMetadata = dummyVideoMetadata,
+                ),
             onAction = {},
         )
     }

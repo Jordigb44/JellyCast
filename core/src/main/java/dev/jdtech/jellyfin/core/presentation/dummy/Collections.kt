@@ -5,21 +5,24 @@ import dev.jdtech.jellyfin.models.JellyCastCollection
 import dev.jdtech.jellyfin.models.JellyCastImages
 import java.util.UUID
 
-private val dummyMoviesCollection = JellyCastCollection(
-    id = UUID.randomUUID(),
-    name = "Movies",
-    type = CollectionType.Movies,
-    images = JellyCastImages(),
-)
+private val dummyMoviesCollection =
+    JellyCastCollection(
+        id = UUID.randomUUID(),
+        name = "Movies",
+        type = CollectionType.Movies,
+        images = JellyCastImages(),
+    )
 
-private val dummyShowsCollection = JellyCastCollection(
-    id = UUID.randomUUID(),
-    name = "Shows",
-    type = CollectionType.TvShows,
-    images = JellyCastImages(),
-)
+private val dummyShowsCollection =
+    JellyCastCollection(
+        id = UUID.randomUUID(),
+        name = "Shows",
+        type = CollectionType.TvShows,
+        images = JellyCastImages(),
+    )
 
-val dummyCollections = listOf(
-    dummyMoviesCollection,
-    dummyShowsCollection,
-)
+val dummyCollections =
+    listOf(
+        dummyMoviesCollection,
+        dummyShowsCollection,
+    )

@@ -13,7 +13,5 @@ import javax.inject.Singleton
 object AppPreferencesModule {
     @Singleton
     @Provides
-    fun provideAppPreferences(sp: SharedPreferences): AppPreferences {
-        return AppPreferences(sp)
-    }
+    fun provideAppPreferences(sp: SharedPreferences): AppPreferences = AppPreferences(sp)
 }

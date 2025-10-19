@@ -11,11 +11,30 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,20 +48,20 @@ import dev.jdtech.jellyfin.settings.R as SettingsR
 data class PlayerApp(
     val packageName: String,
     val name: String,
-    val icon: android.graphics.drawable.Drawable
+    val icon: android.graphics.drawable.Drawable,
 )
 
 class PlayerPickerActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         Log.d("PlayerPickerActivity", "onCreate called")
-        
+
         // Get currently selected player
         val prefsName = this.packageName + "_preferences"
         val sharedPreferences = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
         val currentPlayer = sharedPreferences.getString("pref_player_external_app", null)
-        
+
         setContent {
             JellyCastTheme {
                 PlayerPickerScreen(
@@ -52,14 +71,14 @@ class PlayerPickerActivity : ComponentActivity() {
                         // Save the selected player to app preferences
                         sharedPreferences.edit().putString("pref_player_external_app", packageName).apply()
                         Log.d("PlayerPickerActivity", "Saved to preferences: $prefsName")
-                        
+
                         setResult(Activity.RESULT_OK)
                         finish()
                     },
                     onCancel = {
                         setResult(Activity.RESULT_CANCELED)
                         finish()
-                    }
+                    },
                 )
             }
         }
@@ -71,11 +90,11 @@ class PlayerPickerActivity : ComponentActivity() {
 fun PlayerPickerScreen(
     currentPlayerPackage: String?,
     onPlayerSelected: (String) -> Unit,
-    onCancel: () -> Unit
+    onCancel: () -> Unit,
 ) {
     val context = LocalContext.current
     val players = remember { getAvailablePlayers(context) }
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -84,48 +103,50 @@ fun PlayerPickerScreen(
                     IconButton(onClick = onCancel) {
                         Icon(
                             painter = painterResource(CoreR.drawable.ic_x),
-                            contentDescription = "Close"
+                            contentDescription = "Close",
                         )
                     }
-                }
+                },
             )
-        }
+        },
     ) { paddingValues ->
         if (players.isEmpty()) {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                contentAlignment = Alignment.Center,
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Text(
                         text = "No se encontraron reproductores externos",
-                        style = MaterialTheme.typography.bodyLarge
+                        style = MaterialTheme.typography.bodyLarge,
                     )
                     Text(
                         text = "Instala una aplicación como VLC, MX Player o similar",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
         } else {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
                 contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 items(players) { player ->
                     PlayerItem(
                         player = player,
                         isSelected = player.packageName == currentPlayerPackage,
-                        onClick = { onPlayerSelected(player.packageName) }
+                        onClick = { onPlayerSelected(player.packageName) },
                     )
                 }
             }
@@ -137,47 +158,49 @@ fun PlayerPickerScreen(
 fun PlayerItem(
     player: PlayerApp,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick),
         color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
-        shape = MaterialTheme.shapes.medium
+        shape = MaterialTheme.shapes.medium,
     ) {
         Row(
-            modifier = Modifier
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // App icon would go here - for now just show text
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     text = player.name,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
+                    color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
                 )
                 Text(
                     text = player.packageName,
                     style = MaterialTheme.typography.bodySmall,
-                    color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
             if (isSelected) {
                 Icon(
                     painter = painterResource(CoreR.drawable.ic_check),
                     contentDescription = "Selected",
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             } else {
                 Icon(
                     painter = painterResource(CoreR.drawable.ic_arrow_right),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -187,71 +210,73 @@ fun PlayerItem(
 fun getAvailablePlayers(context: Context): List<PlayerApp> {
     val packageManager = context.packageManager
     val players = mutableListOf<PlayerApp>()
-    
+
     Log.d("PlayerPicker", "Starting player detection...")
-    
+
     // Known popular video players
-    val knownPlayers = listOf(
-        "org.videolan.vlc",              // VLC
-        "com.mxtech.videoplayer.ad",     // MX Player
-        "com.mxtech.videoplayer.pro",    // MX Player Pro
-        "com.google.android.videos",     // Google Play Movies
-        "com.google.android.youtube",     // YouTube
-        "org.xbmc.kodi",                 // Kodi
-        "com.bsplayer.bspandroid.free",  // BSPlayer
-        "com.kmplayer",                  // KMPlayer
-        "net.gtvbox.videoplayer",        // Video Player All Format
-        "pl.solidexplorer2",             // Solid Explorer
-    )
-    
+    val knownPlayers =
+        listOf(
+            "org.videolan.vlc", // VLC
+            "com.mxtech.videoplayer.ad", // MX Player
+            "com.mxtech.videoplayer.pro", // MX Player Pro
+            "com.google.android.videos", // Google Play Movies
+            "com.google.android.youtube", // YouTube
+            "org.xbmc.kodi", // Kodi
+            "com.bsplayer.bspandroid.free", // BSPlayer
+            "com.kmplayer", // KMPlayer
+            "net.gtvbox.videoplayer", // Video Player All Format
+            "pl.solidexplorer2", // Solid Explorer
+        )
+
     // Method 1: Query with http video URL
     val httpIntent = Intent(Intent.ACTION_VIEW)
     httpIntent.setDataAndType(Uri.parse("http://example.com/video.mp4"), "video/*")
     val httpResolveInfos = packageManager.queryIntentActivities(httpIntent, PackageManager.MATCH_DEFAULT_ONLY)
     Log.d("PlayerPicker", "HTTP query found ${httpResolveInfos.size} apps")
-    
+
     // Method 2: Query with file video URL
     val fileIntent = Intent(Intent.ACTION_VIEW)
     fileIntent.setDataAndType(Uri.parse("file:///sdcard/video.mp4"), "video/*")
     val fileResolveInfos = packageManager.queryIntentActivities(fileIntent, PackageManager.MATCH_DEFAULT_ONLY)
     Log.d("PlayerPicker", "File query found ${fileResolveInfos.size} apps")
-    
+
     // Method 3: Query with content video URL
     val contentIntent = Intent(Intent.ACTION_VIEW)
     contentIntent.setDataAndType(Uri.parse("content://media/external/video/media/1"), "video/*")
     val contentResolveInfos = packageManager.queryIntentActivities(contentIntent, PackageManager.MATCH_DEFAULT_ONLY)
     Log.d("PlayerPicker", "Content query found ${contentResolveInfos.size} apps")
-    
+
     // Combine all results
-    val allResolveInfos = (httpResolveInfos + fileResolveInfos + contentResolveInfos).distinctBy { 
-        it.activityInfo.packageName 
-    }
-    
+    val allResolveInfos =
+        (httpResolveInfos + fileResolveInfos + contentResolveInfos).distinctBy {
+            it.activityInfo.packageName
+        }
+
     Log.d("PlayerPicker", "Total unique apps after combining: ${allResolveInfos.size}")
-    
+
     allResolveInfos.forEach { resolveInfo ->
         val activityInfo = resolveInfo.activityInfo
         val packageName = activityInfo.packageName
-        
+
         Log.d("PlayerPicker", "Found package: $packageName")
-        
+
         // Filter out this app and system package picker
         if (packageName == context.packageName || packageName == "android") {
             Log.d("PlayerPicker", "Filtering out: $packageName")
             return@forEach
         }
-        
+
         val appName = resolveInfo.loadLabel(packageManager).toString()
         val appIcon = resolveInfo.loadIcon(packageManager)
-        
+
         if (!players.any { it.packageName == packageName }) {
             Log.d("PlayerPicker", "Adding player: $appName ($packageName)")
             players.add(PlayerApp(packageName, appName, appIcon))
         }
     }
-    
+
     Log.d("PlayerPicker", "Checking ${knownPlayers.size} known players...")
-    
+
     // Add known players that are installed but might not have been detected
     knownPlayers.forEach { packageName ->
         try {
@@ -272,8 +297,8 @@ fun getAvailablePlayers(context: Context): List<PlayerApp> {
             Log.e("PlayerPicker", "Error checking known player $packageName", e)
         }
     }
-    
+
     Log.d("PlayerPicker", "Final player count: ${players.size}")
-    
+
     return players.sortedBy { it.name }
 }

@@ -28,20 +28,20 @@ import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyEpisode
 import dev.jdtech.jellyfin.dlna.DlnaHelper
-import dev.jdtech.jellyfin.roku.RokuHelper
 import dev.jdtech.jellyfin.models.JellyCastItem
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import dev.jdtech.jellyfin.models.JellyCastMovie
 import dev.jdtech.jellyfin.models.JellyCastShow
 import dev.jdtech.jellyfin.models.isDownloaded
 import dev.jdtech.jellyfin.models.isDownloading
 import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
+import dev.jdtech.jellyfin.roku.RokuHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import dev.jdtech.jellyfin.core.R as CoreR
 
 fun isDlnaEnabled(context: Context): Boolean {
@@ -64,18 +64,19 @@ fun ItemButtonsBar(
 ) {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 
-    val trailerUri = when (item) {
-        is JellyCastMovie -> {
-            item.trailer
+    val trailerUri =
+        when (item) {
+            is JellyCastMovie -> {
+                item.trailer
+            }
+            is JellyCastShow -> {
+                item.trailer
+            }
+            is dev.jdtech.jellyfin.models.JellyCastEpisode -> {
+                item.trailer
+            }
+            else -> null
         }
-        is JellyCastShow -> {
-            item.trailer
-        }
-        is dev.jdtech.jellyfin.models.JellyCastEpisode -> {
-            item.trailer
-        }
-        else -> null
-    }
 
     Column(
         modifier = modifier,
@@ -87,10 +88,11 @@ fun ItemButtonsBar(
                 onClick = {
                     onPlayClick(false)
                 },
-                modifier = Modifier.weight(
-                    weight = 1f,
-                    fill = !windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND),
-                ),
+                modifier =
+                    Modifier.weight(
+                        weight = 1f,
+                        fill = !windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND),
+                    ),
             )
             if (item.playbackPositionTicks.div(600000000) > 0) {
                 FilledTonalIconButton(
@@ -149,40 +151,42 @@ fun ItemButtonsBar(
                         }
                     }
                 }
-                
+
                 // DLNA button - only show if enabled in settings
                 val context = LocalContext.current
-                
+
                 if (isDlnaEnabled(context)) {
                     var isDlnaActive by remember { mutableStateOf(false) }
                     var isRokuActive by remember { mutableStateOf(false) }
-                    
+
                     // Update DLNA and Roku active state periodically
                     DisposableEffect(Unit) {
                         var updateJob: Job? = null
-                        
-                        updateJob = CoroutineScope(Dispatchers.Main).launch {
-                            while (isActive) {
-                                isDlnaActive = DlnaHelper.isDlnaDeviceAvailable(context)
-                                isRokuActive = RokuHelper.isRokuDeviceAvailable()
-                                delay(500) // Check every 500ms
+
+                        updateJob =
+                            CoroutineScope(Dispatchers.Main).launch {
+                                while (isActive) {
+                                    isDlnaActive = DlnaHelper.isDlnaDeviceAvailable(context)
+                                    isRokuActive = RokuHelper.isRokuDeviceAvailable()
+                                    delay(500) // Check every 500ms
+                                }
                             }
-                        }
-                        
+
                         onDispose {
                             updateJob?.cancel()
                         }
                     }
-                    
+
                     // Show filled button if DLNA or Roku is active, otherwise tonal button
                     if (isDlnaActive || isRokuActive) {
                         // Filled button when DLNA or Roku is active
                         FilledIconButton(
                             onClick = onDlnaClick,
-                            colors = IconButtonDefaults.filledIconButtonColors(
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.onPrimary
-                            )
+                            colors =
+                                IconButtonDefaults.filledIconButtonColors(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                                ),
                         ) {
                             Icon(
                                 painter = painterResource(CoreR.drawable.ic_tv),
@@ -201,7 +205,7 @@ fun ItemButtonsBar(
                         }
                     }
                 }
-                
+
                 // Download button only when allowed; delete button always when downloaded
                 if (item.canDownload) {
                     val downloadEnabled = !item.isDownloaded() && !item.isDownloading()

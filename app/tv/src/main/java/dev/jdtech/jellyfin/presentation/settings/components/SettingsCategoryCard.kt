@@ -40,19 +40,22 @@ fun SettingsCategoryCard(
         },
         enabled = preference.enabled,
         shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(10.dp)),
-        colors = ClickableSurfaceDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            focusedContainerColor = MaterialTheme.colorScheme.surface,
-        ),
-        border = ClickableSurfaceDefaults.border(
-            focusedBorder = Border(
-                BorderStroke(
-                    4.dp,
-                    Color.White,
-                ),
-                shape = RoundedCornerShape(10.dp),
+        colors =
+            ClickableSurfaceDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.surface,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
             ),
-        ),
+        border =
+            ClickableSurfaceDefaults.border(
+                focusedBorder =
+                    Border(
+                        BorderStroke(
+                            4.dp,
+                            Color.White,
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                    ),
+            ),
         scale = ClickableSurfaceScale.None,
         modifier = modifier,
     ) {
@@ -94,10 +97,11 @@ fun SettingsCategoryCard(
 private fun SettingsCategoryCardPreview() {
     JellyCastTheme {
         SettingsCategoryCard(
-            preference = PreferenceCategory(
-                nameStringResource = SettingsR.string.settings_category_player,
-                iconDrawableId = SettingsR.drawable.ic_play,
-            ),
+            preference =
+                PreferenceCategory(
+                    nameStringResource = SettingsR.string.settings_category_player,
+                    iconDrawableId = SettingsR.drawable.ic_play,
+                ),
         )
     }
 }

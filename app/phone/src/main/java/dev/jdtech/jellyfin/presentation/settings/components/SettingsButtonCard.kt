@@ -26,11 +26,11 @@ fun SettingsButtonCard(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .clickable(enabled = preference.enabled) {
-                preference.onClick()
-            }
-            .padding(16.dp),
+        modifier =
+            modifier
+                .clickable(enabled = preference.enabled) {
+                    preference.onClick()
+                }.padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         preference.iconDrawableId?.let { iconId ->
@@ -41,18 +41,19 @@ fun SettingsButtonCard(
             )
             Spacer(modifier = Modifier.width(16.dp))
         }
-        
+
         Column(
             modifier = Modifier.weight(1f),
         ) {
             Text(
                 text = stringResource(preference.nameStringResource),
                 style = MaterialTheme.typography.bodyLarge,
-                color = if (preference.enabled) {
-                    MaterialTheme.colorScheme.onSurface
-                } else {
-                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                },
+                color =
+                    if (preference.enabled) {
+                        MaterialTheme.colorScheme.onSurface
+                    } else {
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                    },
             )
             // Show dynamic description if available, otherwise use resource string
             val dynamicDesc = preference.descriptionString
@@ -60,35 +61,38 @@ fun SettingsButtonCard(
                 Text(
                     text = dynamicDesc,
                     style = MaterialTheme.typography.bodySmall,
-                    color = if (preference.enabled) {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
-                    },
+                    color =
+                        if (preference.enabled) {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+                        },
                 )
             } else {
                 preference.descriptionStringRes?.let { descId ->
                     Text(
                         text = stringResource(descId),
                         style = MaterialTheme.typography.bodySmall,
-                        color = if (preference.enabled) {
-                            MaterialTheme.colorScheme.onSurfaceVariant
-                        } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
-                        },
+                        color =
+                            if (preference.enabled) {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+                            },
                     )
                 }
             }
         }
-        
+
         Icon(
             painter = painterResource(CoreR.drawable.ic_arrow_right),
             contentDescription = null,
-            tint = if (preference.enabled) {
-                MaterialTheme.colorScheme.onSurfaceVariant
-            } else {
-                MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
-            },
+            tint =
+                if (preference.enabled) {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+                },
         )
     }
 }

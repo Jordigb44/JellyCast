@@ -21,12 +21,9 @@ data class JellyCastBoxSet(
     override val chapters: List<JellyCastChapter> = emptyList(),
 ) : JellyCastItem
 
-fun BaseItemDto.toJellyCastBoxSet(
-    jellyfinRepository: JellyfinRepository,
-): JellyCastBoxSet {
-    return JellyCastBoxSet(
+fun BaseItemDto.toJellyCastBoxSet(jellyfinRepository: JellyfinRepository): JellyCastBoxSet =
+    JellyCastBoxSet(
         id = id,
         name = name.orEmpty(),
         images = toJellyCastImages(jellyfinRepository),
     )
-}

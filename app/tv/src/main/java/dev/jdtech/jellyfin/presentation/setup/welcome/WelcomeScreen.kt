@@ -31,9 +31,7 @@ import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.setup.presentation.welcome.WelcomeAction
 
 @Composable
-fun WelcomeScreen(
-    onContinueClick: () -> Unit,
-) {
+fun WelcomeScreen(onContinueClick: () -> Unit) {
     val uriHandler = LocalUriHandler.current
 
     WelcomeScreenLayout(
@@ -49,9 +47,7 @@ fun WelcomeScreen(
 }
 
 @Composable
-private fun WelcomeScreenLayout(
-    onAction: (WelcomeAction) -> Unit,
-) {
+private fun WelcomeScreenLayout(onAction: (WelcomeAction) -> Unit) {
     val focusRequester = remember { FocusRequester() }
 
     Box(

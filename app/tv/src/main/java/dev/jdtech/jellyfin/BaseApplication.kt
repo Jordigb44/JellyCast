@@ -18,13 +18,16 @@ import javax.inject.Inject
 import kotlin.time.ExperimentalTime
 
 @HiltAndroidApp
-class BaseApplication : Application(), SingletonImageLoader.Factory {
+class BaseApplication :
+    Application(),
+    SingletonImageLoader.Factory {
     @Inject
     lateinit var appPreferences: AppPreferences
 
     @OptIn(ExperimentalCoilApi::class, ExperimentalTime::class)
-    override fun newImageLoader(context: PlatformContext): ImageLoader {
-        return ImageLoader.Builder(this)
+    override fun newImageLoader(context: PlatformContext): ImageLoader =
+        ImageLoader
+            .Builder(this)
             .components {
                 add(
                     OkHttpNetworkFetcherFactory(
@@ -32,15 +35,13 @@ class BaseApplication : Application(), SingletonImageLoader.Factory {
                     ),
                 )
                 add(SvgDecoder.Factory())
-            }
-            .diskCachePolicy(if (appPreferences.getValue(appPreferences.imageCache)) CachePolicy.ENABLED else CachePolicy.DISABLED)
+            }.diskCachePolicy(if (appPreferences.getValue(appPreferences.imageCache)) CachePolicy.ENABLED else CachePolicy.DISABLED)
             .diskCache {
-                DiskCache.Builder()
+                DiskCache
+                    .Builder()
                     .directory(context.cacheDir.resolve("image_cache").toOkioPath())
                     .maxSizeBytes(appPreferences.getValue(appPreferences.imageCacheSize) * 1024L * 1024)
                     .build()
-            }
-            .crossfade(true)
+            }.crossfade(true)
             .build()
-    }
 }

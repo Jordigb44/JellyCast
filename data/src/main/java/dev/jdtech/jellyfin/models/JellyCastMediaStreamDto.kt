@@ -27,8 +27,12 @@ data class JellyCastMediaStreamDto(
     val downloadId: Long? = null,
 )
 
-fun JellyCastMediaStream.toJellyCastMediaStreamDto(id: UUID, sourceId: String, path: String): JellyCastMediaStreamDto {
-    return JellyCastMediaStreamDto(
+fun JellyCastMediaStream.toJellyCastMediaStreamDto(
+    id: UUID,
+    sourceId: String,
+    path: String,
+): JellyCastMediaStreamDto =
+    JellyCastMediaStreamDto(
         id = id,
         sourceId = sourceId,
         title = title,
@@ -44,4 +48,3 @@ fun JellyCastMediaStream.toJellyCastMediaStreamDto(id: UUID, sourceId: String, p
         width = width,
         videoDoViTitle = videoDoViTitle,
     )
-}

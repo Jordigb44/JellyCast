@@ -32,9 +32,10 @@ fun SettingsAppLanguageCard(
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
 
-    val currentValue = remember {
-        configuration.locales.get(0).displayName
-    }
+    val currentValue =
+        remember {
+            configuration.locales.get(0).displayName
+        }
 
     SettingsBaseCard(
         preference = preference,

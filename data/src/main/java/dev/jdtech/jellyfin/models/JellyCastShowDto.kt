@@ -21,8 +21,8 @@ data class JellyCastShowDto(
     val endDate: LocalDateTime?,
 )
 
-fun JellyCastShow.toJellyCastShowDto(serverId: String? = null): JellyCastShowDto {
-    return JellyCastShowDto(
+fun JellyCastShow.toJellyCastShowDto(serverId: String? = null): JellyCastShowDto =
+    JellyCastShowDto(
         id = id,
         serverId = serverId,
         name = name,
@@ -35,4 +35,3 @@ fun JellyCastShow.toJellyCastShowDto(serverId: String? = null): JellyCastShowDto
         productionYear = productionYear,
         endDate = endDate,
     )
-}

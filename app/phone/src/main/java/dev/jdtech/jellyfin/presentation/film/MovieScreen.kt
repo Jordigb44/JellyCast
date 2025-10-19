@@ -42,28 +42,28 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.core.graphics.toColorInt
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dagger.hilt.android.EntryPointAccessors
 import dev.jdtech.jellyfin.PlayerActivity
 import dev.jdtech.jellyfin.TrailerActivity
+import dev.jdtech.jellyfin.cast.CastHelper
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyMovie
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyVideoMetadata
+import dev.jdtech.jellyfin.dialogs.getStorageSelectionDialog
+import dev.jdtech.jellyfin.dlna.DlnaHelper
 import dev.jdtech.jellyfin.film.presentation.movie.MovieAction
 import dev.jdtech.jellyfin.film.presentation.movie.MovieState
 import dev.jdtech.jellyfin.film.presentation.movie.MovieViewModel
+import dev.jdtech.jellyfin.presentation.components.DlnaDevicePicker
+import dev.jdtech.jellyfin.presentation.downloads.DownloaderEntryPoint
 import dev.jdtech.jellyfin.presentation.film.components.ActorsRow
 import dev.jdtech.jellyfin.presentation.film.components.InfoText
 import dev.jdtech.jellyfin.presentation.film.components.ItemButtonsBar
 import dev.jdtech.jellyfin.presentation.film.components.ItemHeader
 import dev.jdtech.jellyfin.presentation.film.components.OverviewText
 import dev.jdtech.jellyfin.presentation.film.components.VideoMetadataBar
-import dev.jdtech.jellyfin.presentation.components.DlnaDevicePicker
 import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.presentation.utils.rememberSafePadding
-import dev.jdtech.jellyfin.dialogs.getStorageSelectionDialog
-import dev.jdtech.jellyfin.presentation.downloads.DownloaderEntryPoint
-import dagger.hilt.android.EntryPointAccessors
-import dev.jdtech.jellyfin.cast.CastHelper
-import dev.jdtech.jellyfin.dlna.DlnaHelper
 import dev.jdtech.jellyfin.roku.RokuHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -112,21 +112,23 @@ fun MovieScreen(
                         state.movie?.let { movie ->
                             try {
                                 val streamUrl = movie.sources.firstOrNull()?.path ?: return@let
-                                val positionMs = if (action.startFromBeginning) {
-                                    0L
-                                } else {
-                                    movie.playbackPositionTicks / 10000
-                                }
-                                
+                                val positionMs =
+                                    if (action.startFromBeginning) {
+                                        0L
+                                    } else {
+                                        movie.playbackPositionTicks / 10000
+                                    }
+
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    val success = RokuHelper.playMedia(
-                                        contentUrl = streamUrl,
-                                        title = movie.name,
-                                        subtitle = movie.overview.orEmpty(),
-                                        imageUrl = movie.images.primary.toString(),
-                                        position = positionMs
-                                    )
-                                    
+                                    val success =
+                                        RokuHelper.playMedia(
+                                            contentUrl = streamUrl,
+                                            title = movie.name,
+                                            subtitle = movie.overview.orEmpty(),
+                                            imageUrl = movie.images.primary.toString(),
+                                            position = positionMs,
+                                        )
+
                                     launch(Dispatchers.Main) {
                                         if (success) {
                                             Toast.makeText(context, "Enviando a Roku...", Toast.LENGTH_SHORT).show()
@@ -147,11 +149,12 @@ fun MovieScreen(
                                 val streamUrl = movie.sources.firstOrNull()?.path ?: return@let
                                 val applicationContext = context.applicationContext
                                 // Convert ticks to milliseconds (1 tick = 100 nanoseconds = 0.0001 ms)
-                                val positionMs = if (action.startFromBeginning) {
-                                    0L
-                                } else {
-                                    movie.playbackPositionTicks / 10000
-                                }
+                                val positionMs =
+                                    if (action.startFromBeginning) {
+                                        0L
+                                    } else {
+                                        movie.playbackPositionTicks / 10000
+                                    }
                                 val durationMs = movie.runtimeTicks / 10000
                                 DlnaHelper.loadMedia(
                                     context = applicationContext,
@@ -161,7 +164,7 @@ fun MovieScreen(
                                     subtitle = movie.overview.orEmpty(),
                                     imageUrl = movie.images.primary.toString(),
                                     position = positionMs,
-                                    duration = durationMs
+                                    duration = durationMs,
                                 )
                                 Toast.makeText(context, "Enviando a DLNA...", Toast.LENGTH_SHORT).show()
                             } catch (e: Exception) {
@@ -176,11 +179,12 @@ fun MovieScreen(
                                 val streamUrl = movie.sources.firstOrNull()?.path ?: return@let
                                 val applicationContext = context.applicationContext
                                 // Convert ticks to milliseconds (1 tick = 100 nanoseconds = 0.0001 ms)
-                                val positionMs = if (action.startFromBeginning) {
-                                    0L
-                                } else {
-                                    movie.playbackPositionTicks / 10000
-                                }
+                                val positionMs =
+                                    if (action.startFromBeginning) {
+                                        0L
+                                    } else {
+                                        movie.playbackPositionTicks / 10000
+                                    }
                                 CastHelper.loadMedia(
                                     context = applicationContext,
                                     contentUrl = streamUrl,
@@ -188,7 +192,7 @@ fun MovieScreen(
                                     title = movie.name,
                                     subtitle = movie.overview.orEmpty(),
                                     imageUrl = movie.images.primary.toString(),
-                                    position = positionMs
+                                    position = positionMs,
                                 )
                                 Toast.makeText(context, "Enviando a Chromecast...", Toast.LENGTH_SHORT).show()
                             } catch (e: Exception) {
@@ -207,8 +211,16 @@ fun MovieScreen(
                                         val intent = Intent(Intent.ACTION_VIEW)
                                         intent.setDataAndType(Uri.parse(streamUrl), "video/*")
                                         intent.putExtra("title", movie.name)
-                                        intent.putExtra("position", if (action.startFromBeginning) 0L else movie.playbackPositionTicks / 10000)
-                                        
+                                        intent.putExtra(
+                                            "position",
+                                            if (action.startFromBeginning) {
+                                                0L
+                                            } else {
+                                                movie.playbackPositionTicks /
+                                                    10000
+                                            },
+                                        )
+
                                         val selectedPlayer = getSelectedExternalPlayer(context)
                                         if (selectedPlayer != null) {
                                             // Use the selected player directly
@@ -220,17 +232,37 @@ fun MovieScreen(
                                                 // If the selected player is not available, show chooser
                                                 intent.setPackage(null)
                                                 if (intent.resolveActivity(context.packageManager) != null) {
-                                                    context.startActivity(Intent.createChooser(intent, context.getString(dev.jdtech.jellyfin.settings.R.string.select_external_player)))
+                                                    context.startActivity(
+                                                        Intent.createChooser(
+                                                            intent,
+                                                            context.getString(dev.jdtech.jellyfin.settings.R.string.select_external_player),
+                                                        ),
+                                                    )
                                                 } else {
-                                                    Toast.makeText(context, "No se encontró ningún reproductor externo", Toast.LENGTH_SHORT).show()
+                                                    Toast
+                                                        .makeText(
+                                                            context,
+                                                            "No se encontró ningún reproductor externo",
+                                                            Toast.LENGTH_SHORT,
+                                                        ).show()
                                                 }
                                             }
                                         } else {
                                             // No player selected, show chooser
                                             if (intent.resolveActivity(context.packageManager) != null) {
-                                                context.startActivity(Intent.createChooser(intent, context.getString(dev.jdtech.jellyfin.settings.R.string.select_external_player)))
+                                                context.startActivity(
+                                                    Intent.createChooser(
+                                                        intent,
+                                                        context.getString(dev.jdtech.jellyfin.settings.R.string.select_external_player),
+                                                    ),
+                                                )
                                             } else {
-                                                Toast.makeText(context, "No se encontró ningún reproductor externo", Toast.LENGTH_SHORT).show()
+                                                Toast
+                                                    .makeText(
+                                                        context,
+                                                        "No se encontró ningún reproductor externo",
+                                                        Toast.LENGTH_SHORT,
+                                                    ).show()
                                             }
                                         }
                                     } else {
@@ -264,28 +296,45 @@ fun MovieScreen(
                 }
                 is MovieAction.Download -> {
                     state.movie?.let { movie ->
-                        val dialog = getStorageSelectionDialog(
-                            context = context,
-                            onItemSelected = { which ->
-                                // Use Hilt entry point to get Downloader from Application graph
-                                val appContext = context.applicationContext
-                                val downloader = EntryPointAccessors.fromApplication(appContext, DownloaderEntryPoint::class.java).downloader()
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    val sourceId = movie.sources.firstOrNull()?.id ?: return@launch
-                                    val result = downloader.downloadItem(movie, sourceId, which)
-                                    if (result.first > 0) {
-                                        launch(Dispatchers.Main) {
-                                            Toast.makeText(context, context.getString(CoreR.string.download_started), Toast.LENGTH_SHORT).show()
-                                        }
-                                    } else {
-                                        launch(Dispatchers.Main) {
-                                            Toast.makeText(context, result.second?.asString(context.resources) ?: context.getString(CoreR.string.unknown_error), Toast.LENGTH_LONG).show()
+                        val dialog =
+                            getStorageSelectionDialog(
+                                context = context,
+                                onItemSelected = { which ->
+                                    // Use Hilt entry point to get Downloader from Application graph
+                                    val appContext = context.applicationContext
+                                    val downloader =
+                                        EntryPointAccessors
+                                            .fromApplication(
+                                                appContext,
+                                                DownloaderEntryPoint::class.java,
+                                            ).downloader()
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        val sourceId = movie.sources.firstOrNull()?.id ?: return@launch
+                                        val result = downloader.downloadItem(movie, sourceId, which)
+                                        if (result.first > 0) {
+                                            launch(Dispatchers.Main) {
+                                                Toast
+                                                    .makeText(
+                                                        context,
+                                                        context.getString(CoreR.string.download_started),
+                                                        Toast.LENGTH_SHORT,
+                                                    ).show()
+                                            }
+                                        } else {
+                                            launch(Dispatchers.Main) {
+                                                Toast
+                                                    .makeText(
+                                                        context,
+                                                        result.second?.asString(context.resources)
+                                                            ?: context.getString(CoreR.string.unknown_error),
+                                                        Toast.LENGTH_LONG,
+                                                    ).show()
+                                            }
                                         }
                                     }
-                                }
-                            },
-                            onCancel = { /* no-op */ },
-                        )
+                                },
+                                onCancel = { /* no-op */ },
+                            )
                         dialog.show()
                     }
                 }
@@ -305,7 +354,7 @@ private fun MovieScreenLayout(
 ) {
     val appContext = LocalContext.current.applicationContext
     val safePadding = rememberSafePadding()
-    
+
     var showDlnaDevicePicker by remember { mutableStateOf(false) }
 
     val paddingTop = safePadding.top
@@ -320,9 +369,10 @@ private fun MovieScreenLayout(
     ) {
         state.movie?.let { movie ->
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(scrollState),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(scrollState),
             ) {
                 ItemHeader(
                     item = movie,
@@ -330,12 +380,13 @@ private fun MovieScreenLayout(
                     paddingTop = paddingTop,
                     content = {
                         Column(
-                            modifier = Modifier
-                                .align(Alignment.BottomStart)
-                                .padding(
-                                    start = paddingStart,
-                                    end = paddingEnd,
-                                ),
+                            modifier =
+                                Modifier
+                                    .align(Alignment.BottomStart)
+                                    .padding(
+                                        start = paddingStart,
+                                        end = paddingEnd,
+                                    ),
                         ) {
                             Text(
                                 text = movie.name,
@@ -357,10 +408,11 @@ private fun MovieScreenLayout(
                     },
                 )
                 Column(
-                    modifier = Modifier.padding(
-                        start = paddingStart,
-                        end = paddingEnd,
-                    ),
+                    modifier =
+                        Modifier.padding(
+                            start = paddingStart,
+                            end = paddingEnd,
+                        ),
                 ) {
                     Spacer(Modifier.height(MaterialTheme.spacings.small))
                     Row(
@@ -438,7 +490,12 @@ private fun MovieScreenLayout(
                         onDeleteClick = {
                             val local = movie.sources.firstOrNull { it.type == dev.jdtech.jellyfin.models.JellyCastSourceType.LOCAL }
                             if (local != null) {
-                                val downloader = EntryPointAccessors.fromApplication(appContext, DownloaderEntryPoint::class.java).downloader()
+                                val downloader =
+                                    EntryPointAccessors
+                                        .fromApplication(
+                                            appContext,
+                                            DownloaderEntryPoint::class.java,
+                                        ).downloader()
                                 CoroutineScope(Dispatchers.IO).launch {
                                     downloader.deleteItem(movie, local)
                                 }
@@ -465,49 +522,55 @@ private fun MovieScreenLayout(
                         onActorClick = { personId ->
                             onAction(MovieAction.NavigateToPerson(personId))
                         },
-                        contentPadding = PaddingValues(
-                            start = paddingStart,
-                            end = paddingEnd,
-                        ),
+                        contentPadding =
+                            PaddingValues(
+                                start = paddingStart,
+                                end = paddingEnd,
+                            ),
                     )
                 }
                 Spacer(Modifier.height(paddingBottom))
             }
         } ?: run {
             CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
+                modifier =
+                    Modifier
+                        .align(Alignment.Center),
             )
         }
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = safePadding.start + MaterialTheme.spacings.small,
-                    top = safePadding.top + MaterialTheme.spacings.small,
-                    end = safePadding.end + MaterialTheme.spacings.small,
-                ),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = safePadding.start + MaterialTheme.spacings.small,
+                        top = safePadding.top + MaterialTheme.spacings.small,
+                        end = safePadding.end + MaterialTheme.spacings.small,
+                    ),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             IconButton(
                 onClick = { onAction(MovieAction.OnBackClick) },
-                modifier = Modifier
-                    .alpha(0.7f),
-                colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White,
-                ),
+                modifier =
+                    Modifier
+                        .alpha(0.7f),
+                colors =
+                    IconButtonDefaults.iconButtonColors(
+                        containerColor = Color.Black,
+                        contentColor = Color.White,
+                    ),
             ) {
                 Icon(
                     painter = painterResource(CoreR.drawable.ic_arrow_left),
                     contentDescription = null,
                 )
             }
-            
-            dev.jdtech.jellyfin.presentation.components.CastButton()
+
+            dev.jdtech.jellyfin.presentation.components
+                .CastButton()
         }
-        
+
         if (showDlnaDevicePicker) {
             DlnaDevicePicker(
                 onDeviceSelected = {
@@ -515,7 +578,7 @@ private fun MovieScreenLayout(
                 },
                 onDismiss = {
                     showDlnaDevicePicker = false
-                }
+                },
             )
         }
     }
@@ -526,10 +589,11 @@ private fun MovieScreenLayout(
 private fun MovieScreenLayoutPreview() {
     JellyCastTheme {
         MovieScreenLayout(
-            state = MovieState(
-                movie = dummyMovie,
-                videoMetadata = dummyVideoMetadata,
-            ),
+            state =
+                MovieState(
+                    movie = dummyMovie,
+                    videoMetadata = dummyVideoMetadata,
+                ),
             onAction = {},
         )
     }

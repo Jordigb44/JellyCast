@@ -21,10 +21,8 @@ data class JellyCastFolder(
     override val chapters: List<JellyCastChapter> = emptyList(),
 ) : JellyCastItem
 
-fun BaseItemDto.toJellyCastFolder(
-    jellyfinRepository: JellyfinRepository,
-): JellyCastFolder {
-    return JellyCastFolder(
+fun BaseItemDto.toJellyCastFolder(jellyfinRepository: JellyfinRepository): JellyCastFolder =
+    JellyCastFolder(
         id = id,
         name = name.orEmpty(),
         played = userData?.played == true,
@@ -32,4 +30,3 @@ fun BaseItemDto.toJellyCastFolder(
         unplayedItemCount = userData?.unplayedItemCount,
         images = toJellyCastImages(jellyfinRepository),
     )
-}

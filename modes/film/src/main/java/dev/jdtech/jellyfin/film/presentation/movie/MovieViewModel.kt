@@ -18,77 +18,82 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovieViewModel
-@Inject
-constructor(
-    private val repository: JellyfinRepository,
-    private val videoMetadataParser: VideoMetadataParser,
-) : ViewModel() {
-    private val _state = MutableStateFlow(MovieState())
-    val state = _state.asStateFlow()
+    @Inject
+    constructor(
+        private val repository: JellyfinRepository,
+        private val videoMetadataParser: VideoMetadataParser,
+    ) : ViewModel() {
+        private val _state = MutableStateFlow(MovieState())
+        val state = _state.asStateFlow()
 
-    lateinit var movieId: UUID
+        lateinit var movieId: UUID
 
-    fun loadMovie(movieId: UUID) {
-        this.movieId = movieId
-        viewModelScope.launch {
-            try {
-                val movie = repository.getMovie(movieId)
-                val videoMetadata = videoMetadataParser.parse(movie.sources.first())
-                val actors = getActors(movie)
-                val director = getDirector(movie)
-                val writers = getWriters(movie)
-                _state.emit(_state.value.copy(movie = movie, videoMetadata = videoMetadata, actors = actors, director = director, writers = writers))
-            } catch (e: Exception) {
-                _state.emit(_state.value.copy(error = e))
-            }
-        }
-    }
-
-    private suspend fun getActors(item: JellyCastMovie): List<JellyCastItemPerson> {
-        return withContext(Dispatchers.Default) {
-            item.people.filter { it.type == PersonKind.ACTOR }
-        }
-    }
-
-    private suspend fun getDirector(item: JellyCastMovie): JellyCastItemPerson? {
-        return withContext(Dispatchers.Default) {
-            item.people.firstOrNull { it.type == PersonKind.DIRECTOR }
-        }
-    }
-
-    private suspend fun getWriters(item: JellyCastMovie): List<JellyCastItemPerson> {
-        return withContext(Dispatchers.Default) {
-            item.people.filter { it.type == PersonKind.WRITER }
-        }
-    }
-
-    fun onAction(action: MovieAction) {
-        when (action) {
-            is MovieAction.MarkAsPlayed -> {
-                viewModelScope.launch {
-                    repository.markAsPlayed(movieId)
-                    loadMovie(movieId)
+        fun loadMovie(movieId: UUID) {
+            this.movieId = movieId
+            viewModelScope.launch {
+                try {
+                    val movie = repository.getMovie(movieId)
+                    val videoMetadata = videoMetadataParser.parse(movie.sources.first())
+                    val actors = getActors(movie)
+                    val director = getDirector(movie)
+                    val writers = getWriters(movie)
+                    _state.emit(
+                        _state.value.copy(
+                            movie = movie,
+                            videoMetadata = videoMetadata,
+                            actors = actors,
+                            director = director,
+                            writers = writers,
+                        ),
+                    )
+                } catch (e: Exception) {
+                    _state.emit(_state.value.copy(error = e))
                 }
             }
-            is MovieAction.UnmarkAsPlayed -> {
-                viewModelScope.launch {
-                    repository.markAsUnplayed(movieId)
-                    loadMovie(movieId)
-                }
+        }
+
+        private suspend fun getActors(item: JellyCastMovie): List<JellyCastItemPerson> =
+            withContext(Dispatchers.Default) {
+                item.people.filter { it.type == PersonKind.ACTOR }
             }
-            is MovieAction.MarkAsFavorite -> {
-                viewModelScope.launch {
-                    repository.markAsFavorite(movieId)
-                    loadMovie(movieId)
-                }
+
+        private suspend fun getDirector(item: JellyCastMovie): JellyCastItemPerson? =
+            withContext(Dispatchers.Default) {
+                item.people.firstOrNull { it.type == PersonKind.DIRECTOR }
             }
-            is MovieAction.UnmarkAsFavorite -> {
-                viewModelScope.launch {
-                    repository.unmarkAsFavorite(movieId)
-                    loadMovie(movieId)
-                }
+
+        private suspend fun getWriters(item: JellyCastMovie): List<JellyCastItemPerson> =
+            withContext(Dispatchers.Default) {
+                item.people.filter { it.type == PersonKind.WRITER }
             }
-            else -> Unit
+
+        fun onAction(action: MovieAction) {
+            when (action) {
+                is MovieAction.MarkAsPlayed -> {
+                    viewModelScope.launch {
+                        repository.markAsPlayed(movieId)
+                        loadMovie(movieId)
+                    }
+                }
+                is MovieAction.UnmarkAsPlayed -> {
+                    viewModelScope.launch {
+                        repository.markAsUnplayed(movieId)
+                        loadMovie(movieId)
+                    }
+                }
+                is MovieAction.MarkAsFavorite -> {
+                    viewModelScope.launch {
+                        repository.markAsFavorite(movieId)
+                        loadMovie(movieId)
+                    }
+                }
+                is MovieAction.UnmarkAsFavorite -> {
+                    viewModelScope.launch {
+                        repository.unmarkAsFavorite(movieId)
+                        loadMovie(movieId)
+                    }
+                }
+                else -> Unit
+            }
         }
     }
-}

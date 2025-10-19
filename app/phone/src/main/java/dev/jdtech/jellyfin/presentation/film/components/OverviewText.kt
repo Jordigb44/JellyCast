@@ -30,9 +30,10 @@ fun OverviewText(
     ) {
         Text(
             text = text,
-            modifier = Modifier
-                .then(if (showChevron) Modifier.clickable { isOverviewExpanded = !isOverviewExpanded } else Modifier)
-                .animateContentSize(),
+            modifier =
+                Modifier
+                    .then(if (showChevron) Modifier.clickable { isOverviewExpanded = !isOverviewExpanded } else Modifier)
+                    .animateContentSize(),
             overflow = TextOverflow.Ellipsis,
             maxLines = if (isOverviewExpanded) Int.MAX_VALUE else maxCollapsedLines,
             onTextLayout = { textLayoutResult ->

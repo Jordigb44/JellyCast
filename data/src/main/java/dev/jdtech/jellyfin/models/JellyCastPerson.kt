@@ -11,13 +11,10 @@ data class JellyCastPerson(
     val images: JellyCastImages,
 )
 
-fun BaseItemDto.toJellyCastPerson(
-    repository: JellyfinRepository,
-): JellyCastPerson {
-    return JellyCastPerson(
+fun BaseItemDto.toJellyCastPerson(repository: JellyfinRepository): JellyCastPerson =
+    JellyCastPerson(
         id = id,
         name = name.orEmpty(),
         overview = overview.orEmpty(),
         images = toJellyCastImages(repository),
     )
-}

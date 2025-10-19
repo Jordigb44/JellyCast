@@ -37,35 +37,34 @@ fun isDlnaEnabled(context: Context): Boolean {
  * Only shows if DLNA is enabled in settings
  */
 @Composable
-fun DlnaButton(
-    modifier: Modifier = Modifier
-) {
+fun DlnaButton(modifier: Modifier = Modifier) {
     val context = LocalContext.current
-    
+
     // Only show button if DLNA is enabled in settings
     if (!isDlnaEnabled(context)) {
         return
     }
-    
+
     var showDevicePicker by remember { mutableStateOf(false) }
     var isDlnaActive by remember { mutableStateOf(false) }
-    
+
     // Update DLNA active state periodically
     DisposableEffect(Unit) {
         var updateJob: Job? = null
-        
-        updateJob = CoroutineScope(Dispatchers.Main).launch {
-            while (isActive) {
-                isDlnaActive = DlnaHelper.isDlnaDeviceAvailable(context)
-                delay(500) // Check every 500ms
+
+        updateJob =
+            CoroutineScope(Dispatchers.Main).launch {
+                while (isActive) {
+                    isDlnaActive = DlnaHelper.isDlnaDeviceAvailable(context)
+                    delay(500) // Check every 500ms
+                }
             }
-        }
-        
+
         onDispose {
             updateJob?.cancel()
         }
     }
-    
+
     if (isDlnaActive) {
         // Filled button when DLNA is active
         FilledIconButton(
@@ -74,14 +73,15 @@ fun DlnaButton(
                 DlnaHelper.stopDlna(context)
             },
             modifier = modifier.size(48.dp),
-            colors = IconButtonDefaults.filledIconButtonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            )
+            colors =
+                IconButtonDefaults.filledIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                ),
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_tv),
-                contentDescription = "DLNA Active"
+                contentDescription = "DLNA Active",
             )
         }
     } else {
@@ -91,16 +91,16 @@ fun DlnaButton(
                 // Show device picker
                 showDevicePicker = true
             },
-            modifier = modifier.size(48.dp)
+            modifier = modifier.size(48.dp),
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_tv),
                 contentDescription = "DLNA",
-                tint = MaterialTheme.colorScheme.onSurface
+                tint = MaterialTheme.colorScheme.onSurface,
             )
         }
     }
-    
+
     if (showDevicePicker) {
         DlnaDevicePicker(
             onDeviceSelected = {
@@ -109,8 +109,7 @@ fun DlnaButton(
             },
             onDismiss = {
                 showDevicePicker = false
-            }
+            },
         )
     }
 }
-

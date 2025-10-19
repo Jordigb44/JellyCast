@@ -22,17 +22,18 @@ suspend fun MediaSourceInfo.toJellyCastSource(
     itemId: UUID,
     includePath: Boolean = false,
 ): JellyCastSource {
-    val path = when (protocol) {
-        MediaProtocol.FILE -> {
-            try {
-                if (includePath) jellyfinRepository.getStreamUrl(itemId, id.orEmpty()) else ""
-            } catch (e: Exception) {
-                ""
+    val path =
+        when (protocol) {
+            MediaProtocol.FILE -> {
+                try {
+                    if (includePath) jellyfinRepository.getStreamUrl(itemId, id.orEmpty()) else ""
+                } catch (e: Exception) {
+                    ""
+                }
             }
+            MediaProtocol.HTTP -> this.path.orEmpty()
+            else -> ""
         }
-        MediaProtocol.HTTP -> this.path.orEmpty()
-        else -> ""
-    }
     return JellyCastSource(
         id = id.orEmpty(),
         name = name.orEmpty(),
@@ -43,10 +44,8 @@ suspend fun MediaSourceInfo.toJellyCastSource(
     )
 }
 
-fun JellyCastSourceDto.toJellyCastSource(
-    serverDatabaseDao: ServerDatabaseDao,
-): JellyCastSource {
-    return JellyCastSource(
+fun JellyCastSourceDto.toJellyCastSource(serverDatabaseDao: ServerDatabaseDao): JellyCastSource =
+    JellyCastSource(
         id = id,
         name = name,
         type = type,
@@ -55,7 +54,6 @@ fun JellyCastSourceDto.toJellyCastSource(
         mediaStreams = serverDatabaseDao.getMediaStreamsBySourceId(id).map { it.toJellyCastMediaStream() },
         downloadId = downloadId,
     )
-}
 
 enum class JellyCastSourceType {
     REMOTE,

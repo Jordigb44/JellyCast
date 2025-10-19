@@ -54,9 +54,7 @@ import dev.jdtech.jellyfin.settings.R as SettingsR
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun AboutScreen(
-    navigateBack: () -> Unit,
-) {
+fun AboutScreen(navigateBack: () -> Unit) {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
     val density = LocalDensity.current
@@ -73,9 +71,10 @@ fun AboutScreen(
     val libraries by produceLibraries(R.raw.aboutlibraries)
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {
@@ -92,7 +91,8 @@ fun AboutScreen(
                     }
                 },
                 actions = {
-                    dev.jdtech.jellyfin.presentation.components.CastButton()
+                    dev.jdtech.jellyfin.presentation.components
+                        .CastButton()
                 },
                 windowInsets = WindowInsets.statusBars.union(WindowInsets.displayCutout),
                 scrollBehavior = scrollBehavior,
@@ -102,12 +102,13 @@ fun AboutScreen(
         LibrariesContainer(
             libraries = libraries,
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(
-                start = paddingStart + innerPadding.calculateStartPadding(layoutDirection),
-                top = innerPadding.calculateTopPadding(),
-                end = paddingEnd + innerPadding.calculateEndPadding(layoutDirection),
-                bottom = innerPadding.calculateBottomPadding(),
-            ),
+            contentPadding =
+                PaddingValues(
+                    start = paddingStart + innerPadding.calculateStartPadding(layoutDirection),
+                    top = innerPadding.calculateTopPadding(),
+                    end = paddingEnd + innerPadding.calculateEndPadding(layoutDirection),
+                    bottom = innerPadding.calculateBottomPadding(),
+                ),
             header = {
                 item {
                     Box(
@@ -115,8 +116,9 @@ fun AboutScreen(
                         contentAlignment = Alignment.Center,
                     ) {
                         Column(
-                            modifier = Modifier
-                                .padding(horizontal = MaterialTheme.spacings.default),
+                            modifier =
+                                Modifier
+                                    .padding(horizontal = MaterialTheme.spacings.default),
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Spacer(Modifier.height(MaterialTheme.spacings.small))

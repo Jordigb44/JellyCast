@@ -12,7 +12,6 @@ import androidx.media3.session.MediaSession
 import dev.jdtech.jellyfin.player.local.presentation.PlayerViewModel
 
 abstract class BasePlayerActivity : AppCompatActivity() {
-
     abstract val viewModel: PlayerViewModel
 
     private lateinit var mediaSession: MediaSession

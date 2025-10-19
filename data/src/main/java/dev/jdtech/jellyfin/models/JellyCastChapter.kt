@@ -15,11 +15,10 @@ data class JellyCastChapter(
     val name: String? = null,
 )
 
-fun BaseItemDto.toJellyCastChapters(): List<JellyCastChapter> {
-    return chapters?.map { chapter ->
+fun BaseItemDto.toJellyCastChapters(): List<JellyCastChapter> =
+    chapters?.map { chapter ->
         JellyCastChapter(
             startPosition = chapter.startPositionTicks / 10000,
             name = chapter.name,
         )
     } ?: emptyList()
-}

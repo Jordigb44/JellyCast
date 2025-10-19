@@ -26,6 +26,7 @@ interface JellyfinRepository {
     suspend fun getUserViews(): List<BaseItemDto>
 
     suspend fun getEpisode(itemId: UUID): JellyCastEpisode
+
     suspend fun getMovie(itemId: UUID): JellyCastMovie
 
     suspend fun getShow(itemId: UUID): JellyCastShow
@@ -52,9 +53,7 @@ interface JellyfinRepository {
         sortOrder: SortOrder = SortOrder.ASCENDING,
     ): Flow<PagingData<JellyCastItem>>
 
-    suspend fun getPerson(
-        personId: UUID,
-    ): JellyCastPerson
+    suspend fun getPerson(personId: UUID): JellyCastPerson
 
     suspend fun getPersonItems(
         personIds: List<UUID>,
@@ -72,7 +71,10 @@ interface JellyfinRepository {
 
     suspend fun getLatestMedia(parentId: UUID): List<JellyCastItem>
 
-    suspend fun getSeasons(seriesId: UUID, offline: Boolean = false): List<JellyCastSeason>
+    suspend fun getSeasons(
+        seriesId: UUID,
+        offline: Boolean = false,
+    ): List<JellyCastSeason>
 
     suspend fun getNextUp(seriesId: UUID? = null): List<JellyCastEpisode>
 
@@ -85,21 +87,39 @@ interface JellyfinRepository {
         offline: Boolean = false,
     ): List<JellyCastEpisode>
 
-    suspend fun getMediaSources(itemId: UUID, includePath: Boolean = false): List<JellyCastSource>
+    suspend fun getMediaSources(
+        itemId: UUID,
+        includePath: Boolean = false,
+    ): List<JellyCastSource>
 
-    suspend fun getStreamUrl(itemId: UUID, mediaSourceId: String): String
+    suspend fun getStreamUrl(
+        itemId: UUID,
+        mediaSourceId: String,
+    ): String
 
     suspend fun getSegments(itemId: UUID): List<JellyCastSegment>
 
-    suspend fun getTrickplayData(itemId: UUID, width: Int, index: Int): ByteArray?
+    suspend fun getTrickplayData(
+        itemId: UUID,
+        width: Int,
+        index: Int,
+    ): ByteArray?
 
     suspend fun postCapabilities()
 
     suspend fun postPlaybackStart(itemId: UUID)
 
-    suspend fun postPlaybackStop(itemId: UUID, positionTicks: Long, playedPercentage: Int)
+    suspend fun postPlaybackStop(
+        itemId: UUID,
+        positionTicks: Long,
+        playedPercentage: Int,
+    )
 
-    suspend fun postPlaybackProgress(itemId: UUID, positionTicks: Long, isPaused: Boolean)
+    suspend fun postPlaybackProgress(
+        itemId: UUID,
+        positionTicks: Long,
+        isPaused: Boolean,
+    )
 
     suspend fun markAsFavorite(itemId: UUID)
 

@@ -46,9 +46,10 @@ fun SettingsMultiSelectDetailsCard(
     val optionValues = stringArrayResource(preference.optionValues)
     val optionNames = stringArrayResource(preference.options)
 
-    val options = remember(preference.nameStringResource) {
-        optionValues.zip(optionNames)
-    }
+    val options =
+        remember(preference.nameStringResource) {
+            optionValues.zip(optionNames)
+        }
 
     var selectedOptions by remember {
         mutableStateOf(preference.value)
@@ -58,10 +59,11 @@ fun SettingsMultiSelectDetailsCard(
         modifier = modifier,
     ) {
         Column(
-            modifier = Modifier.padding(
-                horizontal = MaterialTheme.spacings.default,
-                vertical = MaterialTheme.spacings.medium,
-            ),
+            modifier =
+                Modifier.padding(
+                    horizontal = MaterialTheme.spacings.default,
+                    vertical = MaterialTheme.spacings.medium,
+                ),
         ) {
             Text(text = stringResource(id = preference.nameStringResource), style = MaterialTheme.typography.headlineMedium)
             preference.descriptionStringRes?.let {
@@ -81,11 +83,12 @@ fun SettingsMultiSelectDetailsCard(
                         option = option,
                         checked = selectedOptions.contains(option.first),
                         onCheckedChange = { key ->
-                            selectedOptions = if (selectedOptions.contains(key)) {
-                                selectedOptions - setOfNotNull(key)
-                            } else {
-                                selectedOptions + listOfNotNull(key)
-                            }
+                            selectedOptions =
+                                if (selectedOptions.contains(key)) {
+                                    selectedOptions - setOfNotNull(key)
+                                } else {
+                                    selectedOptions + listOfNotNull(key)
+                                }
 
                             onUpdate(selectedOptions)
                         },
@@ -107,19 +110,22 @@ private fun SettingsMultiSelectDetailsCardItem(
     Surface(
         onClick = { onCheckedChange(option.first) },
         shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(4.dp)),
-        colors = ClickableSurfaceDefaults.colors(
-            containerColor = Color.Transparent,
-            focusedContainerColor = Color.Transparent,
-        ),
-        border = ClickableSurfaceDefaults.border(
-            focusedBorder = Border(
-                BorderStroke(
-                    4.dp,
-                    Color.White,
-                ),
-                shape = RoundedCornerShape(10.dp),
+        colors =
+            ClickableSurfaceDefaults.colors(
+                containerColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
             ),
-        ),
+        border =
+            ClickableSurfaceDefaults.border(
+                focusedBorder =
+                    Border(
+                        BorderStroke(
+                            4.dp,
+                            Color.White,
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                    ),
+            ),
         scale = ClickableSurfaceScale.None,
     ) {
         Row(
@@ -142,12 +148,13 @@ private fun SettingsMultiSelectDetailsCardItem(
 private fun SettingsSelectDetailsCardPreview() {
     JellyCastTheme {
         SettingsMultiSelectDetailsCard(
-            preference = PreferenceMultiSelect(
-                nameStringResource = SettingsR.string.pref_player_mpv_hwdec,
-                backendPreference = Preference("", emptySet()),
-                options = SettingsR.array.mpv_hwdec,
-                optionValues = SettingsR.array.mpv_hwdec,
-            ),
+            preference =
+                PreferenceMultiSelect(
+                    nameStringResource = SettingsR.string.pref_player_mpv_hwdec,
+                    backendPreference = Preference("", emptySet()),
+                    options = SettingsR.array.mpv_hwdec,
+                    optionValues = SettingsR.array.mpv_hwdec,
+                ),
             onUpdate = {},
         )
     }

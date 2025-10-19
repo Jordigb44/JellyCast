@@ -24,12 +24,12 @@ private fun isChromecastEnabled(context: Context): Boolean {
 @Composable
 fun CastButton() {
     val context = LocalContext.current
-    
+
     // Only show if Chromecast is enabled in settings
     if (!isChromecastEnabled(context)) {
         return
     }
-    
+
     AndroidView(
         factory = { ctx ->
             MediaRouteButton(ctx).apply {
@@ -39,7 +39,7 @@ fun CastButton() {
                     Timber.e(e, "Error setting up Cast button")
                 }
             }
-        }
+        },
     )
 }
 
@@ -47,21 +47,25 @@ fun CastButton() {
  * Setup Cast button in an AppCompatActivity menu
  * Only sets up if Chromecast is enabled in settings
  */
-fun setupCastButton(activity: AppCompatActivity, menu: Menu, menuItemId: Int) {
+fun setupCastButton(
+    activity: AppCompatActivity,
+    menu: Menu,
+    menuItemId: Int,
+) {
     // Only set up if Chromecast is enabled in settings
     if (!isChromecastEnabled(activity)) {
         // Hide the menu item if Chromecast is disabled
         menu.findItem(menuItemId)?.isVisible = false
         return
     }
-    
+
     try {
         val castContext = CastContext.getSharedInstance(activity)
         val mediaRouteMenuItem = menu.findItem(menuItemId)
         CastButtonFactory.setUpMediaRouteButton(
             activity.applicationContext,
             menu,
-            menuItemId
+            menuItemId,
         )
     } catch (e: Exception) {
         Timber.e(e, "Error setting up Cast button in menu")

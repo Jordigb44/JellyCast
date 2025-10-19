@@ -46,8 +46,8 @@ data class JellyCastEpisodeDto(
     val chapters: List<JellyCastChapter>?,
 )
 
-fun JellyCastEpisode.toJellyCastEpisodeDto(serverId: String? = null): JellyCastEpisodeDto {
-    return JellyCastEpisodeDto(
+fun JellyCastEpisode.toJellyCastEpisodeDto(serverId: String? = null): JellyCastEpisodeDto =
+    JellyCastEpisodeDto(
         id = id,
         serverId = serverId,
         seasonId = seasonId,
@@ -63,4 +63,3 @@ fun JellyCastEpisode.toJellyCastEpisodeDto(serverId: String? = null): JellyCastE
         communityRating = communityRating,
         chapters = chapters,
     )
-}

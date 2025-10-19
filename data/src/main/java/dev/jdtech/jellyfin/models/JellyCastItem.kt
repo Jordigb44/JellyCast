@@ -26,8 +26,8 @@ interface JellyCastItem {
 suspend fun BaseItemDto.toJellyCastItem(
     jellyfinRepository: JellyfinRepository,
     serverDatabase: ServerDatabaseDao? = null,
-): JellyCastItem? {
-    return when (type) {
+): JellyCastItem? =
+    when (type) {
         BaseItemKind.MOVIE -> toJellyCastMovie(jellyfinRepository, serverDatabase)
         BaseItemKind.EPISODE -> toJellyCastEpisode(jellyfinRepository)
         BaseItemKind.SEASON -> toJellyCastSeason(jellyfinRepository)
@@ -36,12 +36,7 @@ suspend fun BaseItemDto.toJellyCastItem(
         BaseItemKind.FOLDER -> toJellyCastFolder(jellyfinRepository)
         else -> null
     }
-}
 
-fun JellyCastItem.isDownloading(): Boolean {
-    return sources.filter { it.type == JellyCastSourceType.LOCAL }.any { it.path.endsWith(".download") }
-}
+fun JellyCastItem.isDownloading(): Boolean = sources.filter { it.type == JellyCastSourceType.LOCAL }.any { it.path.endsWith(".download") }
 
-fun JellyCastItem.isDownloaded(): Boolean {
-    return sources.filter { it.type == JellyCastSourceType.LOCAL }.any { !it.path.endsWith(".download") }
-}
+fun JellyCastItem.isDownloaded(): Boolean = sources.filter { it.type == JellyCastSourceType.LOCAL }.any { !it.path.endsWith(".download") }

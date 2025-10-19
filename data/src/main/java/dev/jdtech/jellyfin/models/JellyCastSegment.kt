@@ -4,17 +4,23 @@ import org.jellyfin.sdk.model.api.MediaSegmentDto
 import org.jellyfin.sdk.model.api.MediaSegmentType
 
 enum class JellyCastSegmentType {
-    INTRO, OUTRO, RECAP, PREVIEW, COMMERCIAL, UNKNOWN
+    INTRO,
+    OUTRO,
+    RECAP,
+    PREVIEW,
+    COMMERCIAL,
+    UNKNOWN,
 }
 
-private fun MediaSegmentType.toJellyCastSegmentType(): JellyCastSegmentType = when (this) {
-    MediaSegmentType.UNKNOWN -> JellyCastSegmentType.UNKNOWN
-    MediaSegmentType.INTRO -> JellyCastSegmentType.INTRO
-    MediaSegmentType.OUTRO -> JellyCastSegmentType.OUTRO
-    MediaSegmentType.RECAP -> JellyCastSegmentType.RECAP
-    MediaSegmentType.PREVIEW -> JellyCastSegmentType.PREVIEW
-    MediaSegmentType.COMMERCIAL -> JellyCastSegmentType.COMMERCIAL
-}
+private fun MediaSegmentType.toJellyCastSegmentType(): JellyCastSegmentType =
+    when (this) {
+        MediaSegmentType.UNKNOWN -> JellyCastSegmentType.UNKNOWN
+        MediaSegmentType.INTRO -> JellyCastSegmentType.INTRO
+        MediaSegmentType.OUTRO -> JellyCastSegmentType.OUTRO
+        MediaSegmentType.RECAP -> JellyCastSegmentType.RECAP
+        MediaSegmentType.PREVIEW -> JellyCastSegmentType.PREVIEW
+        MediaSegmentType.COMMERCIAL -> JellyCastSegmentType.COMMERCIAL
+    }
 
 data class JellyCastSegment(
     val type: JellyCastSegmentType,
@@ -22,18 +28,16 @@ data class JellyCastSegment(
     val endTicks: Long,
 )
 
-fun JellyCastSegmentDto.toJellyCastSegment(): JellyCastSegment {
-    return JellyCastSegment(
+fun JellyCastSegmentDto.toJellyCastSegment(): JellyCastSegment =
+    JellyCastSegment(
         type = type,
         startTicks = startTicks,
         endTicks = endTicks,
     )
-}
 
-fun MediaSegmentDto.toJellyCastSegment(): JellyCastSegment {
-    return JellyCastSegment(
+fun MediaSegmentDto.toJellyCastSegment(): JellyCastSegment =
+    JellyCastSegment(
         type = type.toJellyCastSegmentType(),
         startTicks = startTicks / 10000,
         endTicks = endTicks / 10000,
     )
-}

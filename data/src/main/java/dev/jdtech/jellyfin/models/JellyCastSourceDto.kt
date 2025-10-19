@@ -17,12 +17,14 @@ data class JellyCastSourceDto(
     val downloadId: Long? = null,
 )
 
-fun JellyCastSource.toJellyCastSourceDto(itemId: UUID, path: String): JellyCastSourceDto {
-    return JellyCastSourceDto(
+fun JellyCastSource.toJellyCastSourceDto(
+    itemId: UUID,
+    path: String,
+): JellyCastSourceDto =
+    JellyCastSourceDto(
         id = id,
         itemId = itemId,
         name = name,
         type = JellyCastSourceType.LOCAL,
         path = path,
     )
-}

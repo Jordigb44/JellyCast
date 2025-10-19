@@ -90,24 +90,25 @@ fun PlayerScreen(
     }
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            lifecycle = event
+        val observer =
+            LifecycleEventObserver { _, event ->
+                lifecycle = event
 
-            // Handle creation and release of media session
-            when (lifecycle) {
-                Lifecycle.Event.ON_STOP -> {
-                    println("ON_STOP")
-                    mediaSession?.release()
+                // Handle creation and release of media session
+                when (lifecycle) {
+                    Lifecycle.Event.ON_STOP -> {
+                        println("ON_STOP")
+                        mediaSession?.release()
+                    }
+
+                    Lifecycle.Event.ON_START -> {
+                        println("ON_START")
+                        mediaSession = MediaSession.Builder(context, viewModel.player).build()
+                    }
+
+                    else -> {}
                 }
-
-                Lifecycle.Event.ON_START -> {
-                    println("ON_START")
-                    mediaSession = MediaSession.Builder(context, viewModel.player).build()
-                }
-
-                else -> {}
             }
-        }
         lifecycleOwner.lifecycle.addObserver(observer)
 
         onDispose {
@@ -132,6 +133,7 @@ fun PlayerScreen(
     }
 
     // TODO: implement the track selection dialogs
+
     /*
     resultRecipient.onNavResult { result ->
         when (result) {
@@ -181,12 +183,12 @@ fun PlayerScreen(
     }
 
     Box(
-        modifier = Modifier
-            .dPadEvents(
-                exoPlayer = viewModel.player,
-                videoPlayerState = videoPlayerState,
-            )
-            .focusable(),
+        modifier =
+            Modifier
+                .dPadEvents(
+                    exoPlayer = viewModel.player,
+                    videoPlayerState = videoPlayerState,
+                ).focusable(),
     ) {
         AndroidView(
             factory = { context ->
@@ -220,8 +222,9 @@ fun PlayerScreen(
                     else -> Unit
                 }
             },
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier =
+                Modifier
+                    .fillMaxSize(),
         )
         val focusRequester = remember { FocusRequester() }
         VideoPlayerOverlay(
@@ -315,21 +318,24 @@ private fun SkipButton(
     skipButtonFocusRequester: FocusRequester,
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(MaterialTheme.spacings.large)
-            .zIndex(1f),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(MaterialTheme.spacings.large)
+                .zIndex(1f),
         contentAlignment = Alignment.BottomEnd,
     ) {
         Button(
             onClick = onClick,
             modifier = Modifier.focusRequester(skipButtonFocusRequester),
-            glow = ButtonDefaults.glow(
-                focusedGlow = Glow(
-                    elevationColor = Color.Gray,
-                    elevation = 20.dp,
+            glow =
+                ButtonDefaults.glow(
+                    focusedGlow =
+                        Glow(
+                            elevationColor = Color.Gray,
+                            elevation = 20.dp,
+                        ),
                 ),
-            ),
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_skip_forward),
@@ -347,45 +353,51 @@ private fun SkipButton(
 private fun Modifier.dPadEvents(
     exoPlayer: Player,
     videoPlayerState: VideoPlayerState,
-): Modifier = this.handleDPadKeyEvents(
-    onLeft = {},
-    onRight = {},
-    onUp = {},
-    onDown = {},
-    onEnter = {
-        exoPlayer.pause()
-        videoPlayerState.showControls()
-    },
-)
+): Modifier =
+    this.handleDPadKeyEvents(
+        onLeft = {},
+        onRight = {},
+        onUp = {},
+        onDown = {},
+        onEnter = {
+            exoPlayer.pause()
+            videoPlayerState.showControls()
+        },
+    )
 
 @androidx.annotation.OptIn(UnstableApi::class)
-private fun getTracks(player: Player, type: Int): Array<Track> {
+private fun getTracks(
+    player: Player,
+    type: Int,
+): Array<Track> {
     val tracks = arrayListOf<Track>()
     for (groupIndex in 0 until player.currentTracks.groups.count()) {
         val group = player.currentTracks.groups[groupIndex]
         if (group.type == type) {
             val format = group.mediaTrackGroup.getFormat(0)
 
-            val track = Track(
-                id = groupIndex,
-                label = format.label,
-                language = Locale(format.language.toString()).displayLanguage,
-                codec = format.codecs,
-                selected = group.isSelected,
-                supported = group.isSupported,
-            )
+            val track =
+                Track(
+                    id = groupIndex,
+                    label = format.label,
+                    language = Locale(format.language.toString()).displayLanguage,
+                    codec = format.codecs,
+                    selected = group.isSelected,
+                    supported = group.isSupported,
+                )
 
             tracks.add(track)
         }
     }
 
-    val noneTrack = Track(
-        id = -1,
-        label = null,
-        language = null,
-        codec = null,
-        selected = !tracks.any { it.selected },
-        supported = true,
-    )
+    val noneTrack =
+        Track(
+            id = -1,
+            label = null,
+            language = null,
+            codec = null,
+            selected = !tracks.any { it.selected },
+            supported = true,
+        )
     return arrayOf(noneTrack) + tracks
 }

@@ -68,13 +68,14 @@ private fun SeasonScreenLayout(
                 modifier = Modifier.fillMaxSize(),
             ) {
                 Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(
-                            start = MaterialTheme.spacings.extraLarge,
-                            top = MaterialTheme.spacings.large,
-                            end = MaterialTheme.spacings.large,
-                        ),
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .padding(
+                                start = MaterialTheme.spacings.extraLarge,
+                                top = MaterialTheme.spacings.large,
+                                end = MaterialTheme.spacings.large,
+                            ),
                 ) {
                     Text(
                         text = season.name,
@@ -86,14 +87,16 @@ private fun SeasonScreenLayout(
                     )
                 }
                 LazyColumn(
-                    contentPadding = PaddingValues(
-                        top = MaterialTheme.spacings.large,
-                        bottom = MaterialTheme.spacings.large,
-                    ),
+                    contentPadding =
+                        PaddingValues(
+                            top = MaterialTheme.spacings.large,
+                            bottom = MaterialTheme.spacings.large,
+                        ),
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.medium),
-                    modifier = Modifier
-                        .weight(2f)
-                        .padding(end = MaterialTheme.spacings.extraLarge),
+                    modifier =
+                        Modifier
+                            .weight(2f)
+                            .padding(end = MaterialTheme.spacings.extraLarge),
                 ) {
                     items(state.episodes) { episode ->
                         EpisodeCard(
@@ -107,8 +110,9 @@ private fun SeasonScreenLayout(
             }
         } ?: run {
             CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
+                modifier =
+                    Modifier
+                        .align(Alignment.Center),
             )
         }
     }
@@ -119,10 +123,11 @@ private fun SeasonScreenLayout(
 private fun SeasonScreenLayoutPreview() {
     JellyCastTheme {
         SeasonScreenLayout(
-            state = SeasonState(
-                season = dummySeason,
-                episodes = dummyEpisodes,
-            ),
+            state =
+                SeasonState(
+                    season = dummySeason,
+                    episodes = dummyEpisodes,
+                ),
             onAction = {},
         )
     }

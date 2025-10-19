@@ -30,8 +30,8 @@ data class JellyCastSeasonDto(
     val indexNumber: Int,
 )
 
-fun JellyCastSeason.toJellyCastSeasonDto(): JellyCastSeasonDto {
-    return JellyCastSeasonDto(
+fun JellyCastSeason.toJellyCastSeasonDto(): JellyCastSeasonDto =
+    JellyCastSeasonDto(
         id = id,
         seriesId = seriesId,
         name = name,
@@ -39,4 +39,3 @@ fun JellyCastSeason.toJellyCastSeasonDto(): JellyCastSeasonDto {
         overview = overview,
         indexNumber = indexNumber,
     )
-}

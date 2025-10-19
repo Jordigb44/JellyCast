@@ -18,63 +18,62 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EpisodeViewModel
-@Inject
-constructor(
-    private val repository: JellyfinRepository,
-    private val videoMetadataParser: VideoMetadataParser,
-) : ViewModel() {
-    private val _state = MutableStateFlow(EpisodeState())
-    val state = _state.asStateFlow()
+    @Inject
+    constructor(
+        private val repository: JellyfinRepository,
+        private val videoMetadataParser: VideoMetadataParser,
+    ) : ViewModel() {
+        private val _state = MutableStateFlow(EpisodeState())
+        val state = _state.asStateFlow()
 
-    lateinit var episodeId: UUID
+        lateinit var episodeId: UUID
 
-    fun loadEpisode(episodeId: UUID) {
-        this.episodeId = episodeId
-        viewModelScope.launch {
-            try {
-                val episode = repository.getEpisode(episodeId)
-                val videoMetadata = videoMetadataParser.parse(episode.sources.first())
-                val actors = getActors(episode)
-                _state.emit(_state.value.copy(episode = episode, videoMetadata = videoMetadata, actors = actors))
-            } catch (e: Exception) {
-                _state.emit(_state.value.copy(error = e))
+        fun loadEpisode(episodeId: UUID) {
+            this.episodeId = episodeId
+            viewModelScope.launch {
+                try {
+                    val episode = repository.getEpisode(episodeId)
+                    val videoMetadata = videoMetadataParser.parse(episode.sources.first())
+                    val actors = getActors(episode)
+                    _state.emit(_state.value.copy(episode = episode, videoMetadata = videoMetadata, actors = actors))
+                } catch (e: Exception) {
+                    _state.emit(_state.value.copy(error = e))
+                }
+            }
+        }
+
+        private suspend fun getActors(item: JellyCastEpisode): List<JellyCastItemPerson> =
+            withContext(Dispatchers.Default) {
+                item.people.filter { it.type == PersonKind.ACTOR }
+            }
+
+        fun onAction(action: EpisodeAction) {
+            when (action) {
+                is EpisodeAction.MarkAsPlayed -> {
+                    viewModelScope.launch {
+                        repository.markAsPlayed(episodeId)
+                        loadEpisode(episodeId)
+                    }
+                }
+                is EpisodeAction.UnmarkAsPlayed -> {
+                    viewModelScope.launch {
+                        repository.markAsUnplayed(episodeId)
+                        loadEpisode(episodeId)
+                    }
+                }
+                is EpisodeAction.MarkAsFavorite -> {
+                    viewModelScope.launch {
+                        repository.markAsFavorite(episodeId)
+                        loadEpisode(episodeId)
+                    }
+                }
+                is EpisodeAction.UnmarkAsFavorite -> {
+                    viewModelScope.launch {
+                        repository.unmarkAsFavorite(episodeId)
+                        loadEpisode(episodeId)
+                    }
+                }
+                else -> Unit
             }
         }
     }
-
-    private suspend fun getActors(item: JellyCastEpisode): List<JellyCastItemPerson> {
-        return withContext(Dispatchers.Default) {
-            item.people.filter { it.type == PersonKind.ACTOR }
-        }
-    }
-
-    fun onAction(action: EpisodeAction) {
-        when (action) {
-            is EpisodeAction.MarkAsPlayed -> {
-                viewModelScope.launch {
-                    repository.markAsPlayed(episodeId)
-                    loadEpisode(episodeId)
-                }
-            }
-            is EpisodeAction.UnmarkAsPlayed -> {
-                viewModelScope.launch {
-                    repository.markAsUnplayed(episodeId)
-                    loadEpisode(episodeId)
-                }
-            }
-            is EpisodeAction.MarkAsFavorite -> {
-                viewModelScope.launch {
-                    repository.markAsFavorite(episodeId)
-                    loadEpisode(episodeId)
-                }
-            }
-            is EpisodeAction.UnmarkAsFavorite -> {
-                viewModelScope.launch {
-                    repository.unmarkAsFavorite(episodeId)
-                    loadEpisode(episodeId)
-                }
-            }
-            else -> Unit
-        }
-    }
-}

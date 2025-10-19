@@ -31,11 +31,12 @@ fun ProgressBadge(
 ) {
     if (!(!item.played && item.unplayedItemCount == null)) {
         Box(
-            modifier = modifier
-                .height(24.dp)
-                .defaultMinSize(24.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(MaterialTheme.colorScheme.primary),
+            modifier =
+                modifier
+                    .height(24.dp)
+                    .defaultMinSize(24.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.primary),
         ) {
             when (item.played) {
                 true -> {
@@ -43,9 +44,10 @@ fun ProgressBadge(
                         painter = painterResource(id = CoreR.drawable.ic_check),
                         contentDescription = "",
                         tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier
-                            .size(16.dp)
-                            .align(Alignment.Center),
+                        modifier =
+                            Modifier
+                                .size(16.dp)
+                                .align(Alignment.Center),
                     )
                 }
 
@@ -54,9 +56,10 @@ fun ProgressBadge(
                         text = item.unplayedItemCount.toString(),
                         color = MaterialTheme.colorScheme.onPrimary,
                         style = MaterialTheme.typography.labelMedium,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .padding(horizontal = MaterialTheme.spacings.extraSmall),
+                        modifier =
+                            Modifier
+                                .align(Alignment.Center)
+                                .padding(horizontal = MaterialTheme.spacings.extraSmall),
                     )
                 }
             }

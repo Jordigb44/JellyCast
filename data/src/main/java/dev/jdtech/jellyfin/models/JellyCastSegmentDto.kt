@@ -23,11 +23,10 @@ data class JellyCastSegmentDto(
     val endTicks: Long,
 )
 
-fun JellyCastSegment.toJellyCastSegmentsDto(itemId: UUID): JellyCastSegmentDto {
-    return JellyCastSegmentDto(
+fun JellyCastSegment.toJellyCastSegmentsDto(itemId: UUID): JellyCastSegmentDto =
+    JellyCastSegmentDto(
         itemId = itemId,
         type = type,
         startTicks = startTicks,
         endTicks = endTicks,
     )
-}

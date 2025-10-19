@@ -39,14 +39,9 @@ class JellyfinRepositoryOfflineImpl(
     private val database: ServerDatabaseDao,
     private val appPreferences: AppPreferences,
 ) : JellyfinRepository {
+    override suspend fun getPublicSystemInfo(): PublicSystemInfo = throw Exception("System info not available in offline mode")
 
-    override suspend fun getPublicSystemInfo(): PublicSystemInfo {
-        throw Exception("System info not available in offline mode")
-    }
-
-    override suspend fun getUserViews(): List<BaseItemDto> {
-        return emptyList()
-    }
+    override suspend fun getUserViews(): List<BaseItemDto> = emptyList()
 
     override suspend fun getMovie(itemId: UUID): JellyCastMovie =
         withContext(Dispatchers.IO) {
@@ -90,12 +85,13 @@ class JellyfinRepositoryOfflineImpl(
 
             // Helper to apply sorting and paging
             fun List<JellyCastItem>.applySortAndPaging(): List<JellyCastItem> {
-                val sorted = when (sortBy) {
-                    SortBy.NAME -> this.sortedBy { it.name.lowercase() }
-                    else -> this // Other sort modes not available offline; keep DB/default order
-                }.let { list ->
-                    if (sortOrder == SortOrder.DESCENDING) list.reversed() else list
-                }
+                val sorted =
+                    when (sortBy) {
+                        SortBy.NAME -> this.sortedBy { it.name.lowercase() }
+                        else -> this // Other sort modes not available offline; keep DB/default order
+                    }.let { list ->
+                        if (sortOrder == SortOrder.DESCENDING) list.reversed() else list
+                    }
                 val from = startIndex ?: 0
                 val toExclusive = if (limit != null) (from + limit).coerceAtMost(sorted.size) else sorted.size
                 return if (from in 0..sorted.size) sorted.subList(from, toExclusive) else emptyList()
@@ -119,11 +115,12 @@ class JellyfinRepositoryOfflineImpl(
                     }
                     BaseItemKind.EPISODE -> {
                         // If parentId provided, assume it's a seasonId; otherwise list all episodes for server
-                        val episodes = if (parentId != null) {
-                            database.getEpisodesBySeasonId(parentId)
-                        } else {
-                            database.getEpisodesByServerId(serverId)
-                        }
+                        val episodes =
+                            if (parentId != null) {
+                                database.getEpisodesBySeasonId(parentId)
+                            } else {
+                                database.getEpisodesByServerId(serverId)
+                            }
                         result += episodes.map { it.toJellyCastEpisode(database, userId) }
                     }
                     else -> {
@@ -142,8 +139,8 @@ class JellyfinRepositoryOfflineImpl(
         recursive: Boolean,
         sortBy: SortBy,
         sortOrder: SortOrder,
-    ): Flow<PagingData<JellyCastItem>> {
-        return ItemsPagingSource(
+    ): Flow<PagingData<JellyCastItem>> =
+        ItemsPagingSource(
             this,
             parentId,
             includeTypes,
@@ -152,12 +149,12 @@ class JellyfinRepositoryOfflineImpl(
             sortOrder,
         ).let { pagingSource ->
             // Reuse the same paging approach as online by delegating to ItemsPagingSource through Pager
-            androidx.paging.Pager(
-                config = androidx.paging.PagingConfig(pageSize = 10, enablePlaceholders = false),
-                pagingSourceFactory = { pagingSource },
-            ).flow
+            androidx.paging
+                .Pager(
+                    config = androidx.paging.PagingConfig(pageSize = 10, enablePlaceholders = false),
+                    pagingSourceFactory = { pagingSource },
+                ).flow
         }
-    }
 
     override suspend fun getPerson(personId: UUID): JellyCastPerson {
         // Offline doesn't hold people metadata; return a minimal placeholder
@@ -165,7 +162,9 @@ class JellyfinRepositoryOfflineImpl(
             id = personId,
             name = "",
             overview = "",
-            images = dev.jdtech.jellyfin.models.JellyCastImages(),
+            images =
+                dev.jdtech.jellyfin.models
+                    .JellyCastImages(),
         )
     }
 
@@ -190,42 +189,65 @@ class JellyfinRepositoryOfflineImpl(
         }
     }
 
-    override suspend fun getSearchItems(query: String): List<JellyCastItem> {
-        return withContext(Dispatchers.IO) {
-            val movies = database.searchMovies(appPreferences.getValue(appPreferences.currentServer)!!, query).map { it.toJellyCastMovie(database, jellyfinApi.userId!!) }
-            val shows = database.searchShows(appPreferences.getValue(appPreferences.currentServer)!!, query).map { it.toJellyCastShow(database, jellyfinApi.userId!!) }
-            val episodes = database.searchEpisodes(appPreferences.getValue(appPreferences.currentServer)!!, query).map { it.toJellyCastEpisode(database, jellyfinApi.userId!!) }
+    override suspend fun getSearchItems(query: String): List<JellyCastItem> =
+        withContext(Dispatchers.IO) {
+            val movies =
+                database.searchMovies(appPreferences.getValue(appPreferences.currentServer)!!, query).map {
+                    it.toJellyCastMovie(database, jellyfinApi.userId!!)
+                }
+            val shows =
+                database.searchShows(appPreferences.getValue(appPreferences.currentServer)!!, query).map {
+                    it.toJellyCastShow(database, jellyfinApi.userId!!)
+                }
+            val episodes =
+                database.searchEpisodes(appPreferences.getValue(appPreferences.currentServer)!!, query).map {
+                    it.toJellyCastEpisode(database, jellyfinApi.userId!!)
+                }
             movies + shows + episodes
         }
-    }
 
-    override suspend fun getSuggestions(): List<JellyCastItem> {
-        return emptyList()
-    }
+    override suspend fun getSuggestions(): List<JellyCastItem> = emptyList()
 
-    override suspend fun getResumeItems(): List<JellyCastItem> {
-        return withContext(Dispatchers.IO) {
-            val movies = database.getMoviesByServerId(appPreferences.getValue(appPreferences.currentServer)!!).map { it.toJellyCastMovie(database, jellyfinApi.userId!!) }.filter { it.playbackPositionTicks > 0 }
-            val episodes = database.getEpisodesByServerId(appPreferences.getValue(appPreferences.currentServer)!!).map { it.toJellyCastEpisode(database, jellyfinApi.userId!!) }.filter { it.playbackPositionTicks > 0 }
+    override suspend fun getResumeItems(): List<JellyCastItem> =
+        withContext(Dispatchers.IO) {
+            val movies =
+                database
+                    .getMoviesByServerId(appPreferences.getValue(appPreferences.currentServer)!!)
+                    .map {
+                        it.toJellyCastMovie(database, jellyfinApi.userId!!)
+                    }.filter {
+                        it.playbackPositionTicks >
+                            0
+                    }
+            val episodes =
+                database
+                    .getEpisodesByServerId(appPreferences.getValue(appPreferences.currentServer)!!)
+                    .map {
+                        it.toJellyCastEpisode(database, jellyfinApi.userId!!)
+                    }.filter {
+                        it.playbackPositionTicks >
+                            0
+                    }
             movies + episodes
         }
-    }
 
-    override suspend fun getLatestMedia(parentId: UUID): List<JellyCastItem> {
-        return emptyList()
-    }
+    override suspend fun getLatestMedia(parentId: UUID): List<JellyCastItem> = emptyList()
 
-    override suspend fun getSeasons(seriesId: UUID, offline: Boolean): List<JellyCastSeason> =
+    override suspend fun getSeasons(
+        seriesId: UUID,
+        offline: Boolean,
+    ): List<JellyCastSeason> =
         withContext(Dispatchers.IO) {
             database.getSeasonsByShowId(seriesId).map { it.toJellyCastSeason(database, jellyfinApi.userId!!) }
         }
 
-    override suspend fun getNextUp(seriesId: UUID?): List<JellyCastEpisode> {
-        return withContext(Dispatchers.IO) {
+    override suspend fun getNextUp(seriesId: UUID?): List<JellyCastEpisode> =
+        withContext(Dispatchers.IO) {
             val result = mutableListOf<JellyCastEpisode>()
-            val shows = database.getShowsByServerId(appPreferences.getValue(appPreferences.currentServer)!!).filter {
-                if (seriesId != null) it.id == seriesId else true
-            }
+            val shows =
+                database.getShowsByServerId(appPreferences.getValue(appPreferences.currentServer)!!).filter {
+                    if (seriesId != null) it.id == seriesId else true
+                }
             for (show in shows) {
                 val episodes = database.getEpisodesByShowId(show.id).map { it.toJellyCastEpisode(database, jellyfinApi.userId!!) }
                 val indexOfLastPlayed = episodes.indexOfLast { it.played }
@@ -237,7 +259,6 @@ class JellyfinRepositoryOfflineImpl(
             }
             result.filter { it.playbackPositionTicks == 0L }
         }
-    }
 
     override suspend fun getEpisodes(
         seriesId: UUID,
@@ -253,12 +274,18 @@ class JellyfinRepositoryOfflineImpl(
             items
         }
 
-    override suspend fun getMediaSources(itemId: UUID, includePath: Boolean): List<JellyCastSource> =
+    override suspend fun getMediaSources(
+        itemId: UUID,
+        includePath: Boolean,
+    ): List<JellyCastSource> =
         withContext(Dispatchers.IO) {
             database.getSources(itemId).map { it.toJellyCastSource(database) }
         }
 
-    override suspend fun getStreamUrl(itemId: UUID, mediaSourceId: String): String {
+    override suspend fun getStreamUrl(
+        itemId: UUID,
+        mediaSourceId: String,
+    ): String {
         // Offline streaming url isn't applicable; return empty string
         return ""
     }
@@ -268,7 +295,11 @@ class JellyfinRepositoryOfflineImpl(
             database.getSegments(itemId).map { it.toJellyCastSegment() }
         }
 
-    override suspend fun getTrickplayData(itemId: UUID, width: Int, index: Int): ByteArray? =
+    override suspend fun getTrickplayData(
+        itemId: UUID,
+        width: Int,
+        index: Int,
+    ): ByteArray? =
         withContext(Dispatchers.IO) {
             try {
                 val sources = File(context.filesDir, "trickplay/$itemId").listFiles() ?: return@withContext null
@@ -282,7 +313,11 @@ class JellyfinRepositoryOfflineImpl(
 
     override suspend fun postPlaybackStart(itemId: UUID) {}
 
-    override suspend fun postPlaybackStop(itemId: UUID, positionTicks: Long, playedPercentage: Int) {
+    override suspend fun postPlaybackStop(
+        itemId: UUID,
+        positionTicks: Long,
+        playedPercentage: Int,
+    ) {
         withContext(Dispatchers.IO) {
             when {
                 playedPercentage < 10 -> {
@@ -342,17 +377,13 @@ class JellyfinRepositoryOfflineImpl(
         }
     }
 
-    override fun getBaseUrl(): String {
-        return ""
-    }
+    override fun getBaseUrl(): String = ""
 
     override suspend fun updateDeviceName(name: String) {
         // No-op in offline mode
     }
 
-    override suspend fun getUserConfiguration(): UserConfiguration? {
-        return null
-    }
+    override suspend fun getUserConfiguration(): UserConfiguration? = null
 
     override suspend fun getDownloads(): List<JellyCastItem> =
         withContext(Dispatchers.IO) {
@@ -360,19 +391,24 @@ class JellyfinRepositoryOfflineImpl(
             val userId = jellyfinApi.userId ?: return@withContext emptyList()
             val baseUrl = getBaseUrl()
             val items = mutableListOf<JellyCastItem>()
-            timber.log.Timber.tag("Repo").d("getDownloads(offline) serverId=%s userId=%s baseUrl=%s", serverId, userId, baseUrl)
+            timber.log.Timber
+                .tag("Repo")
+                .d("getDownloads(offline) serverId=%s userId=%s baseUrl=%s", serverId, userId, baseUrl)
             items.addAll(
-                database.getMovies()
+                database
+                    .getMovies()
                     .filter { dto -> serverId == null || dto.serverId == serverId || dto.serverId == null }
                     .map { movieDto -> movieDto.toJellyCastMovie(database, userId, baseUrl) },
             )
             items.addAll(
-                database.getShows()
+                database
+                    .getShows()
                     .filter { dto -> serverId == null || dto.serverId == serverId || dto.serverId == null }
                     .map { showDto -> showDto.toJellyCastShow(database, userId, baseUrl) },
             )
             items.addAll(
-                database.getEpisodes()
+                database
+                    .getEpisodes()
                     .filter { dto -> serverId == null || dto.serverId == serverId || dto.serverId == null }
                     .map { episodeDto -> episodeDto.toJellyCastEpisode(database, userId, baseUrl) },
             )
@@ -386,7 +422,5 @@ class JellyfinRepositoryOfflineImpl(
             items
         }
 
-    override fun getUserId(): UUID {
-        return jellyfinApi.userId!!
-    }
+    override fun getUserId(): UUID = jellyfinApi.userId!!
 }

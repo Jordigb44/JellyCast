@@ -33,10 +33,8 @@ data class JellyCastShow(
     override val chapters: List<JellyCastChapter> = emptyList(),
 ) : JellyCastItem
 
-fun BaseItemDto.toJellyCastShow(
-    jellyfinRepository: JellyfinRepository,
-): JellyCastShow {
-    return JellyCastShow(
+fun BaseItemDto.toJellyCastShow(jellyfinRepository: JellyfinRepository): JellyCastShow =
+    JellyCastShow(
         id = id,
         name = name.orEmpty(),
         originalTitle = originalTitle,
@@ -59,26 +57,34 @@ fun BaseItemDto.toJellyCastShow(
         trailer = remoteTrailers?.getOrNull(0)?.url,
         images = toJellyCastImages(jellyfinRepository),
     )
-}
 
-fun JellyCastShowDto.toJellyCastShow(database: ServerDatabaseDao, userId: UUID, baseUrl: String? = null): JellyCastShow {
+fun JellyCastShowDto.toJellyCastShow(
+    database: ServerDatabaseDao,
+    userId: UUID,
+    baseUrl: String? = null,
+): JellyCastShow {
     val userData = database.getUserDataOrCreateNew(id, userId)
-    
+
     // Build image URIs from baseUrl if available
-    val images = if (baseUrl != null) {
-        val uri = android.net.Uri.parse(baseUrl)
-        JellyCastImages(
-            primary = uri.buildUpon()
-                .appendEncodedPath("items/$id/Images/${org.jellyfin.sdk.model.api.ImageType.PRIMARY}")
-                .build(),
-            backdrop = uri.buildUpon()
-                .appendEncodedPath("items/$id/Images/${org.jellyfin.sdk.model.api.ImageType.BACKDROP}/0")
-                .build()
-        )
-    } else {
-        JellyCastImages()
-    }
-    
+    val images =
+        if (baseUrl != null) {
+            val uri = android.net.Uri.parse(baseUrl)
+            JellyCastImages(
+                primary =
+                    uri
+                        .buildUpon()
+                        .appendEncodedPath("items/$id/Images/${org.jellyfin.sdk.model.api.ImageType.PRIMARY}")
+                        .build(),
+                backdrop =
+                    uri
+                        .buildUpon()
+                        .appendEncodedPath("items/$id/Images/${org.jellyfin.sdk.model.api.ImageType.BACKDROP}/0")
+                        .build(),
+            )
+        } else {
+            JellyCastImages()
+        }
+
     return JellyCastShow(
         id = id,
         name = name,

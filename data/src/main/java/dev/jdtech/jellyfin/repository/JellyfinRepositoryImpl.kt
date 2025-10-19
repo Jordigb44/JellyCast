@@ -54,51 +54,64 @@ class JellyfinRepositoryImpl(
     private val database: ServerDatabaseDao,
     private val appPreferences: AppPreferences,
 ) : JellyfinRepository {
-    override suspend fun getPublicSystemInfo(): PublicSystemInfo = withContext(Dispatchers.IO) {
-        jellyfinApi.systemApi.getPublicSystemInfo().content
-    }
+    override suspend fun getPublicSystemInfo(): PublicSystemInfo =
+        withContext(Dispatchers.IO) {
+            jellyfinApi.systemApi.getPublicSystemInfo().content
+        }
 
-    override suspend fun getUserViews(): List<BaseItemDto> = withContext(Dispatchers.IO) {
-        jellyfinApi.viewsApi.getUserViews(jellyfinApi.userId!!).content.items
-    }
+    override suspend fun getUserViews(): List<BaseItemDto> =
+        withContext(Dispatchers.IO) {
+            jellyfinApi.viewsApi
+                .getUserViews(jellyfinApi.userId!!)
+                .content.items
+        }
 
     override suspend fun getEpisode(itemId: UUID): JellyCastEpisode =
         withContext(Dispatchers.IO) {
-            jellyfinApi.userLibraryApi.getItem(
-                itemId,
-                jellyfinApi.userId!!,
-            ).content.toJellyCastEpisode(this@JellyfinRepositoryImpl, database)!!
+            jellyfinApi.userLibraryApi
+                .getItem(
+                    itemId,
+                    jellyfinApi.userId!!,
+                ).content
+                .toJellyCastEpisode(this@JellyfinRepositoryImpl, database)!!
         }
 
     override suspend fun getMovie(itemId: UUID): JellyCastMovie =
         withContext(Dispatchers.IO) {
-            jellyfinApi.userLibraryApi.getItem(
-                itemId,
-                jellyfinApi.userId!!,
-            ).content.toJellyCastMovie(this@JellyfinRepositoryImpl, database)
+            jellyfinApi.userLibraryApi
+                .getItem(
+                    itemId,
+                    jellyfinApi.userId!!,
+                ).content
+                .toJellyCastMovie(this@JellyfinRepositoryImpl, database)
         }
 
     override suspend fun getShow(itemId: UUID): JellyCastShow =
         withContext(Dispatchers.IO) {
-            jellyfinApi.userLibraryApi.getItem(
-                itemId,
-                jellyfinApi.userId!!,
-            ).content.toJellyCastShow(this@JellyfinRepositoryImpl)
+            jellyfinApi.userLibraryApi
+                .getItem(
+                    itemId,
+                    jellyfinApi.userId!!,
+                ).content
+                .toJellyCastShow(this@JellyfinRepositoryImpl)
         }
 
     override suspend fun getSeason(itemId: UUID): JellyCastSeason =
         withContext(Dispatchers.IO) {
-            jellyfinApi.userLibraryApi.getItem(
-                itemId,
-                jellyfinApi.userId!!,
-            ).content.toJellyCastSeason(this@JellyfinRepositoryImpl)
+            jellyfinApi.userLibraryApi
+                .getItem(
+                    itemId,
+                    jellyfinApi.userId!!,
+                ).content
+                .toJellyCastSeason(this@JellyfinRepositoryImpl)
         }
 
     override suspend fun getLibraries(): List<JellyCastCollection> =
         withContext(Dispatchers.IO) {
-            jellyfinApi.itemsApi.getItems(
-                jellyfinApi.userId!!,
-            ).content.items
+            jellyfinApi.itemsApi
+                .getItems(
+                    jellyfinApi.userId!!,
+                ).content.items
                 .mapNotNull { it.toJellyCastCollection(this@JellyfinRepositoryImpl) }
         }
 
@@ -112,17 +125,18 @@ class JellyfinRepositoryImpl(
         limit: Int?,
     ): List<JellyCastItem> =
         withContext(Dispatchers.IO) {
-            jellyfinApi.itemsApi.getItems(
-                jellyfinApi.userId!!,
-                parentId = parentId,
-                includeItemTypes = includeTypes,
-                recursive = recursive,
-                fields = listOf(ItemFields.GENRES),
-                sortBy = listOf(ItemSortBy.fromName(sortBy.sortString)),
-                sortOrder = listOf(sortOrder),
-                startIndex = startIndex,
-                limit = limit,
-            ).content.items
+            jellyfinApi.itemsApi
+                .getItems(
+                    jellyfinApi.userId!!,
+                    parentId = parentId,
+                    includeItemTypes = includeTypes,
+                    recursive = recursive,
+                    fields = listOf(ItemFields.GENRES),
+                    sortBy = listOf(ItemSortBy.fromName(sortBy.sortString)),
+                    sortOrder = listOf(sortOrder),
+                    startIndex = startIndex,
+                    limit = limit,
+                ).content.items
                 .mapNotNull { it.toJellyCastItem(this@JellyfinRepositoryImpl, database) }
         }
 
@@ -132,12 +146,13 @@ class JellyfinRepositoryImpl(
         recursive: Boolean,
         sortBy: SortBy,
         sortOrder: SortOrder,
-    ): Flow<PagingData<JellyCastItem>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = 10,
-                enablePlaceholders = false,
-            ),
+    ): Flow<PagingData<JellyCastItem>> =
+        Pager(
+            config =
+                PagingConfig(
+                    pageSize = 10,
+                    enablePlaceholders = false,
+                ),
             pagingSourceFactory = {
                 ItemsPagingSource(
                     this,
@@ -149,101 +164,120 @@ class JellyfinRepositoryImpl(
                 )
             },
         ).flow
-    }
 
     override suspend fun getPerson(personId: UUID): JellyCastPerson =
         withContext(Dispatchers.IO) {
-            jellyfinApi.userLibraryApi.getItem(personId, jellyfinApi.userId!!).content.toJellyCastPerson(this@JellyfinRepositoryImpl)
+            jellyfinApi.userLibraryApi
+                .getItem(personId, jellyfinApi.userId!!)
+                .content
+                .toJellyCastPerson(this@JellyfinRepositoryImpl)
         }
 
     override suspend fun getPersonItems(
         personIds: List<UUID>,
         includeTypes: List<BaseItemKind>?,
         recursive: Boolean,
-    ): List<JellyCastItem> = withContext(Dispatchers.IO) {
-        jellyfinApi.itemsApi.getItems(
-            jellyfinApi.userId!!,
-            personIds = personIds,
-            includeItemTypes = includeTypes,
-            recursive = recursive,
-        ).content.items
-            .mapNotNull {
-                it.toJellyCastItem(this@JellyfinRepositoryImpl, database)
-            }
-    }
+    ): List<JellyCastItem> =
+        withContext(Dispatchers.IO) {
+            jellyfinApi.itemsApi
+                .getItems(
+                    jellyfinApi.userId!!,
+                    personIds = personIds,
+                    includeItemTypes = includeTypes,
+                    recursive = recursive,
+                ).content.items
+                .mapNotNull {
+                    it.toJellyCastItem(this@JellyfinRepositoryImpl, database)
+                }
+        }
 
     override suspend fun getFavoriteItems(): List<JellyCastItem> =
         withContext(Dispatchers.IO) {
-            jellyfinApi.itemsApi.getItems(
-                jellyfinApi.userId!!,
-                filters = listOf(ItemFilter.IS_FAVORITE),
-                includeItemTypes = listOf(
-                    BaseItemKind.MOVIE,
-                    BaseItemKind.SERIES,
-                    BaseItemKind.EPISODE,
-                ),
-                recursive = true,
-            ).content.items
+            jellyfinApi.itemsApi
+                .getItems(
+                    jellyfinApi.userId!!,
+                    filters = listOf(ItemFilter.IS_FAVORITE),
+                    includeItemTypes =
+                        listOf(
+                            BaseItemKind.MOVIE,
+                            BaseItemKind.SERIES,
+                            BaseItemKind.EPISODE,
+                        ),
+                    recursive = true,
+                ).content.items
                 .mapNotNull { it.toJellyCastItem(this@JellyfinRepositoryImpl, database) }
         }
 
     override suspend fun getSearchItems(query: String): List<JellyCastItem> =
         withContext(Dispatchers.IO) {
-            jellyfinApi.itemsApi.getItems(
-                jellyfinApi.userId!!,
-                searchTerm = query,
-                includeItemTypes = listOf(
-                    BaseItemKind.MOVIE,
-                    BaseItemKind.SERIES,
-                ),
-                recursive = true,
-            ).content.items
+            jellyfinApi.itemsApi
+                .getItems(
+                    jellyfinApi.userId!!,
+                    searchTerm = query,
+                    includeItemTypes =
+                        listOf(
+                            BaseItemKind.MOVIE,
+                            BaseItemKind.SERIES,
+                        ),
+                    recursive = true,
+                ).content.items
                 .mapNotNull { it.toJellyCastItem(this@JellyfinRepositoryImpl, database) }
         }
 
     override suspend fun getSuggestions(): List<JellyCastItem> {
-        val items = withContext(Dispatchers.IO) {
-            jellyfinApi.suggestionsApi.getSuggestions(
-                jellyfinApi.userId!!,
-                limit = 6,
-                type = listOf(BaseItemKind.MOVIE, BaseItemKind.SERIES),
-            ).content.items
-        }
+        val items =
+            withContext(Dispatchers.IO) {
+                jellyfinApi.suggestionsApi
+                    .getSuggestions(
+                        jellyfinApi.userId!!,
+                        limit = 6,
+                        type = listOf(BaseItemKind.MOVIE, BaseItemKind.SERIES),
+                    ).content.items
+            }
         return items.mapNotNull {
             it.toJellyCastItem(this, database)
         }
     }
 
     override suspend fun getResumeItems(): List<JellyCastItem> {
-        val items = withContext(Dispatchers.IO) {
-            jellyfinApi.itemsApi.getResumeItems(
-                jellyfinApi.userId!!,
-                limit = 12,
-                includeItemTypes = listOf(BaseItemKind.MOVIE, BaseItemKind.EPISODE),
-            ).content.items
-        }
+        val items =
+            withContext(Dispatchers.IO) {
+                jellyfinApi.itemsApi
+                    .getResumeItems(
+                        jellyfinApi.userId!!,
+                        limit = 12,
+                        includeItemTypes = listOf(BaseItemKind.MOVIE, BaseItemKind.EPISODE),
+                    ).content.items
+            }
         return items.mapNotNull {
             it.toJellyCastItem(this, database)
         }
     }
 
     override suspend fun getLatestMedia(parentId: UUID): List<JellyCastItem> {
-        val items = withContext(Dispatchers.IO) {
-            jellyfinApi.userLibraryApi.getLatestMedia(
-                jellyfinApi.userId!!,
-                parentId = parentId,
-                limit = 16,
-            ).content
-        }
+        val items =
+            withContext(Dispatchers.IO) {
+                jellyfinApi.userLibraryApi
+                    .getLatestMedia(
+                        jellyfinApi.userId!!,
+                        parentId = parentId,
+                        limit = 16,
+                    ).content
+            }
         return items.mapNotNull {
             it.toJellyCastItem(this, database)
         }
     }
 
-    override suspend fun getSeasons(seriesId: UUID, offline: Boolean): List<JellyCastSeason> =
+    override suspend fun getSeasons(
+        seriesId: UUID,
+        offline: Boolean,
+    ): List<JellyCastSeason> =
         withContext(Dispatchers.IO) {
             if (!offline) {
-                jellyfinApi.showsApi.getSeasons(seriesId, jellyfinApi.userId!!).content.items
+                jellyfinApi.showsApi
+                    .getSeasons(seriesId, jellyfinApi.userId!!)
+                    .content.items
                     .map { it.toJellyCastSeason(this@JellyfinRepositoryImpl) }
             } else {
                 database.getSeasonsByShowId(seriesId).map { it.toJellyCastSeason(database, jellyfinApi.userId!!) }
@@ -252,12 +286,13 @@ class JellyfinRepositoryImpl(
 
     override suspend fun getNextUp(seriesId: UUID?): List<JellyCastEpisode> =
         withContext(Dispatchers.IO) {
-            jellyfinApi.showsApi.getNextUp(
-                jellyfinApi.userId!!,
-                limit = 24,
-                seriesId = seriesId,
-                enableResumable = false,
-            ).content.items
+            jellyfinApi.showsApi
+                .getNextUp(
+                    jellyfinApi.userId!!,
+                    limit = 24,
+                    seriesId = seriesId,
+                    enableResumable = false,
+                ).content.items
                 .mapNotNull { it.toJellyCastEpisode(this@JellyfinRepositoryImpl) }
         }
 
@@ -271,50 +306,58 @@ class JellyfinRepositoryImpl(
     ): List<JellyCastEpisode> =
         withContext(Dispatchers.IO) {
             if (!offline) {
-                jellyfinApi.showsApi.getEpisodes(
-                    seriesId,
-                    jellyfinApi.userId!!,
-                    seasonId = seasonId,
-                    fields = fields,
-                    startItemId = startItemId,
-                    limit = limit,
-                ).content.items
+                jellyfinApi.showsApi
+                    .getEpisodes(
+                        seriesId,
+                        jellyfinApi.userId!!,
+                        seasonId = seasonId,
+                        fields = fields,
+                        startItemId = startItemId,
+                        limit = limit,
+                    ).content.items
                     .mapNotNull { it.toJellyCastEpisode(this@JellyfinRepositoryImpl, database) }
             } else {
                 database.getEpisodesBySeasonId(seasonId).map { it.toJellyCastEpisode(database, jellyfinApi.userId!!) }
             }
         }
 
-    override suspend fun getMediaSources(itemId: UUID, includePath: Boolean): List<JellyCastSource> =
+    override suspend fun getMediaSources(
+        itemId: UUID,
+        includePath: Boolean,
+    ): List<JellyCastSource> =
         withContext(Dispatchers.IO) {
             val sources = mutableListOf<JellyCastSource>()
             sources.addAll(
-                jellyfinApi.mediaInfoApi.getPostedPlaybackInfo(
-                    itemId,
-                    PlaybackInfoDto(
-                        userId = jellyfinApi.userId!!,
-                        deviceProfile = DeviceProfile(
-                            name = "Direct play all",
-                            maxStaticBitrate = 1_000_000_000,
-                            maxStreamingBitrate = 1_000_000_000,
-                            codecProfiles = emptyList(),
-                            containerProfiles = emptyList(),
-                            directPlayProfiles = emptyList(),
-                            transcodingProfiles = emptyList(),
-                            subtitleProfiles = listOf(
-                                SubtitleProfile("srt", SubtitleDeliveryMethod.EXTERNAL),
-                                SubtitleProfile("ass", SubtitleDeliveryMethod.EXTERNAL),
-                            ),
-                        ),
-                        maxStreamingBitrate = 1_000_000_000,
-                    ),
-                ).content.mediaSources.map {
-                    it.toJellyCastSource(
-                        this@JellyfinRepositoryImpl,
+                jellyfinApi.mediaInfoApi
+                    .getPostedPlaybackInfo(
                         itemId,
-                        includePath,
-                    )
-                },
+                        PlaybackInfoDto(
+                            userId = jellyfinApi.userId!!,
+                            deviceProfile =
+                                DeviceProfile(
+                                    name = "Direct play all",
+                                    maxStaticBitrate = 1_000_000_000,
+                                    maxStreamingBitrate = 1_000_000_000,
+                                    codecProfiles = emptyList(),
+                                    containerProfiles = emptyList(),
+                                    directPlayProfiles = emptyList(),
+                                    transcodingProfiles = emptyList(),
+                                    subtitleProfiles =
+                                        listOf(
+                                            SubtitleProfile("srt", SubtitleDeliveryMethod.EXTERNAL),
+                                            SubtitleProfile("ass", SubtitleDeliveryMethod.EXTERNAL),
+                                        ),
+                                ),
+                            maxStreamingBitrate = 1_000_000_000,
+                        ),
+                    ).content.mediaSources
+                    .map {
+                        it.toJellyCastSource(
+                            this@JellyfinRepositoryImpl,
+                            itemId,
+                            includePath,
+                        )
+                    },
             )
             sources.addAll(
                 database.getSources(itemId).map { it.toJellyCastSource(database) },
@@ -322,7 +365,10 @@ class JellyfinRepositoryImpl(
             sources
         }
 
-    override suspend fun getStreamUrl(itemId: UUID, mediaSourceId: String): String =
+    override suspend fun getStreamUrl(
+        itemId: UUID,
+        mediaSourceId: String,
+    ): String =
         withContext(Dispatchers.IO) {
             try {
                 jellyfinApi.videosApi.getVideoStreamUrl(
@@ -338,18 +384,20 @@ class JellyfinRepositoryImpl(
 
     override suspend fun getSegments(itemId: UUID): List<JellyCastSegment> =
         withContext(Dispatchers.IO) {
-            val databaseSegments = database.getSegments(itemId).map {
-                it.toJellyCastSegment()
-            }
+            val databaseSegments =
+                database.getSegments(itemId).map {
+                    it.toJellyCastSegment()
+                }
 
             if (databaseSegments.isNotEmpty()) {
                 return@withContext databaseSegments
             }
 
             try {
-                val apiSegments = jellyfinApi.mediaSegmentsApi.getItemSegments(itemId).content.items.map {
-                    it.toJellyCastSegment()
-                }
+                val apiSegments =
+                    jellyfinApi.mediaSegmentsApi.getItemSegments(itemId).content.items.map {
+                        it.toJellyCastSegment()
+                    }
 
                 return@withContext apiSegments
             } catch (e: Exception) {
@@ -358,7 +406,11 @@ class JellyfinRepositoryImpl(
             }
         }
 
-    override suspend fun getTrickplayData(itemId: UUID, width: Int, index: Int): ByteArray? =
+    override suspend fun getTrickplayData(
+        itemId: UUID,
+        width: Int,
+        index: Int,
+    ): ByteArray? =
         withContext(Dispatchers.IO) {
             try {
                 try {
@@ -366,7 +418,8 @@ class JellyfinRepositoryImpl(
                     if (sources != null) {
                         return@withContext File(sources.first(), index.toString()).readBytes()
                     }
-                } catch (_: Exception) { }
+                } catch (_: Exception) {
+                }
 
                 return@withContext jellyfinApi.trickplayApi.getTrickplayTileImage(itemId, width, index).content
             } catch (_: Exception) {
@@ -379,21 +432,22 @@ class JellyfinRepositoryImpl(
         withContext(Dispatchers.IO) {
             jellyfinApi.sessionApi.postCapabilities(
                 playableMediaTypes = listOf(MediaType.VIDEO),
-                supportedCommands = listOf(
-                    GeneralCommandType.VOLUME_UP,
-                    GeneralCommandType.VOLUME_DOWN,
-                    GeneralCommandType.TOGGLE_MUTE,
-                    GeneralCommandType.SET_AUDIO_STREAM_INDEX,
-                    GeneralCommandType.SET_SUBTITLE_STREAM_INDEX,
-                    GeneralCommandType.MUTE,
-                    GeneralCommandType.UNMUTE,
-                    GeneralCommandType.SET_VOLUME,
-                    GeneralCommandType.DISPLAY_MESSAGE,
-                    GeneralCommandType.PLAY,
-                    GeneralCommandType.PLAY_STATE,
-                    GeneralCommandType.PLAY_NEXT,
-                    GeneralCommandType.PLAY_MEDIA_SOURCE,
-                ),
+                supportedCommands =
+                    listOf(
+                        GeneralCommandType.VOLUME_UP,
+                        GeneralCommandType.VOLUME_DOWN,
+                        GeneralCommandType.TOGGLE_MUTE,
+                        GeneralCommandType.SET_AUDIO_STREAM_INDEX,
+                        GeneralCommandType.SET_SUBTITLE_STREAM_INDEX,
+                        GeneralCommandType.MUTE,
+                        GeneralCommandType.UNMUTE,
+                        GeneralCommandType.SET_VOLUME,
+                        GeneralCommandType.DISPLAY_MESSAGE,
+                        GeneralCommandType.PLAY,
+                        GeneralCommandType.PLAY_STATE,
+                        GeneralCommandType.PLAY_NEXT,
+                        GeneralCommandType.PLAY_MEDIA_SOURCE,
+                    ),
                 supportsMediaControl = true,
             )
         }
@@ -515,9 +569,12 @@ class JellyfinRepositoryImpl(
         }
     }
 
-    override suspend fun getUserConfiguration(): UserConfiguration = withContext(Dispatchers.IO) {
-        jellyfinApi.userApi.getCurrentUser().content.configuration!!
-    }
+    override suspend fun getUserConfiguration(): UserConfiguration =
+        withContext(Dispatchers.IO) {
+            jellyfinApi.userApi
+                .getCurrentUser()
+                .content.configuration!!
+        }
 
     override suspend fun getDownloads(): List<JellyCastItem> =
         withContext(Dispatchers.IO) {
@@ -529,17 +586,20 @@ class JellyfinRepositoryImpl(
 
             // Include entries for current server and any entries where serverId is null (created before we set serverId)
             items.addAll(
-                database.getMovies()
+                database
+                    .getMovies()
                     .filter { dto -> serverId == null || dto.serverId == serverId || dto.serverId == null }
                     .map { movieDto -> movieDto.toJellyCastMovie(database, userId, baseUrl) },
             )
             items.addAll(
-                database.getShows()
+                database
+                    .getShows()
                     .filter { dto -> serverId == null || dto.serverId == serverId || dto.serverId == null }
                     .map { showDto -> showDto.toJellyCastShow(database, userId, baseUrl) },
             )
             items.addAll(
-                database.getEpisodes()
+                database
+                    .getEpisodes()
                     .filter { dto -> serverId == null || dto.serverId == serverId || dto.serverId == null }
                     .map { episodeDto -> episodeDto.toJellyCastEpisode(database, userId, baseUrl) },
             )
@@ -553,7 +613,5 @@ class JellyfinRepositoryImpl(
             items
         }
 
-    override fun getUserId(): UUID {
-        return jellyfinApi.userId!!
-    }
+    override fun getUserId(): UUID = jellyfinApi.userId!!
 }

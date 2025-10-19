@@ -16,27 +16,28 @@ class CastOptionsProvider : OptionsProvider {
         // Using the Default Media Receiver (basic casting)
         // For custom receiver, replace with your own App ID from Google Cast Console
         val receiverApplicationId = "CC1AD845" // Default Media Receiver
-        
-        val notificationOptions = NotificationOptions.Builder()
-            .setTargetActivityClassName(
-                "dev.jdtech.jellyfin.MainActivity"
-            )
-            .build()
-        
-        val mediaOptions = CastMediaOptions.Builder()
-            .setNotificationOptions(notificationOptions)
-            .setExpandedControllerActivityClassName(
-                "dev.jdtech.jellyfin.cast.ExpandedControlsActivity"
-            )
-            .build()
-        
-        return CastOptions.Builder()
+
+        val notificationOptions =
+            NotificationOptions
+                .Builder()
+                .setTargetActivityClassName(
+                    "dev.jdtech.jellyfin.MainActivity",
+                ).build()
+
+        val mediaOptions =
+            CastMediaOptions
+                .Builder()
+                .setNotificationOptions(notificationOptions)
+                .setExpandedControllerActivityClassName(
+                    "dev.jdtech.jellyfin.cast.ExpandedControlsActivity",
+                ).build()
+
+        return CastOptions
+            .Builder()
             .setReceiverApplicationId(receiverApplicationId)
             .setCastMediaOptions(mediaOptions)
             .build()
     }
-    
-    override fun getAdditionalSessionProviders(context: Context): List<SessionProvider>? {
-        return null
-    }
+
+    override fun getAdditionalSessionProviders(context: Context): List<SessionProvider>? = null
 }

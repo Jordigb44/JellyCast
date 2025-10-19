@@ -29,7 +29,10 @@ interface SetupRepository {
 
     suspend fun loadDisclaimer(): String?
 
-    suspend fun login(username: String, password: String)
+    suspend fun login(
+        username: String,
+        password: String,
+    )
 
     suspend fun loginWithSecret(secret: String)
 

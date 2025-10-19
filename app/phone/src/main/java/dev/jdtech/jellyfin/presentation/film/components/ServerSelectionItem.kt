@@ -51,18 +51,21 @@ fun ServerSelectionItem(
         enabled = server.server.currentUserId != null,
     ) {
         Column(
-            modifier = Modifier
-                .padding(MaterialTheme.spacings.medium),
+            modifier =
+                Modifier
+                    .padding(MaterialTheme.spacings.medium),
         ) {
             Row(
-                modifier = Modifier
-                    .height(48.dp),
+                modifier =
+                    Modifier
+                        .height(48.dp),
             ) {
                 Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape)
-                        .background(if (selected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent),
+                    modifier =
+                        Modifier
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(if (selected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent),
                 ) {
                     Icon(
                         painter = painterResource(CoreR.drawable.ic_server),
@@ -73,8 +76,9 @@ fun ServerSelectionItem(
                 }
                 Spacer(modifier = Modifier.width(MaterialTheme.spacings.medium))
                 Column(
-                    modifier = Modifier
-                        .fillMaxHeight(),
+                    modifier =
+                        Modifier
+                            .fillMaxHeight(),
                     verticalArrangement = Arrangement.Center,
                 ) {
                     Text(
@@ -97,25 +101,36 @@ fun ServerSelectionItem(
                 Spacer(modifier = Modifier.height(MaterialTheme.spacings.small))
                 server.addresses.forEach { address ->
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(MaterialTheme.spacings.medium))
-                            .clickable(
-                                onClick = {
-                                    onClickAddress(address.id)
-                                },
-                            ),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(MaterialTheme.spacings.medium))
+                                .clickable(
+                                    onClick = {
+                                        onClickAddress(address.id)
+                                    },
+                                ),
                     ) {
                         Row(
-                            modifier = Modifier
-                                .padding(all = MaterialTheme.spacings.medium),
+                            modifier =
+                                Modifier
+                                    .padding(all = MaterialTheme.spacings.medium),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Box(
-                                modifier = Modifier
-                                    .size(8.dp)
-                                    .clip(CircleShape)
-                                    .background(if (address.id == server.server.currentServerAddressId) MaterialTheme.colorScheme.primaryContainer else Color.Transparent),
+                                modifier =
+                                    Modifier
+                                        .size(8.dp)
+                                        .clip(CircleShape)
+                                        .background(
+                                            if (address.id ==
+                                                server.server.currentServerAddressId
+                                            ) {
+                                                MaterialTheme.colorScheme.primaryContainer
+                                            } else {
+                                                Color.Transparent
+                                            },
+                                        ),
                             )
                             Spacer(modifier = Modifier.width(MaterialTheme.spacings.medium))
                             Text(
@@ -136,13 +151,15 @@ fun ServerSelectionItem(
 private fun ServerSelectionItemPreview() {
     JellyCastTheme {
         ServerSelectionItem(
-            server = ServerWithAddresses(
-                server = dummyServer,
-                addresses = listOf(
-                    dummyServerAddress,
+            server =
+                ServerWithAddresses(
+                    server = dummyServer,
+                    addresses =
+                        listOf(
+                            dummyServerAddress,
+                        ),
+                    user = null,
                 ),
-                user = null,
-            ),
             selected = false,
             onClick = {},
             onClickAddress = {},
@@ -155,14 +172,16 @@ private fun ServerSelectionItemPreview() {
 private fun ServerSelectionItemSelectedPreview() {
     JellyCastTheme {
         ServerSelectionItem(
-            server = ServerWithAddresses(
-                server = dummyServer,
-                addresses = listOf(
-                    dummyServerAddress,
-                    dummyServerAddress,
+            server =
+                ServerWithAddresses(
+                    server = dummyServer,
+                    addresses =
+                        listOf(
+                            dummyServerAddress,
+                            dummyServerAddress,
+                        ),
+                    user = null,
                 ),
-                user = null,
-            ),
             selected = true,
             onClick = {},
             onClickAddress = {},

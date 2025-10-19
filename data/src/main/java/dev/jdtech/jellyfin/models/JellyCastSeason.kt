@@ -27,10 +27,8 @@ data class JellyCastSeason(
     override val chapters: List<JellyCastChapter> = emptyList(),
 ) : JellyCastItem
 
-fun BaseItemDto.toJellyCastSeason(
-    jellyfinRepository: JellyfinRepository,
-): JellyCastSeason {
-    return JellyCastSeason(
+fun BaseItemDto.toJellyCastSeason(jellyfinRepository: JellyfinRepository): JellyCastSeason =
+    JellyCastSeason(
         id = id,
         name = name.orEmpty(),
         originalTitle = originalTitle,
@@ -47,9 +45,11 @@ fun BaseItemDto.toJellyCastSeason(
         seriesName = seriesName.orEmpty(),
         images = toJellyCastImages(jellyfinRepository),
     )
-}
 
-fun JellyCastSeasonDto.toJellyCastSeason(database: ServerDatabaseDao, userId: UUID): JellyCastSeason {
+fun JellyCastSeasonDto.toJellyCastSeason(
+    database: ServerDatabaseDao,
+    userId: UUID,
+): JellyCastSeason {
     val userData = database.getUserDataOrCreateNew(id, userId)
     return JellyCastSeason(
         id = id,

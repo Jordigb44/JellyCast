@@ -131,21 +131,23 @@ private fun ShowScreenLayout(
     ) {
         state.show?.let { show ->
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(scrollState),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(scrollState),
             ) {
                 ItemHeader(
                     item = show,
                     scrollState = scrollState,
                     content = {
                         Column(
-                            modifier = Modifier
-                                .align(Alignment.BottomStart)
-                                .padding(
-                                    start = paddingStart,
-                                    end = paddingEnd,
-                                ),
+                            modifier =
+                                Modifier
+                                    .align(Alignment.BottomStart)
+                                    .padding(
+                                        start = paddingStart,
+                                        end = paddingEnd,
+                                    ),
                         ) {
                             Text(
                                 text = show.name,
@@ -167,11 +169,12 @@ private fun ShowScreenLayout(
                     },
                 )
                 Column(
-                    modifier = Modifier
-                        .padding(
-                            start = paddingStart,
-                            end = paddingEnd,
-                        ),
+                    modifier =
+                        Modifier
+                            .padding(
+                                start = paddingStart,
+                                end = paddingEnd,
+                            ),
                 ) {
                     Spacer(Modifier.height(MaterialTheme.spacings.small))
                     Row(
@@ -253,28 +256,31 @@ private fun ShowScreenLayout(
                         )
                         Spacer(Modifier.height(MaterialTheme.spacings.small))
                         Column(
-                            modifier = Modifier
-                                .widthIn(max = 420.dp)
-                                .clip(MaterialTheme.shapes.small)
-                                .clickable {
-                                    onAction(ShowAction.NavigateToItem(nextUp))
-                                },
+                            modifier =
+                                Modifier
+                                    .widthIn(max = 420.dp)
+                                    .clip(MaterialTheme.shapes.small)
+                                    .clickable {
+                                        onAction(ShowAction.NavigateToItem(nextUp))
+                                    },
                         ) {
                             ItemPoster(
                                 item = nextUp,
                                 direction = Direction.HORIZONTAL,
-                                modifier = Modifier.clip(
-                                    MaterialTheme.shapes.medium,
-                                ),
+                                modifier =
+                                    Modifier.clip(
+                                        MaterialTheme.shapes.medium,
+                                    ),
                             )
                             Spacer(Modifier.height(MaterialTheme.spacings.extraSmall))
                             Text(
-                                text = stringResource(
-                                    id = CoreR.string.episode_name_extended,
-                                    nextUp.parentIndexNumber,
-                                    nextUp.indexNumber,
-                                    nextUp.name,
-                                ),
+                                text =
+                                    stringResource(
+                                        id = CoreR.string.episode_name_extended,
+                                        nextUp.parentIndexNumber,
+                                        nextUp.indexNumber,
+                                        nextUp.name,
+                                    ),
                                 style = MaterialTheme.typography.bodyMedium,
                             )
                         }
@@ -284,11 +290,12 @@ private fun ShowScreenLayout(
 
                 if (state.seasons.isNotEmpty()) {
                     Column(
-                        modifier = Modifier
-                            .padding(
-                                start = paddingStart,
-                                end = paddingEnd,
-                            ),
+                        modifier =
+                            Modifier
+                                .padding(
+                                    start = paddingStart,
+                                    end = paddingEnd,
+                                ),
                     ) {
                         Text(
                             text = stringResource(CoreR.string.seasons),
@@ -297,10 +304,11 @@ private fun ShowScreenLayout(
                         Spacer(Modifier.height(MaterialTheme.spacings.small))
                     }
                     LazyRow(
-                        contentPadding = PaddingValues(
-                            start = paddingStart,
-                            end = paddingEnd,
-                        ),
+                        contentPadding =
+                            PaddingValues(
+                                start = paddingStart,
+                                end = paddingEnd,
+                            ),
                         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.default),
                     ) {
                         items(
@@ -327,47 +335,53 @@ private fun ShowScreenLayout(
                         onActorClick = { personId ->
                             onAction(ShowAction.NavigateToPerson(personId))
                         },
-                        contentPadding = PaddingValues(
-                            start = paddingStart,
-                            end = paddingEnd,
-                        ),
+                        contentPadding =
+                            PaddingValues(
+                                start = paddingStart,
+                                end = paddingEnd,
+                            ),
                     )
                 }
                 Spacer(Modifier.height(paddingBottom))
             }
         } ?: run {
             CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
+                modifier =
+                    Modifier
+                        .align(Alignment.Center),
             )
         }
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = safePadding.start + MaterialTheme.spacings.small,
-                    top = safePadding.top + MaterialTheme.spacings.small,
-                    end = safePadding.end + MaterialTheme.spacings.small,
-                ),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = safePadding.start + MaterialTheme.spacings.small,
+                        top = safePadding.top + MaterialTheme.spacings.small,
+                        end = safePadding.end + MaterialTheme.spacings.small,
+                    ),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             IconButton(
                 onClick = { onAction(ShowAction.OnBackClick) },
-                modifier = Modifier
-                    .alpha(0.7f),
-                colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White,
-                ),
+                modifier =
+                    Modifier
+                        .alpha(0.7f),
+                colors =
+                    IconButtonDefaults.iconButtonColors(
+                        containerColor = Color.Black,
+                        contentColor = Color.White,
+                    ),
             ) {
                 Icon(
                     painter = painterResource(CoreR.drawable.ic_arrow_left),
                     contentDescription = null,
                 )
             }
-            
-            dev.jdtech.jellyfin.presentation.components.CastButton()
+
+            dev.jdtech.jellyfin.presentation.components
+                .CastButton()
         }
     }
 }
@@ -377,9 +391,10 @@ private fun ShowScreenLayout(
 private fun EpisodeScreenLayoutPreview() {
     JellyCastTheme {
         ShowScreenLayout(
-            state = ShowState(
-                show = dummyShow,
-            ),
+            state =
+                ShowState(
+                    show = dummyShow,
+                ),
             onAction = {},
         )
     }

@@ -71,7 +71,8 @@ fun SettingsSubScreen(
             is SettingsEvent.LaunchIntent -> {
                 try {
                     context.startActivity(event.intent)
-                } catch (_: Exception) { }
+                } catch (_: Exception) {
+                }
             }
         }
     }
@@ -100,17 +101,23 @@ private fun SettingsSubScreenLayout(
     val focusRequester = remember { FocusRequester() }
 
     var focusedPreference by remember(state.preferenceGroups.isNotEmpty()) {
-        mutableStateOf(state.preferenceGroups.firstOrNull()?.preferences?.firstOrNull())
+        mutableStateOf(
+            state.preferenceGroups
+                .firstOrNull()
+                ?.preferences
+                ?.firstOrNull(),
+        )
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                start = MaterialTheme.spacings.large,
-                top = MaterialTheme.spacings.default * 2,
-                end = MaterialTheme.spacings.large,
-            ),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(
+                    start = MaterialTheme.spacings.large,
+                    top = MaterialTheme.spacings.default * 2,
+                    end = MaterialTheme.spacings.large,
+                ),
     ) {
         Column {
             Text(
@@ -128,9 +135,10 @@ private fun SettingsSubScreenLayout(
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.default),
                 contentPadding = PaddingValues(vertical = MaterialTheme.spacings.large),
-                modifier = Modifier
-                    .weight(1f)
-                    .focusRequester(focusRequester),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .focusRequester(focusRequester),
             ) {
                 items(state.preferenceGroups) { group ->
                     SettingsGroupCard(
@@ -152,9 +160,10 @@ private fun SettingsSubScreenLayout(
                         is PreferenceSelect -> {
                             SettingsSelectDetailsCard(
                                 preference = preference,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(bottom = MaterialTheme.spacings.large),
+                                modifier =
+                                    Modifier
+                                        .fillMaxSize()
+                                        .padding(bottom = MaterialTheme.spacings.large),
                                 onUpdate = { value ->
                                     onAction(
                                         SettingsAction.OnUpdate(
@@ -167,9 +176,10 @@ private fun SettingsSubScreenLayout(
                         is PreferenceMultiSelect -> {
                             SettingsMultiSelectDetailsCard(
                                 preference = preference,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(bottom = MaterialTheme.spacings.large),
+                                modifier =
+                                    Modifier
+                                        .fillMaxSize()
+                                        .padding(bottom = MaterialTheme.spacings.large),
                                 onUpdate = { value ->
                                     onAction(
                                         SettingsAction.OnUpdate(
@@ -195,20 +205,23 @@ private fun SettingsSubScreenLayoutPreview() {
     JellyCastTheme {
         SettingsSubScreenLayout(
             title = SettingsR.string.title_settings,
-            state = SettingsState(
-                preferenceGroups = listOf(
-                    PreferenceGroup(
-                        preferences = listOf(
-                            PreferenceSelect(
-                                nameStringResource = SettingsR.string.pref_player_mpv_hwdec,
-                                backendPreference = Preference("", ""),
-                                options = SettingsR.array.mpv_hwdec,
-                                optionValues = SettingsR.array.mpv_hwdec,
+            state =
+                SettingsState(
+                    preferenceGroups =
+                        listOf(
+                            PreferenceGroup(
+                                preferences =
+                                    listOf(
+                                        PreferenceSelect(
+                                            nameStringResource = SettingsR.string.pref_player_mpv_hwdec,
+                                            backendPreference = Preference("", ""),
+                                            options = SettingsR.array.mpv_hwdec,
+                                            optionValues = SettingsR.array.mpv_hwdec,
+                                        ),
+                                    ),
                             ),
                         ),
-                    ),
                 ),
-            ),
             onAction = {},
         )
     }

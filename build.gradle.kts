@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.aboutlibraries) apply false
     alias(libs.plugins.aboutlibraries.android) apply false
     alias(libs.plugins.ksp) apply false
-    alias(libs.plugins.ktlint) apply false
 }
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile

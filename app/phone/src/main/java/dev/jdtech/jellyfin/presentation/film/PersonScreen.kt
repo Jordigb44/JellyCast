@@ -94,26 +94,29 @@ private fun PersonScreenLayout(
     val paddingEnd = safePadding.end + MaterialTheme.spacings.default
     val paddingBottom = safePadding.bottom + MaterialTheme.spacings.default
 
-    val itemsPadding = PaddingValues(
-        start = paddingStart,
-        end = paddingEnd,
-    )
+    val itemsPadding =
+        PaddingValues(
+            start = paddingStart,
+            end = paddingEnd,
+        )
 
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
         state.person?.let { person ->
             Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState()),
+                modifier =
+                    Modifier
+                        .verticalScroll(rememberScrollState()),
             ) {
                 Spacer(Modifier.height(paddingTop))
                 when {
                     windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) -> {
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(itemsPadding),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(itemsPadding),
                             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.default),
                         ) {
                             PersonImage(person)
@@ -135,9 +138,10 @@ private fun PersonScreenLayout(
                     }
                     else -> {
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(itemsPadding),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(itemsPadding),
                             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.medium),
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
@@ -165,8 +169,9 @@ private fun PersonScreenLayout(
                         Column {
                             Text(
                                 text = stringResource(CoreR.string.movies_label),
-                                modifier = Modifier
-                                    .padding(itemsPadding),
+                                modifier =
+                                    Modifier
+                                        .padding(itemsPadding),
                                 style = MaterialTheme.typography.titleMedium,
                             )
                             Spacer(modifier = Modifier.height(MaterialTheme.spacings.extraSmall))
@@ -191,8 +196,9 @@ private fun PersonScreenLayout(
                         Column {
                             Text(
                                 text = stringResource(CoreR.string.shows_label),
-                                modifier = Modifier
-                                    .padding(itemsPadding),
+                                modifier =
+                                    Modifier
+                                        .padding(itemsPadding),
                                 style = MaterialTheme.typography.titleMedium,
                             )
                             Spacer(modifier = Modifier.height(MaterialTheme.spacings.extraSmall))
@@ -218,36 +224,41 @@ private fun PersonScreenLayout(
             }
         } ?: run {
             CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
+                modifier =
+                    Modifier
+                        .align(Alignment.Center),
             )
         }
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .safeDrawingPadding()
-                .padding(horizontal = MaterialTheme.spacings.small),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .safeDrawingPadding()
+                    .padding(horizontal = MaterialTheme.spacings.small),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             IconButton(
                 onClick = {
                     onAction(PersonAction.NavigateBack)
                 },
-                modifier = Modifier
-                    .alpha(0.7f),
-                colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White,
-                ),
+                modifier =
+                    Modifier
+                        .alpha(0.7f),
+                colors =
+                    IconButtonDefaults.iconButtonColors(
+                        containerColor = Color.Black,
+                        contentColor = Color.White,
+                    ),
             ) {
                 Icon(
                     painter = painterResource(CoreR.drawable.ic_arrow_left),
                     contentDescription = null,
                 )
             }
-            
-            dev.jdtech.jellyfin.presentation.components.CastButton()
+
+            dev.jdtech.jellyfin.presentation.components
+                .CastButton()
         }
     }
 }
@@ -261,13 +272,14 @@ private fun PersonImage(
         model = person.images.primary,
         contentDescription = null,
         contentScale = ContentScale.Crop,
-        modifier = modifier
-            .height(320.dp)
-            .aspectRatio(0.66f)
-            .clip(MaterialTheme.shapes.extraLarge)
-            .background(
-                MaterialTheme.colorScheme.surfaceContainer,
-            ),
+        modifier =
+            modifier
+                .height(320.dp)
+                .aspectRatio(0.66f)
+                .clip(MaterialTheme.shapes.extraLarge)
+                .background(
+                    MaterialTheme.colorScheme.surfaceContainer,
+                ),
     )
 }
 
@@ -276,10 +288,11 @@ private fun PersonImage(
 private fun PersonScreenLayoutPreview() {
     JellyCastTheme {
         PersonScreenLayout(
-            state = PersonState(
-                person = dummyPersonDetail,
-                starredInMovies = dummyMovies,
-            ),
+            state =
+                PersonState(
+                    person = dummyPersonDetail,
+                    starredInMovies = dummyMovies,
+                ),
             onAction = {},
         )
     }

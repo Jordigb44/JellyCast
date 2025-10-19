@@ -16,12 +16,11 @@ data class JellyCastUserDataDto(
     val toBeSynced: Boolean = false,
 )
 
-fun JellyCastItem.toJellyCastUserDataDto(userId: UUID): JellyCastUserDataDto {
-    return JellyCastUserDataDto(
+fun JellyCastItem.toJellyCastUserDataDto(userId: UUID): JellyCastUserDataDto =
+    JellyCastUserDataDto(
         userId = userId,
         itemId = id,
         played = played,
         favorite = favorite,
         playbackPositionTicks = playbackPositionTicks,
     )
-}

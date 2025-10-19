@@ -72,17 +72,19 @@ fun AddServerAddressDialog(
             onValueChange = {
                 textFieldValue = it
             },
-            modifier = Modifier
-                .padding(contentPadding)
-                .fillMaxWidth()
-                .focusRequester(focusRequester),
+            modifier =
+                Modifier
+                    .padding(contentPadding)
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
             placeholder = {
                 Text("http://<server_ip>:8096")
             },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Uri,
-                imeAction = ImeAction.Done,
-            ),
+            keyboardOptions =
+                KeyboardOptions(
+                    keyboardType = KeyboardType.Uri,
+                    imeAction = ImeAction.Done,
+                ),
             singleLine = true,
         )
     }

@@ -22,9 +22,7 @@ data class JellyCastCollection(
     override val chapters: List<JellyCastChapter> = emptyList(),
 ) : JellyCastItem
 
-fun BaseItemDto.toJellyCastCollection(
-    jellyfinRepository: JellyfinRepository,
-): JellyCastCollection? {
+fun BaseItemDto.toJellyCastCollection(jellyfinRepository: JellyfinRepository): JellyCastCollection? {
     val type = CollectionType.fromString(collectionType?.serialName)
 
     if (type !in CollectionType.supported) {

@@ -23,7 +23,10 @@ class PreviewScrubListener(
     private val roundedCorners = RoundedCornersTransformation(10f)
     private var currentBitMap: Bitmap? = null
 
-    override fun onScrubStart(timeBar: TimeBar, position: Long) {
+    override fun onScrubStart(
+        timeBar: TimeBar,
+        position: Long,
+    ) {
         Timber.d("Scrubbing started at $position")
 
         if (currentTrickplay == null) {
@@ -34,7 +37,10 @@ class PreviewScrubListener(
         onScrubMove(timeBar, position)
     }
 
-    override fun onScrubMove(timeBar: TimeBar, position: Long) {
+    override fun onScrubMove(
+        timeBar: TimeBar,
+        position: Long,
+    ) {
         Timber.d("Scrubbing to $position")
 
         try {
@@ -50,11 +56,12 @@ class PreviewScrubListener(
             val startX = timeBarView.left + (timeBarView.right - timeBarView.left) * offset - scrubbingPreview.width / 2
             val endX = startX + scrubbingPreview.width
 
-            val layoutX = when {
-                startX >= minX && endX <= maxX -> startX
-                startX < minX -> minX
-                else -> maxX - scrubbingPreview.width
-            }.toFloat()
+            val layoutX =
+                when {
+                    startX >= minX && endX <= maxX -> startX
+                    startX < minX -> minX
+                    else -> maxX - scrubbingPreview.width
+                }.toFloat()
 
             scrubbingPreview.x = layoutX
 
@@ -72,7 +79,11 @@ class PreviewScrubListener(
         }
     }
 
-    override fun onScrubStop(timeBar: TimeBar, position: Long, canceled: Boolean) {
+    override fun onScrubStop(
+        timeBar: TimeBar,
+        position: Long,
+        canceled: Boolean,
+    ) {
         Timber.d("Scrubbing stopped at $position")
 
         scrubbingPreview.visibility = View.GONE

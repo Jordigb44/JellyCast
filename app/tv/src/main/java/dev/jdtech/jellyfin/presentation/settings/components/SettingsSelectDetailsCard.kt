@@ -45,25 +45,27 @@ fun SettingsSelectDetailsCard(
     val optionNames = stringArrayResource(preference.options)
     val notSetString = stringResource(CoreR.string.not_set)
 
-    val options = remember(preference.nameStringResource) {
-        val options = mutableListOf<Pair<String?, String>>()
+    val options =
+        remember(preference.nameStringResource) {
+            val options = mutableListOf<Pair<String?, String>>()
 
-        if (preference.optionsIncludeNull) {
-            options.add(Pair(null, notSetString))
+            if (preference.optionsIncludeNull) {
+                options.add(Pair(null, notSetString))
+            }
+            options.addAll(optionValues.zip(optionNames))
+
+            options
         }
-        options.addAll(optionValues.zip(optionNames))
-
-        options
-    }
 
     Surface(
         modifier = modifier,
     ) {
         Column(
-            modifier = Modifier.padding(
-                horizontal = MaterialTheme.spacings.default,
-                vertical = MaterialTheme.spacings.medium,
-            ),
+            modifier =
+                Modifier.padding(
+                    horizontal = MaterialTheme.spacings.default,
+                    vertical = MaterialTheme.spacings.medium,
+                ),
         ) {
             Text(text = stringResource(id = preference.nameStringResource), style = MaterialTheme.typography.headlineMedium)
             preference.descriptionStringRes?.let {
@@ -101,19 +103,22 @@ private fun SettingsSelectDetailsCardItem(
     Surface(
         onClick = { onSelect(option.first) },
         shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(4.dp)),
-        colors = ClickableSurfaceDefaults.colors(
-            containerColor = Color.Transparent,
-            focusedContainerColor = Color.Transparent,
-        ),
-        border = ClickableSurfaceDefaults.border(
-            focusedBorder = Border(
-                BorderStroke(
-                    4.dp,
-                    Color.White,
-                ),
-                shape = RoundedCornerShape(10.dp),
+        colors =
+            ClickableSurfaceDefaults.colors(
+                containerColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
             ),
-        ),
+        border =
+            ClickableSurfaceDefaults.border(
+                focusedBorder =
+                    Border(
+                        BorderStroke(
+                            4.dp,
+                            Color.White,
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                    ),
+            ),
         scale = ClickableSurfaceScale.None,
     ) {
         Row(
@@ -136,12 +141,13 @@ private fun SettingsSelectDetailsCardItem(
 private fun SettingsSelectDetailsCardPreview() {
     JellyCastTheme {
         SettingsSelectDetailsCard(
-            preference = PreferenceSelect(
-                nameStringResource = SettingsR.string.settings_preferred_audio_language,
-                backendPreference = Preference("", ""),
-                options = SettingsR.array.languages,
-                optionValues = SettingsR.array.languages_values,
-            ),
+            preference =
+                PreferenceSelect(
+                    nameStringResource = SettingsR.string.settings_preferred_audio_language,
+                    backendPreference = Preference("", ""),
+                    options = SettingsR.array.languages,
+                    optionValues = SettingsR.array.languages_values,
+                ),
             onUpdate = {},
         )
     }

@@ -38,13 +38,15 @@ fun SettingsIntInputCard(
         mutableStateOf(false)
     }
 
-    val prefix = preference.prefixRes?.let {
-        stringResource(it)
-    }
+    val prefix =
+        preference.prefixRes?.let {
+            stringResource(it)
+        }
 
-    val suffix = preference.suffixRes?.let {
-        stringResource(it)
-    }
+    val suffix =
+        preference.suffixRes?.let {
+            stringResource(it)
+        }
 
     SettingsNumberInputCard(
         preference = preference,
@@ -79,13 +81,15 @@ fun SettingsLongInputCard(
         mutableStateOf(false)
     }
 
-    val prefix = preference.prefixRes?.let {
-        stringResource(it)
-    }
+    val prefix =
+        preference.prefixRes?.let {
+            stringResource(it)
+        }
 
-    val suffix = preference.suffixRes?.let {
-        stringResource(it)
-    }
+    val suffix =
+        preference.suffixRes?.let {
+            stringResource(it)
+        }
 
     SettingsNumberInputCard(
         preference = preference,
@@ -155,12 +159,13 @@ fun SettingsNumberInputCard(
 private fun SettingsIntInputCardPreview() {
     JellyCastTheme {
         SettingsIntInputCard(
-            preference = PreferenceIntInput(
-                nameStringResource = SettingsR.string.settings_cache_size,
-                backendPreference = PreferenceBackend("", 0),
-                suffixRes = SettingsR.string.mb,
-                value = 25,
-            ),
+            preference =
+                PreferenceIntInput(
+                    nameStringResource = SettingsR.string.settings_cache_size,
+                    backendPreference = PreferenceBackend("", 0),
+                    suffixRes = SettingsR.string.mb,
+                    value = 25,
+                ),
             onUpdate = {},
         )
     }
@@ -171,12 +176,13 @@ private fun SettingsIntInputCardPreview() {
 private fun SettingsLongInputCardPreview() {
     JellyCastTheme {
         SettingsLongInputCard(
-            preference = PreferenceLongInput(
-                nameStringResource = SettingsR.string.settings_cache_size,
-                backendPreference = PreferenceBackend("", 0L),
-                suffixRes = SettingsR.string.mb,
-                value = 25,
-            ),
+            preference =
+                PreferenceLongInput(
+                    nameStringResource = SettingsR.string.settings_cache_size,
+                    backendPreference = PreferenceBackend("", 0L),
+                    suffixRes = SettingsR.string.mb,
+                    value = 25,
+                ),
             onUpdate = {},
         )
     }

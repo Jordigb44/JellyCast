@@ -20,7 +20,5 @@ object SetupDataModule {
         jellyfinApi: JellyfinApi,
         serverDatabase: ServerDatabaseDao,
         appPreferences: AppPreferences,
-    ): SetupRepository {
-        return SetupRepositoryImpl(jellyfinApi = jellyfinApi, database = serverDatabase, appPreferences = appPreferences)
-    }
+    ): SetupRepository = SetupRepositoryImpl(jellyfinApi = jellyfinApi, database = serverDatabase, appPreferences = appPreferences)
 }

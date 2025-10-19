@@ -37,8 +37,9 @@ fun DiscoveredServerItem(
             modifier = Modifier.size(64.dp),
         ) {
             Box(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier =
+                    Modifier
+                        .fillMaxSize(),
             ) {
                 Icon(
                     painter = painterResource(CoreR.drawable.ic_server),

@@ -72,10 +72,11 @@ fun SettingsCategoryCard(
 private fun SettingsCategoryCardPreview() {
     JellyCastTheme {
         SettingsCategoryCard(
-            preference = PreferenceCategory(
-                nameStringResource = SettingsR.string.settings_category_player,
-                iconDrawableId = CoreR.drawable.ic_play,
-            ),
+            preference =
+                PreferenceCategory(
+                    nameStringResource = SettingsR.string.settings_category_player,
+                    iconDrawableId = CoreR.drawable.ic_play,
+                ),
         )
     }
 }

@@ -21,62 +21,62 @@ import dev.jdtech.jellyfin.core.R as CoreR
 
 @HiltViewModel
 class FavoritesViewModel
-@Inject
-constructor(
-    private val repository: JellyfinRepository,
-) : ViewModel() {
-    private val _state = MutableStateFlow(CollectionState())
-    val state = _state.asStateFlow()
+    @Inject
+    constructor(
+        private val repository: JellyfinRepository,
+    ) : ViewModel() {
+        private val _state = MutableStateFlow(CollectionState())
+        val state = _state.asStateFlow()
 
-    fun loadItems() {
-        viewModelScope.launch {
-            _state.emit(_state.value.copy(isLoading = true, error = null))
+        fun loadItems() {
+            viewModelScope.launch {
+                _state.emit(_state.value.copy(isLoading = true, error = null))
 
-            try {
-                val items = repository.getFavoriteItems()
+                try {
+                    val items = repository.getFavoriteItems()
 
-                val sections = mutableListOf<CollectionSection>()
+                    val sections = mutableListOf<CollectionSection>()
 
-                withContext(Dispatchers.Default) {
-                    CollectionSection(
-                        Constants.FAVORITE_TYPE_MOVIES,
-                        UiText.StringResource(CoreR.string.movies_label),
-                        items.filterIsInstance<JellyCastMovie>(),
-                    ).let {
-                        if (it.items.isNotEmpty()) {
-                            sections.add(
-                                it,
-                            )
+                    withContext(Dispatchers.Default) {
+                        CollectionSection(
+                            Constants.FAVORITE_TYPE_MOVIES,
+                            UiText.StringResource(CoreR.string.movies_label),
+                            items.filterIsInstance<JellyCastMovie>(),
+                        ).let {
+                            if (it.items.isNotEmpty()) {
+                                sections.add(
+                                    it,
+                                )
+                            }
+                        }
+                        CollectionSection(
+                            Constants.FAVORITE_TYPE_SHOWS,
+                            UiText.StringResource(CoreR.string.shows_label),
+                            items.filterIsInstance<JellyCastShow>(),
+                        ).let {
+                            if (it.items.isNotEmpty()) {
+                                sections.add(
+                                    it,
+                                )
+                            }
+                        }
+                        CollectionSection(
+                            Constants.FAVORITE_TYPE_EPISODES,
+                            UiText.StringResource(CoreR.string.episodes_label),
+                            items.filterIsInstance<JellyCastEpisode>(),
+                        ).let {
+                            if (it.items.isNotEmpty()) {
+                                sections.add(
+                                    it,
+                                )
+                            }
                         }
                     }
-                    CollectionSection(
-                        Constants.FAVORITE_TYPE_SHOWS,
-                        UiText.StringResource(CoreR.string.shows_label),
-                        items.filterIsInstance<JellyCastShow>(),
-                    ).let {
-                        if (it.items.isNotEmpty()) {
-                            sections.add(
-                                it,
-                            )
-                        }
-                    }
-                    CollectionSection(
-                        Constants.FAVORITE_TYPE_EPISODES,
-                        UiText.StringResource(CoreR.string.episodes_label),
-                        items.filterIsInstance<JellyCastEpisode>(),
-                    ).let {
-                        if (it.items.isNotEmpty()) {
-                            sections.add(
-                                it,
-                            )
-                        }
-                    }
+
+                    _state.emit(_state.value.copy(isLoading = false, sections = sections))
+                } catch (e: Exception) {
+                    _state.emit(_state.value.copy(isLoading = false, error = e))
                 }
-
-                _state.emit(_state.value.copy(isLoading = false, sections = sections))
-            } catch (e: Exception) {
-                _state.emit(_state.value.copy(isLoading = false, error = e))
             }
         }
     }
-}

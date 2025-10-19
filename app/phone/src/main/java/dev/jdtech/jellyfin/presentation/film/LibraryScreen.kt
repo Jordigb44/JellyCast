@@ -111,9 +111,10 @@ private fun LibraryScreenLayout(
     state: LibraryState,
     onAction: (LibraryAction) -> Unit,
 ) {
-    val contentPadding = PaddingValues(
-        all = MaterialTheme.spacings.default,
-    )
+    val contentPadding =
+        PaddingValues(
+            all = MaterialTheme.spacings.default,
+        )
 
     val items = state.items.collectAsLazyPagingItems()
 
@@ -124,10 +125,11 @@ private fun LibraryScreenLayout(
     }
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .recalculateWindowInsets()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .recalculateWindowInsets()
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {
@@ -146,7 +148,8 @@ private fun LibraryScreenLayout(
                     }
                 },
                 actions = {
-                    dev.jdtech.jellyfin.presentation.components.CastButton()
+                    dev.jdtech.jellyfin.presentation.components
+                        .CastButton()
                     IconButton(
                         onClick = {
                             showSortByDialog = true
@@ -169,23 +172,25 @@ private fun LibraryScreenLayout(
                 onRefresh = {
                     items.refresh()
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(contentPadding + innerPadding),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(contentPadding + innerPadding),
             )
             LazyVerticalGrid(
                 columns = GridCellsAdaptiveWithMinColumns(minSize = 160.dp, minColumns = 2),
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = if (state.genres.isNotEmpty()) {
-                    // When genres exist, remove top padding to make carousel stick to top
-                    PaddingValues(
-                        start = MaterialTheme.spacings.default,
-                        end = MaterialTheme.spacings.default,
-                        bottom = MaterialTheme.spacings.default,
-                    ) + innerPadding
-                } else {
-                    contentPadding + innerPadding
-                },
+                contentPadding =
+                    if (state.genres.isNotEmpty()) {
+                        // When genres exist, remove top padding to make carousel stick to top
+                        PaddingValues(
+                            start = MaterialTheme.spacings.default,
+                            end = MaterialTheme.spacings.default,
+                            bottom = MaterialTheme.spacings.default,
+                        ) + innerPadding
+                    } else {
+                        contentPadding + innerPadding
+                    },
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.default),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.default),
             ) {
@@ -193,9 +198,10 @@ private fun LibraryScreenLayout(
                 if (state.genres.isNotEmpty()) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         LazyRow(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = MaterialTheme.spacings.small),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = MaterialTheme.spacings.small),
                             contentPadding = PaddingValues(horizontal = MaterialTheme.spacings.medium),
                             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.small),
                         ) {
@@ -218,7 +224,7 @@ private fun LibraryScreenLayout(
                         }
                     }
                 }
-                
+
                 items(
                     count = items.itemCount,
                     key = items.itemKey { it.id },
@@ -257,21 +263,26 @@ private fun LibraryScreenLayout(
 }
 
 @Composable
-private fun ErrorGroup(loadStates: CombinedLoadStates, onRefresh: () -> Unit, modifier: Modifier = Modifier) {
+private fun ErrorGroup(
+    loadStates: CombinedLoadStates,
+    onRefresh: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     var showErrorDialog by rememberSaveable { mutableStateOf(false) }
 
-    val loadStateError = when {
-        loadStates.refresh is LoadState.Error -> {
-            loadStates.refresh as LoadState.Error
+    val loadStateError =
+        when {
+            loadStates.refresh is LoadState.Error -> {
+                loadStates.refresh as LoadState.Error
+            }
+            loadStates.prepend is LoadState.Error -> {
+                loadStates.prepend as LoadState.Error
+            }
+            loadStates.append is LoadState.Error -> {
+                loadStates.append as LoadState.Error
+            }
+            else -> null
         }
-        loadStates.prepend is LoadState.Error -> {
-            loadStates.prepend as LoadState.Error
-        }
-        loadStates.append is LoadState.Error -> {
-            loadStates.append as LoadState.Error
-        }
-        else -> null
-    }
 
     loadStateError?.let {
         ErrorCard(

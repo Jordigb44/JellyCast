@@ -33,19 +33,21 @@ fun ItemCard(
     onClick: (JellyCastItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val width = when (direction) {
-        Direction.HORIZONTAL -> 260
-        Direction.VERTICAL -> 150
-    }
+    val width =
+        when (direction) {
+            Direction.HORIZONTAL -> 260
+            Direction.VERTICAL -> 150
+        }
     Column(
-        modifier = modifier
-            .width(width.dp)
-            .clip(MaterialTheme.shapes.small)
-            .clickable(
-                onClick = {
-                    onClick(item)
-                },
-            ),
+        modifier =
+            modifier
+                .width(width.dp)
+                .clip(MaterialTheme.shapes.small)
+                .clickable(
+                    onClick = {
+                        onClick(item)
+                    },
+                ),
     ) {
         Surface(
             shape = MaterialTheme.shapes.small,
@@ -57,17 +59,19 @@ fun ItemCard(
                 )
                 ProgressBadge(
                     item = item,
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(MaterialTheme.spacings.small),
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(MaterialTheme.spacings.small),
                 )
                 if (direction == Direction.HORIZONTAL) {
                     ProgressBar(
                         item = item,
                         width = width,
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(MaterialTheme.spacings.small),
+                        modifier =
+                            Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(MaterialTheme.spacings.small),
                     )
                 }
             }
@@ -81,12 +85,13 @@ fun ItemCard(
         )
         if (item is JellyCastEpisode) {
             Text(
-                text = stringResource(
-                    id = R.string.episode_name_extended,
-                    item.parentIndexNumber,
-                    item.indexNumber,
-                    item.name,
-                ),
+                text =
+                    stringResource(
+                        id = R.string.episode_name_extended,
+                        item.parentIndexNumber,
+                        item.indexNumber,
+                        item.name,
+                    ),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
                 maxLines = 1,

@@ -25,8 +25,9 @@ fun ActorsRow(
     contentPadding: PaddingValues,
 ) {
     Column(
-        modifier = Modifier
-            .padding(contentPadding),
+        modifier =
+            Modifier
+                .padding(contentPadding),
     ) {
         Text(
             text = stringResource(CoreR.string.cast_amp_crew),

@@ -36,55 +36,61 @@ fun HomeCarouselItem(
     item: JellyCastItem,
     onAction: (HomeAction) -> Unit,
 ) {
-    val colorStops = arrayOf(
-        0.0f to Color.Black.copy(alpha = 0.1f),
-        0.5f to Color.Black.copy(alpha = 0.5f),
-        1f to Color.Black.copy(alpha = 0.6f),
-    )
+    val colorStops =
+        arrayOf(
+            0.0f to Color.Black.copy(alpha = 0.1f),
+            0.5f to Color.Black.copy(alpha = 0.5f),
+            1f to Color.Black.copy(alpha = 0.6f),
+        )
 
     Box(
-        modifier = Modifier
-            .aspectRatio(1.77f)
-            .clip(MaterialTheme.shapes.large)
-            .clickable {
-                onAction(HomeAction.OnItemClick(item))
-            },
+        modifier =
+            Modifier
+                .aspectRatio(1.77f)
+                .clip(MaterialTheme.shapes.large)
+                .clickable {
+                    onAction(HomeAction.OnItemClick(item))
+                },
     ) {
         AsyncImage(
             model = item.images.backdrop,
             placeholder = ColorPainter(MaterialTheme.colorScheme.surfaceContainer),
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(),
         )
         Canvas(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier =
+                Modifier
+                    .fillMaxSize(),
         ) {
             drawRect(
-                brush = Brush.verticalGradient(
-                    colorStops = colorStops,
-                ),
+                brush =
+                    Brush.verticalGradient(
+                        colorStops = colorStops,
+                    ),
             )
         }
         Column(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.small),
-            modifier = Modifier
-                .padding(
-                    horizontal = MaterialTheme.spacings.default,
-                    vertical = MaterialTheme.spacings.medium,
-                )
-                .align(Alignment.BottomStart)
-                .onGloballyPositioned { coordinates ->
-                    coordinates.size
-                },
+            modifier =
+                Modifier
+                    .padding(
+                        horizontal = MaterialTheme.spacings.default,
+                        vertical = MaterialTheme.spacings.medium,
+                    ).align(Alignment.BottomStart)
+                    .onGloballyPositioned { coordinates ->
+                        coordinates.size
+                    },
         ) {
-            val genres = when (item) {
-                is JellyCastMovie -> item.genres
-                is JellyCastShow -> item.genres
-                else -> emptyList()
-            }
+            val genres =
+                when (item) {
+                    is JellyCastMovie -> item.genres
+                    is JellyCastShow -> item.genres
+                    else -> emptyList()
+                }
             Text(
                 text = genres.joinToString(),
                 color = Color.LightGray,

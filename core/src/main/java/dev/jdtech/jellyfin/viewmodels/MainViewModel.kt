@@ -14,74 +14,75 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel
-@Inject
-constructor(
-    private val appPreferences: AppPreferences,
-    private val database: ServerDatabaseDao,
-) : ViewModel() {
-    private val _state = MutableStateFlow(MainState())
-    val state = _state.asStateFlow()
+    @Inject
+    constructor(
+        private val appPreferences: AppPreferences,
+        private val database: ServerDatabaseDao,
+    ) : ViewModel() {
+        private val _state = MutableStateFlow(MainState())
+        val state = _state.asStateFlow()
 
-    private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
-    val uiState = _uiState.asStateFlow()
+        private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
+        val uiState = _uiState.asStateFlow()
 
-    sealed class UiState {
-        data class Normal(val server: Server?, val user: User?) : UiState()
-        data object Loading : UiState()
-    }
+        sealed class UiState {
+            data class Normal(
+                val server: Server?,
+                val user: User?,
+            ) : UiState()
 
-    init {
-        check()
-    }
-
-    private fun check() {
-        viewModelScope.launch {
-            _state.emit(MainState(isLoading = true))
-            val mainState = MainState(
-                isLoading = false,
-                isDynamicColors = checkIsDynamicColors(),
-                hasServers = checkHasServers(),
-                hasCurrentServer = checkHasCurrentServer(),
-                hasCurrentUser = checkHasCurrentUser(),
-            )
-            _state.emit(mainState)
+            data object Loading : UiState()
         }
-    }
 
-    fun loadServerAndUser() {
-        viewModelScope.launch {
-            val serverId = appPreferences.getValue(appPreferences.currentServer)
-            serverId?.let { id ->
-                database.getServerWithAddressAndUser(id)?.let { data ->
-                    _uiState.emit(
-                        UiState.Normal(data.server, data.user),
+        init {
+            check()
+        }
+
+        private fun check() {
+            viewModelScope.launch {
+                _state.emit(MainState(isLoading = true))
+                val mainState =
+                    MainState(
+                        isLoading = false,
+                        isDynamicColors = checkIsDynamicColors(),
+                        hasServers = checkHasServers(),
+                        hasCurrentServer = checkHasCurrentServer(),
+                        hasCurrentUser = checkHasCurrentUser(),
                     )
+                _state.emit(mainState)
+            }
+        }
+
+        fun loadServerAndUser() {
+            viewModelScope.launch {
+                val serverId = appPreferences.getValue(appPreferences.currentServer)
+                serverId?.let { id ->
+                    database.getServerWithAddressAndUser(id)?.let { data ->
+                        _uiState.emit(
+                            UiState.Normal(data.server, data.user),
+                        )
+                    }
                 }
             }
         }
-    }
 
-    private fun checkHasServers(): Boolean {
-        val nServers = database.getServersCount()
-        return nServers > 0
-    }
+        private fun checkHasServers(): Boolean {
+            val nServers = database.getServersCount()
+            return nServers > 0
+        }
 
-    private fun checkHasCurrentServer(): Boolean {
-        return appPreferences.getValue(appPreferences.currentServer)?.let {
-            database.get(it) != null
-        } == true
-    }
+        private fun checkHasCurrentServer(): Boolean =
+            appPreferences.getValue(appPreferences.currentServer)?.let {
+                database.get(it) != null
+            } == true
 
-    private fun checkHasCurrentUser(): Boolean {
-        return appPreferences.getValue(appPreferences.currentServer)?.let {
-            database.getServerCurrentUser(it) != null
-        } == true
-    }
+        private fun checkHasCurrentUser(): Boolean =
+            appPreferences.getValue(appPreferences.currentServer)?.let {
+                database.getServerCurrentUser(it) != null
+            } == true
 
-    private fun checkIsDynamicColors(): Boolean {
-        return appPreferences.getValue(appPreferences.dynamicColors)
+        private fun checkIsDynamicColors(): Boolean = appPreferences.getValue(appPreferences.dynamicColors)
     }
-}
 
 data class MainState(
     val isLoading: Boolean = true,

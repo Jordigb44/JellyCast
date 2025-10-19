@@ -18,12 +18,15 @@ class TrackSelectionDialogFragment(
     private val viewModel: PlayerViewModel,
 ) : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val titleResource = when (type) {
-            C.TRACK_TYPE_AUDIO -> R.string.select_audio_track
-            C.TRACK_TYPE_TEXT -> R.string.select_subtile_track
-            else -> throw IllegalStateException("TrackType must be AUDIO or TEXT")
-        }
-        val tracksGroups = viewModel.player.currentTracks.groups.filter { it.type == type && it.isSupported }
+        val titleResource =
+            when (type) {
+                C.TRACK_TYPE_AUDIO -> R.string.select_audio_track
+                C.TRACK_TYPE_TEXT -> R.string.select_subtile_track
+                else -> throw IllegalStateException("TrackType must be AUDIO or TEXT")
+            }
+        val tracksGroups =
+            viewModel.player.currentTracks.groups
+                .filter { it.type == type && it.isSupported }
         return activity?.let { activity ->
             val builder = MaterialAlertDialogBuilder(activity)
             builder

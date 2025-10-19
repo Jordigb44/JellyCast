@@ -41,27 +41,30 @@ fun ErrorDialog(
         onDismissRequest = { onDismissRequest() },
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(200.dp, max = 540.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .heightIn(200.dp, max = 540.dp),
             shape = RoundedCornerShape(28.dp),
         ) {
             Column {
                 Spacer(modifier = Modifier.height(MaterialTheme.spacings.default))
                 Text(
                     text = exception.message ?: stringResource(CoreR.string.unknown_error),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = MaterialTheme.spacings.default),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = MaterialTheme.spacings.default),
                     style = MaterialTheme.typography.headlineSmall,
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.spacings.medium))
                 HorizontalDivider()
                 Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
-                        .verticalScroll(rememberScrollState()),
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .verticalScroll(rememberScrollState()),
                 ) {
                     Spacer(modifier = Modifier.height(MaterialTheme.spacings.small))
                     Text(
@@ -73,23 +76,25 @@ fun ErrorDialog(
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(MaterialTheme.spacings.small))
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = MaterialTheme.spacings.medium,
-                            top = MaterialTheme.spacings.extraSmall,
-                            end = MaterialTheme.spacings.medium,
-                            bottom = MaterialTheme.spacings.small,
-                        ),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                start = MaterialTheme.spacings.medium,
+                                top = MaterialTheme.spacings.extraSmall,
+                                end = MaterialTheme.spacings.medium,
+                                bottom = MaterialTheme.spacings.small,
+                            ),
                     horizontalArrangement = Arrangement.End,
                 ) {
                     TextButton(
                         onClick = {
-                            val sendIntent = Intent().apply {
-                                action = Intent.ACTION_SEND
-                                putExtra(Intent.EXTRA_TEXT, "${exception.message}\n ${exception.stackTraceToString()}")
-                                type = "text/plain"
-                            }
+                            val sendIntent =
+                                Intent().apply {
+                                    action = Intent.ACTION_SEND
+                                    putExtra(Intent.EXTRA_TEXT, "${exception.message}\n ${exception.stackTraceToString()}")
+                                    type = "text/plain"
+                                }
                             val shareIntent = Intent.createChooser(sendIntent, null)
                             context.startActivity(shareIntent)
                         },

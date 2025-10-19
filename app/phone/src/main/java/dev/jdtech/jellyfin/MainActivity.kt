@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
-        
+
         // Initialize DLNA service
         DlnaDeviceManager.initialize(this)
 
@@ -41,11 +41,12 @@ class MainActivity : AppCompatActivity() {
                 dynamicColor = state.isDynamicColors,
             ) {
                 val navController = rememberNavController()
-                val navigateFn = remember {
-                    { item: dev.jdtech.jellyfin.models.JellyCastItem ->
-                        dev.jdtech.jellyfin.navigateToItem(navController, item)
+                val navigateFn =
+                    remember {
+                        { item: dev.jdtech.jellyfin.models.JellyCastItem ->
+                            dev.jdtech.jellyfin.navigateToItem(navController, item)
+                        }
                     }
-                }
                 navigateToItemCallback = navigateFn
                 if (!state.isLoading) {
                     NavigationRoot(
@@ -62,19 +63,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun scheduleUserDataSync() {
-        val syncWorkRequest = OneTimeWorkRequestBuilder<SyncWorker>()
-            .setConstraints(
-                Constraints.Builder()
-                    .setRequiredNetworkType(
-                        NetworkType.CONNECTED,
-                    )
-                    .build(),
-            )
-            .build()
+        val syncWorkRequest =
+            OneTimeWorkRequestBuilder<SyncWorker>()
+                .setConstraints(
+                    Constraints
+                        .Builder()
+                        .setRequiredNetworkType(
+                            NetworkType.CONNECTED,
+                        ).build(),
+                ).build()
 
         val workManager = WorkManager.getInstance(applicationContext)
 
-        workManager.beginUniqueWork("syncUserData", ExistingWorkPolicy.KEEP, syncWorkRequest)
+        workManager
+            .beginUniqueWork("syncUserData", ExistingWorkPolicy.KEEP, syncWorkRequest)
             .enqueue()
     }
 

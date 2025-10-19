@@ -12,7 +12,8 @@ import dev.jdtech.jellyfin.models.JellyCastItem
 import dev.jdtech.jellyfin.models.JellyCastMovie
 
 enum class Direction {
-    HORIZONTAL, VERTICAL
+    HORIZONTAL,
+    VERTICAL,
 }
 
 @Composable
@@ -38,10 +39,11 @@ fun ItemPoster(
         model = imageUri,
         contentDescription = null,
         contentScale = ContentScale.Crop,
-        modifier = modifier
-            .aspectRatio(if (direction == Direction.HORIZONTAL) 1.77f else 0.66f)
-            .background(
-                MaterialTheme.colorScheme.surfaceContainer,
-            ),
+        modifier =
+            modifier
+                .aspectRatio(if (direction == Direction.HORIZONTAL) 1.77f else 0.66f)
+                .background(
+                    MaterialTheme.colorScheme.surfaceContainer,
+                ),
     )
 }

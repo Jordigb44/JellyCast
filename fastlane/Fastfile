@@ -10,10 +10,10 @@ platform :android do
       build_type: "release",
       print_command: false,
       properties: {
-        "android.injected.signing.store.file" => ENV["FINDROID_KEYSTORE"],
-        "android.injected.signing.store.password" => ENV["FINDROID_KEYSTORE_PASSWORD"],
-        "android.injected.signing.key.alias" => ENV["FINDROID_KEY_ALIAS"],
-        "android.injected.signing.key.password" => ENV["FINDROID_KEY_PASSWORD"],
+        "android.injected.signing.store.file" => ENV["JELLYCAST_KEYSTORE"],
+        "android.injected.signing.store.password" => ENV["JELLYCAST_KEYSTORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["JELLYCAST_KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["JELLYCAST_KEY_PASSWORD"],
       }
     )
 
@@ -23,16 +23,16 @@ platform :android do
       build_type: "release",
       print_command: false,
       properties: {
-        "android.injected.signing.store.file" => ENV["FINDROID_KEYSTORE"],
-        "android.injected.signing.store.password" => ENV["FINDROID_KEYSTORE_PASSWORD"],
-        "android.injected.signing.key.alias" => ENV["FINDROID_KEY_ALIAS"],
-        "android.injected.signing.key.password" => ENV["FINDROID_KEY_PASSWORD"],
+        "android.injected.signing.store.file" => ENV["JELLYCAST_KEYSTORE"],
+        "android.injected.signing.store.password" => ENV["JELLYCAST_KEYSTORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["JELLYCAST_KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["JELLYCAST_KEY_PASSWORD"],
       }
     )
 
     upload_to_play_store(
       track: "production",
-      json_key: ENV["FINDROID_PLAY_API_CREDENTIALS"],
+      json_key: ENV["JELLYCAST_PLAY_API_CREDENTIALS"],
       skip_upload_apk: true,
       sync_image_upload: true
     )

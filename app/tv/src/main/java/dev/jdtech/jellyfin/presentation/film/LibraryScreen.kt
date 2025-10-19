@@ -116,9 +116,10 @@ private fun LibraryScreenLayout(
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.default),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.default),
         contentPadding = PaddingValues(horizontal = MaterialTheme.spacings.default * 2, vertical = MaterialTheme.spacings.large),
-        modifier = Modifier
-            .fillMaxSize()
-            .focusRequester(focusRequester),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .focusRequester(focusRequester),
     ) {
         item(span = { GridItemSpan(this.maxLineSpan) }) {
             Row(

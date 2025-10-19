@@ -17,9 +17,7 @@ import androidx.tv.material3.MaterialTheme as MaterialThemeTv
 import androidx.tv.material3.contentColorFor as contentColorForTv
 
 @Composable
-fun JellyCastTheme(
-    content: @Composable BoxScope.() -> Unit,
-) {
+fun JellyCastTheme(content: @Composable BoxScope.() -> Unit) {
     MaterialTheme(
         colorScheme = darkScheme,
         typography = Typography,
@@ -36,14 +34,15 @@ fun JellyCastTheme(
                 LocalSpacings provides Spacings,
             ) {
                 Box(
-                    modifier = Modifier.background(
-                        Brush.linearGradient(
-                            listOf(
-                                Color.Black,
-                                Color(0xFF001721),
+                    modifier =
+                        Modifier.background(
+                            Brush.linearGradient(
+                                listOf(
+                                    Color.Black,
+                                    Color(0xFF001721),
+                                ),
                             ),
                         ),
-                    ),
                 ) {
                     content()
                 }

@@ -72,12 +72,13 @@ private fun LibrariesScreenLayout(
         columns = GridCells.Fixed(3),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.large),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.large),
-        contentPadding = PaddingValues(
-            start = MaterialTheme.spacings.large,
-            top = MaterialTheme.spacings.small,
-            end = MaterialTheme.spacings.large,
-            bottom = MaterialTheme.spacings.large,
-        ),
+        contentPadding =
+            PaddingValues(
+                start = MaterialTheme.spacings.large,
+                top = MaterialTheme.spacings.small,
+                end = MaterialTheme.spacings.large,
+                bottom = MaterialTheme.spacings.large,
+            ),
         modifier = Modifier.focusRequester(focusRequester),
     ) {
         items(state.libraries, key = { it.id }) { library ->

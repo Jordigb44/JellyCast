@@ -48,9 +48,10 @@ fun ServerBottomSheet(
             ServerItem(
                 name = name,
                 address = address,
-                modifier = Modifier
-                    .padding(horizontal = MaterialTheme.spacings.medium)
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .padding(horizontal = MaterialTheme.spacings.medium)
+                        .fillMaxWidth(),
             )
             Column {
                 ServerBottomSheetItem(
@@ -76,12 +77,12 @@ private fun ServerBottomSheetItem(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(
-                onClick = onClick,
-            )
-            .padding(MaterialTheme.spacings.medium),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable(
+                    onClick = onClick,
+                ).padding(MaterialTheme.spacings.medium),
     ) {
         Icon(painter = icon, contentDescription = null)
         Spacer(Modifier.width(MaterialTheme.spacings.medium))

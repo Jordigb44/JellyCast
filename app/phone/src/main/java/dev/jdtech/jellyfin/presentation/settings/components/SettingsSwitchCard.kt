@@ -76,11 +76,12 @@ fun SettingsSwitchCard(
 private fun SettingsSwitchCardPreview() {
     JellyCastTheme {
         SettingsSwitchCard(
-            preference = PreferenceSwitch(
-                nameStringResource = SettingsR.string.settings_use_cache_title,
-                backendPreference = Preference("", true),
-                value = false,
-            ),
+            preference =
+                PreferenceSwitch(
+                    nameStringResource = SettingsR.string.settings_use_cache_title,
+                    backendPreference = Preference("", true),
+                    value = false,
+                ),
             onClick = {},
         )
     }
@@ -91,11 +92,12 @@ private fun SettingsSwitchCardPreview() {
 private fun SettingsSwitchCardDisabledPreview() {
     JellyCastTheme {
         SettingsSwitchCard(
-            preference = PreferenceSwitch(
-                nameStringResource = SettingsR.string.settings_use_cache_title,
-                backendPreference = Preference("", true),
-                enabled = false,
-            ),
+            preference =
+                PreferenceSwitch(
+                    nameStringResource = SettingsR.string.settings_use_cache_title,
+                    backendPreference = Preference("", true),
+                    enabled = false,
+                ),
             onClick = {},
         )
     }

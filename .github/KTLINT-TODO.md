@@ -121,13 +121,39 @@ git commit -m "ci: make ktlint blocking after fixes"
 git push origin develop
 ```
 
-## 📊 Archivos Específicos a Corregir
+# KtLint & Android Lint Style Issues - TODO
 
-### Alta Prioridad (Más errores)
-1. `core/src/main/java/dev/jdtech/jellyfin/roku/RokuHelper.kt` (35+ errores)
-2. `core/src/main/java/dev/jdtech/jellyfin/presentation/components/DlnaMiniController.kt` (25+ errores)
-3. `core/src/main/java/dev/jdtech/jellyfin/viewmodels/DownloadsViewModel.kt` (15+ errores)
-4. `core/src/main/java/dev/jdtech/jellyfin/presentation/components/RokuDevicePicker.kt` (10+ errores)
+## 📋 Resumen
+
+El CI está fallando por violaciones de estilo de ktlint y Android Lint.
+
+### Android Lint (Arreglado ✅)
+- **VideoPlayerSeeker.kt** - Error: `FocusRequester()` sin `remember` en preview
+  - ✅ **YA CORREGIDO** en commit `eb67559f`
+
+### KtLint (Pendiente ⚠️)
+Aproximadamente **~700 violaciones** distribuidas en múltiples archivos del módulo `core`:
+
+**Archivos Cast/Google Cast:**
+1. **CastHelper.kt** - ~30 errores
+2. **CastOptionsProvider.kt** - ~10 errores
+3. **CastButton.kt** - ~5 errores
+4. **CastMiniController.kt** - ~100 errores
+
+**Archivos DLNA:**
+5. **DlnaDeviceManager.kt** - ~80 errores
+6. **DlnaHelper.kt** - ~120 errores
+7. **SimpleUpnpService.kt** - ~15 errores
+8. **DlnaButton.kt** - ~20 errores
+9. **DlnaDevicePicker.kt** - ~100 errores
+10. **DlnaMiniController.kt** - ~100 errores
+
+**Archivos Roku:**
+11. **RokuHelper.kt** - ~50 errores
+12. **RokuDevicePicker.kt** - ~20 errores
+
+**Otros:**
+13. **DownloadsViewModel.kt** - ~15 errores
 
 ## 🔍 Verificar Correcciones
 

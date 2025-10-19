@@ -43,39 +43,45 @@ fun SettingsMultiSelectCard(
     val optionNames = stringArrayResource(preference.options)
     val noneString = stringResource(CoreR.string.none)
 
-    val options = remember(preference.nameStringResource) {
-        val options = mutableListOf<Pair<String?, String>>()
+    val options =
+        remember(preference.nameStringResource) {
+            val options = mutableListOf<Pair<String?, String>>()
 
-        options.addAll(optionValues.zip(optionNames))
+            options.addAll(optionValues.zip(optionNames))
 
-        options
-    }
+            options
+        }
 
-    val optionsMap = remember(options) {
-        options.toMap()
-    }
+    val optionsMap =
+        remember(options) {
+            options.toMap()
+        }
 
     Surface(
         onClick = onClick,
         enabled = preference.enabled,
         shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(10.dp)),
-        colors = ClickableSurfaceDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            focusedContainerColor = MaterialTheme.colorScheme.surface,
-            disabledContainerColor = MaterialTheme.colorScheme.surface,
-        ),
-        border = ClickableSurfaceDefaults.border(
-            focusedBorder = Border(
-                BorderStroke(
-                    4.dp,
-                    Color.White,
-                ),
-                shape = RoundedCornerShape(10.dp),
+        colors =
+            ClickableSurfaceDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.surface,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                disabledContainerColor = MaterialTheme.colorScheme.surface,
             ),
-        ),
+        border =
+            ClickableSurfaceDefaults.border(
+                focusedBorder =
+                    Border(
+                        BorderStroke(
+                            4.dp,
+                            Color.White,
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                    ),
+            ),
         scale = ClickableSurfaceScale.None,
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier =
+            modifier
+                .fillMaxWidth(),
     ) {
         Row(
             modifier = Modifier.padding(MaterialTheme.spacings.default),
@@ -99,9 +105,10 @@ fun SettingsMultiSelectCard(
 
                 Spacer(modifier = Modifier.height(MaterialTheme.spacings.extraSmall))
                 Text(
-                    text = preference.value
-                        .joinToString(", ") { key -> optionsMap[key].toString() }
-                        .ifEmpty { noneString },
+                    text =
+                        preference.value
+                            .joinToString(", ") { key -> optionsMap[key].toString() }
+                            .ifEmpty { noneString },
                     style = MaterialTheme.typography.labelMedium,
                 )
             }
@@ -114,13 +121,14 @@ fun SettingsMultiSelectCard(
 private fun SettingsMultiSelectCardPreview() {
     JellyCastTheme {
         SettingsMultiSelectCard(
-            preference = PreferenceMultiSelect(
-                nameStringResource = SettingsR.string.settings_preferred_audio_language,
-                iconDrawableId = SettingsR.drawable.ic_speaker,
-                backendPreference = Preference("", emptySet()),
-                options = SettingsR.array.languages,
-                optionValues = SettingsR.array.languages_values,
-            ),
+            preference =
+                PreferenceMultiSelect(
+                    nameStringResource = SettingsR.string.settings_preferred_audio_language,
+                    iconDrawableId = SettingsR.drawable.ic_speaker,
+                    backendPreference = Preference("", emptySet()),
+                    options = SettingsR.array.languages,
+                    optionValues = SettingsR.array.languages_values,
+                ),
             onClick = {},
         )
     }

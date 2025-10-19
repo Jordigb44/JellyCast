@@ -89,7 +89,10 @@ interface ServerDatabaseDao {
     fun deleteServerAddress(id: UUID)
 
     @Query("UPDATE servers SET currentUserId = :userId WHERE id = :serverId")
-    fun updateServerCurrentUser(serverId: String, userId: UUID)
+    fun updateServerCurrentUser(
+        serverId: String,
+        userId: UUID,
+    )
 
     @Query("SELECT * FROM users WHERE id = (SELECT currentUserId FROM servers WHERE id = :serverId)")
     fun getServerCurrentUser(serverId: String): User?
@@ -116,10 +119,16 @@ interface ServerDatabaseDao {
     fun getSourceByDownloadId(downloadId: Long): JellyCastSourceDto?
 
     @Query("UPDATE sources SET downloadId = :downloadId WHERE id = :id")
-    fun setSourceDownloadId(id: String, downloadId: Long)
+    fun setSourceDownloadId(
+        id: String,
+        downloadId: Long,
+    )
 
     @Query("UPDATE sources SET path = :path WHERE id = :id")
-    fun setSourcePath(id: String, path: String)
+    fun setSourcePath(
+        id: String,
+        path: String,
+    )
 
     @Query("DELETE FROM sources WHERE id = :id")
     fun deleteSource(id: String)
@@ -128,7 +137,11 @@ interface ServerDatabaseDao {
     fun deleteMovie(id: UUID)
 
     @Query("UPDATE userdata SET playbackPositionTicks = :playbackPositionTicks WHERE itemId = :itemId AND userid = :userId")
-    fun setPlaybackPositionTicks(itemId: UUID, userId: UUID, playbackPositionTicks: Long)
+    fun setPlaybackPositionTicks(
+        itemId: UUID,
+        userId: UUID,
+        playbackPositionTicks: Long,
+    )
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMediaStream(mediaStream: JellyCastMediaStreamDto)
@@ -140,10 +153,16 @@ interface ServerDatabaseDao {
     fun getMediaStreamByDownloadId(downloadId: Long): JellyCastMediaStreamDto?
 
     @Query("UPDATE mediastreams SET downloadId = :downloadId WHERE id = :id")
-    fun setMediaStreamDownloadId(id: UUID, downloadId: Long)
+    fun setMediaStreamDownloadId(
+        id: UUID,
+        downloadId: Long,
+    )
 
     @Query("UPDATE mediastreams SET path = :path WHERE id = :id")
-    fun setMediaStreamPath(id: UUID, path: String)
+    fun setMediaStreamPath(
+        id: UUID,
+        path: String,
+    )
 
     @Query("DELETE FROM mediastreams WHERE id = :id")
     fun deleteMediaStream(id: UUID)
@@ -152,10 +171,18 @@ interface ServerDatabaseDao {
     fun deleteMediaStreamsBySourceId(sourceId: String)
 
     @Query("UPDATE userdata SET played = :played WHERE userId = :userId AND itemId = :itemId")
-    fun setPlayed(userId: UUID, itemId: UUID, played: Boolean)
+    fun setPlayed(
+        userId: UUID,
+        itemId: UUID,
+        played: Boolean,
+    )
 
     @Query("UPDATE userdata SET favorite = :favorite WHERE userId = :userId AND itemId = :itemId")
-    fun setFavorite(userId: UUID, itemId: UUID, favorite: Boolean)
+    fun setFavorite(
+        userId: UUID,
+        itemId: UUID,
+        favorite: Boolean,
+    )
 
     @Query("SELECT * FROM movies WHERE serverId = :serverId ORDER BY name ASC")
     fun getMoviesByServerId(serverId: String): List<JellyCastMovieDto>
@@ -208,7 +235,9 @@ interface ServerDatabaseDao {
     @Query("SELECT * FROM episodes ORDER BY seriesName ASC, parentIndexNumber ASC, indexNumber ASC")
     fun getEpisodes(): List<JellyCastEpisodeDto>
 
-    @Query("SELECT episodes.id, episodes.serverId, episodes.seasonId, episodes.seriesId, episodes.name, episodes.seriesName, episodes.overview, episodes.indexNumber, episodes.indexNumberEnd, episodes.parentIndexNumber, episodes.runtimeTicks, episodes.premiereDate, episodes.communityRating, episodes.chapters FROM episodes INNER JOIN userdata ON episodes.id = userdata.itemId WHERE serverId = :serverId AND playbackPositionTicks > 0 ORDER BY episodes.parentIndexNumber ASC, episodes.indexNumber ASC")
+    @Query(
+        "SELECT episodes.id, episodes.serverId, episodes.seasonId, episodes.seriesId, episodes.name, episodes.seriesName, episodes.overview, episodes.indexNumber, episodes.indexNumberEnd, episodes.parentIndexNumber, episodes.runtimeTicks, episodes.premiereDate, episodes.communityRating, episodes.chapters FROM episodes INNER JOIN userdata ON episodes.id = userdata.itemId WHERE serverId = :serverId AND playbackPositionTicks > 0 ORDER BY episodes.parentIndexNumber ASC, episodes.indexNumber ASC",
+    )
     fun getEpisodeResumeItems(serverId: String): List<JellyCastEpisodeDto>
 
     @Query("DELETE FROM episodes WHERE id = :id")
@@ -226,24 +255,29 @@ interface ServerDatabaseDao {
     @Query("SELECT * FROM seasons")
     fun getSeasons(): List<JellyCastSeasonDto>
 
-    
-
     @Query("SELECT * FROM userdata WHERE itemId = :itemId AND userId = :userId")
-    fun getUserData(itemId: UUID, userId: UUID): JellyCastUserDataDto?
+    fun getUserData(
+        itemId: UUID,
+        userId: UUID,
+    ): JellyCastUserDataDto?
 
     @Transaction
-    fun getUserDataOrCreateNew(itemId: UUID, userId: UUID): JellyCastUserDataDto {
+    fun getUserDataOrCreateNew(
+        itemId: UUID,
+        userId: UUID,
+    ): JellyCastUserDataDto {
         var userData = getUserData(itemId, userId)
 
         // Create user data when there is none
         if (userData == null) {
-            userData = JellyCastUserDataDto(
-                userId = userId,
-                itemId = itemId,
-                played = false,
-                favorite = false,
-                playbackPositionTicks = 0L,
-            )
+            userData =
+                JellyCastUserDataDto(
+                    userId = userId,
+                    itemId = itemId,
+                    played = false,
+                    favorite = false,
+                    playbackPositionTicks = 0L,
+                )
             insertUserData(userData)
         }
 
@@ -257,19 +291,35 @@ interface ServerDatabaseDao {
     fun deleteUserData(itemId: UUID)
 
     @Query("SELECT * FROM userdata WHERE userId = :userId AND itemId = :itemId AND toBeSynced = 1")
-    fun getUserDataToBeSynced(userId: UUID, itemId: UUID): JellyCastUserDataDto?
+    fun getUserDataToBeSynced(
+        userId: UUID,
+        itemId: UUID,
+    ): JellyCastUserDataDto?
 
     @Query("UPDATE userdata SET toBeSynced = :toBeSynced WHERE itemId = :itemId AND userId = :userId")
-    fun setUserDataToBeSynced(userId: UUID, itemId: UUID, toBeSynced: Boolean)
+    fun setUserDataToBeSynced(
+        userId: UUID,
+        itemId: UUID,
+        toBeSynced: Boolean,
+    )
 
     @Query("SELECT * FROM movies WHERE serverId = :serverId AND name LIKE '%' || :name || '%'")
-    fun searchMovies(serverId: String, name: String): List<JellyCastMovieDto>
+    fun searchMovies(
+        serverId: String,
+        name: String,
+    ): List<JellyCastMovieDto>
 
     @Query("SELECT * FROM shows WHERE serverId = :serverId AND name LIKE '%' || :name || '%'")
-    fun searchShows(serverId: String, name: String): List<JellyCastShowDto>
+    fun searchShows(
+        serverId: String,
+        name: String,
+    ): List<JellyCastShowDto>
 
     @Query("SELECT * FROM episodes WHERE serverId = :serverId AND name LIKE '%' || :name || '%'")
-    fun searchEpisodes(serverId: String, name: String): List<JellyCastEpisodeDto>
+    fun searchEpisodes(
+        serverId: String,
+        name: String,
+    ): List<JellyCastEpisodeDto>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTrickplayInfo(trickplayInfoDto: JellyCastTrickplayInfoDto)

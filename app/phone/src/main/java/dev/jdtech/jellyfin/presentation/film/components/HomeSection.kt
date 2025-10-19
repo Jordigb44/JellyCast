@@ -31,10 +31,11 @@ fun HomeSection(
         modifier = modifier,
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(42.dp)
-                .padding(itemsPadding),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(42.dp)
+                    .padding(itemsPadding),
         ) {
             Text(
                 text = section.name.asString(),

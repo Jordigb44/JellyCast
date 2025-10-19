@@ -46,20 +46,22 @@ private fun CollectionScreenLayoutPreview() {
     JellyCastTheme {
         CollectionScreenLayout(
             collectionName = "Favorites",
-            state = CollectionState(
-                sections = listOf(
-                    CollectionSection(
-                        id = 0,
-                        name = UiText.StringResource(CoreR.string.title_favorite),
-                        items = dummyMovies,
-                    ),
+            state =
+                CollectionState(
+                    sections =
+                        listOf(
+                            CollectionSection(
+                                id = 0,
+                                name = UiText.StringResource(CoreR.string.title_favorite),
+                                items = dummyMovies,
+                            ),
+                        ),
                 ),
-            ),
-                onBack = {},
-                onItemClick = {},
-                onGenreSelected = {},
-                onePerGenreState = false,
-                onToggleOnePerGenre = {},
+            onBack = {},
+            onItemClick = {},
+            onGenreSelected = {},
+            onePerGenreState = false,
+            onToggleOnePerGenre = {},
         )
     }
 }

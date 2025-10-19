@@ -111,22 +111,25 @@ private fun MainScreenLayout(
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize(),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(80.dp)
-                .padding(horizontal = MaterialTheme.spacings.default),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+                    .padding(horizontal = MaterialTheme.spacings.default),
         ) {
             Icon(
                 painter = painterResource(id = CoreR.drawable.ic_logo),
                 contentDescription = null,
                 tint = Color.Unspecified,
-                modifier = Modifier
-                    .size(32.dp)
-                    .align(Alignment.CenterStart),
+                modifier =
+                    Modifier
+                        .size(32.dp)
+                        .align(Alignment.CenterStart),
             )
             TabRow(
                 selectedTabIndex = focusedTabIndex,
@@ -153,17 +156,22 @@ private fun MainScreenLayout(
                     Tab(
                         selected = activeTabIndex == index,
                         onFocus = { focusedTabIndex = index },
-                        colors = TabDefaults.pillIndicatorTabColors(
-                            contentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
-                            selectedContentColor = MaterialTheme.colorScheme.onPrimary,
-                            focusedContentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
-                            focusedSelectedContentColor = MaterialTheme.colorScheme.onPrimary,
-                        ),
+                        colors =
+                            TabDefaults.pillIndicatorTabColors(
+                                contentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
+                                selectedContentColor = MaterialTheme.colorScheme.onPrimary,
+                                focusedContentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
+                                focusedSelectedContentColor = MaterialTheme.colorScheme.onPrimary,
+                            ),
                         onClick = {
                             focusedTabIndex = index
                             activeTabIndex = index
                         },
-                        modifier = Modifier.padding(horizontal = MaterialTheme.spacings.default / 2, vertical = MaterialTheme.spacings.small),
+                        modifier =
+                            Modifier.padding(
+                                horizontal = MaterialTheme.spacings.default / 2,
+                                vertical = MaterialTheme.spacings.small,
+                            ),
                     ) {
                         Icon(
                             painter = painterResource(id = tab.icon),

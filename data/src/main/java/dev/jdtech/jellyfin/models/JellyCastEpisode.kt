@@ -35,7 +35,8 @@ data class JellyCastEpisode(
     override val images: JellyCastImages,
     override val chapters: List<JellyCastChapter>,
     override val trickplayInfo: Map<String, JellyCastTrickplayInfo>?,
-) : JellyCastItem, JellyCastSources
+) : JellyCastItem,
+    JellyCastSources
 
 suspend fun BaseItemDto.toJellyCastEpisode(
     jellyfinRepository: JellyfinRepository,
@@ -79,7 +80,11 @@ suspend fun BaseItemDto.toJellyCastEpisode(
     }
 }
 
-fun JellyCastEpisodeDto.toJellyCastEpisode(database: ServerDatabaseDao, userId: UUID, baseUrl: String? = null): JellyCastEpisode {
+fun JellyCastEpisodeDto.toJellyCastEpisode(
+    database: ServerDatabaseDao,
+    userId: UUID,
+    baseUrl: String? = null,
+): JellyCastEpisode {
     val userData = database.getUserDataOrCreateNew(id, userId)
     val sources = database.getSources(id).map { it.toJellyCastSource(database) }
     val trickplayInfos = mutableMapOf<String, JellyCastTrickplayInfo>()
@@ -88,22 +93,27 @@ fun JellyCastEpisodeDto.toJellyCastEpisode(database: ServerDatabaseDao, userId: 
             trickplayInfos[source.id] = it
         }
     }
-    
+
     // Build image URIs from baseUrl if available
-    val images = if (baseUrl != null) {
-        val uri = android.net.Uri.parse(baseUrl)
-        JellyCastImages(
-            primary = uri.buildUpon()
-                .appendEncodedPath("items/$id/Images/${org.jellyfin.sdk.model.api.ImageType.PRIMARY}")
-                .build(),
-            showPrimary = uri.buildUpon()
-                .appendEncodedPath("items/$seriesId/Images/${org.jellyfin.sdk.model.api.ImageType.PRIMARY}")
-                .build()
-        )
-    } else {
-        JellyCastImages()
-    }
-    
+    val images =
+        if (baseUrl != null) {
+            val uri = android.net.Uri.parse(baseUrl)
+            JellyCastImages(
+                primary =
+                    uri
+                        .buildUpon()
+                        .appendEncodedPath("items/$id/Images/${org.jellyfin.sdk.model.api.ImageType.PRIMARY}")
+                        .build(),
+                showPrimary =
+                    uri
+                        .buildUpon()
+                        .appendEncodedPath("items/$seriesId/Images/${org.jellyfin.sdk.model.api.ImageType.PRIMARY}")
+                        .build(),
+            )
+        } else {
+            JellyCastImages()
+        }
+
     return JellyCastEpisode(
         id = id,
         name = name,

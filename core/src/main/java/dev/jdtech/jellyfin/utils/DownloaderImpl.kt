@@ -48,14 +48,16 @@ class DownloaderImpl(
     ): Pair<Long, UiText?> {
         try {
             val sources = jellyfinRepository.getMediaSources(item.id, true)
-            val source = sources.firstOrNull { it.id == sourceId } ?: sources.firstOrNull()
-                ?: return Pair(-1, UiText.StringResource(CoreR.string.source_unavailable))
+            val source =
+                sources.firstOrNull { it.id == sourceId } ?: sources.firstOrNull()
+                    ?: return Pair(-1, UiText.StringResource(CoreR.string.source_unavailable))
             val segments = jellyfinRepository.getSegments(item.id)
-            val trickplayInfo = if (item is JellyCastSources) {
-                item.trickplayInfo?.get(sourceId)
-            } else {
-                null
-            }
+            val trickplayInfo =
+                if (item is JellyCastSources) {
+                    item.trickplayInfo?.get(sourceId)
+                } else {
+                    null
+                }
             val storageLocation = context.getExternalFilesDirs(null)[storageIndex]
             if (storageLocation == null || Environment.getExternalStorageState(storageLocation) != Environment.MEDIA_MOUNTED) {
                 return Pair(-1, UiText.StringResource(CoreR.string.storage_unavailable))
@@ -85,12 +87,14 @@ class DownloaderImpl(
                     if (trickplayInfo != null) {
                         downloadTrickplayData(item.id, sourceId, trickplayInfo)
                     }
-                    val request = DownloadManager.Request(source.path.toUri())
-                        .setTitle(item.name)
-                        .setAllowedOverMetered(appPreferences.getValue(appPreferences.downloadOverMobileData))
-                        .setAllowedOverRoaming(appPreferences.getValue(appPreferences.downloadWhenRoaming))
-                        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                        .setDestinationUri(path)
+                    val request =
+                        DownloadManager
+                            .Request(source.path.toUri())
+                            .setTitle(item.name)
+                            .setAllowedOverMetered(appPreferences.getValue(appPreferences.downloadOverMobileData))
+                            .setAllowedOverRoaming(appPreferences.getValue(appPreferences.downloadWhenRoaming))
+                            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                            .setDestinationUri(path)
                     val downloadId = downloadManager.enqueue(request)
                     database.setSourceDownloadId(source.id, downloadId)
                     return Pair(downloadId, null)
@@ -98,7 +102,8 @@ class DownloaderImpl(
 
                 is JellyCastEpisode -> {
                     database.insertShow(
-                        jellyfinRepository.getShow(item.seriesId)
+                        jellyfinRepository
+                            .getShow(item.seriesId)
                             .toJellyCastShowDto(appPreferences.getValue(appPreferences.currentServer)),
                     )
                     database.insertSeason(
@@ -114,12 +119,14 @@ class DownloaderImpl(
                     if (trickplayInfo != null) {
                         downloadTrickplayData(item.id, sourceId, trickplayInfo)
                     }
-                    val request = DownloadManager.Request(source.path.toUri())
-                        .setTitle(item.name)
-                        .setAllowedOverMetered(appPreferences.getValue(appPreferences.downloadOverMobileData))
-                        .setAllowedOverRoaming(appPreferences.getValue(appPreferences.downloadWhenRoaming))
-                        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                        .setDestinationUri(path)
+                    val request =
+                        DownloadManager
+                            .Request(source.path.toUri())
+                            .setTitle(item.name)
+                            .setAllowedOverMetered(appPreferences.getValue(appPreferences.downloadOverMobileData))
+                            .setAllowedOverRoaming(appPreferences.getValue(appPreferences.downloadWhenRoaming))
+                            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                            .setDestinationUri(path)
                     val downloadId = downloadManager.enqueue(request)
                     database.setSourceDownloadId(source.id, downloadId)
                     return Pair(downloadId, null)
@@ -128,18 +135,23 @@ class DownloaderImpl(
             return Pair(-1, null)
         } catch (e: Exception) {
             try {
-                val cleanupSource = jellyfinRepository.getMediaSources(item.id).firstOrNull { it.id == sourceId }
-                    ?: jellyfinRepository.getMediaSources(item.id).firstOrNull()
+                val cleanupSource =
+                    jellyfinRepository.getMediaSources(item.id).firstOrNull { it.id == sourceId }
+                        ?: jellyfinRepository.getMediaSources(item.id).firstOrNull()
                 if (cleanupSource != null) {
                     deleteItem(item, cleanupSource)
                 }
-            } catch (_: Exception) {}
+            } catch (_: Exception) {
+            }
 
             return Pair(-1, if (e.message != null) UiText.DynamicString(e.message!!) else UiText.StringResource(CoreR.string.unknown_error))
         }
     }
 
-    override suspend fun cancelDownload(item: JellyCastItem, source: JellyCastSource) {
+    override suspend fun cancelDownload(
+        item: JellyCastItem,
+        source: JellyCastSource,
+    ) {
         if (source.downloadId != null) {
             downloadManager.remove(source.downloadId!!)
         }
@@ -147,7 +159,10 @@ class DownloaderImpl(
         deleteItem(item, source)
     }
 
-    override suspend fun deleteItem(item: JellyCastItem, source: JellyCastSource) {
+    override suspend fun deleteItem(
+        item: JellyCastItem,
+        source: JellyCastSource,
+    ) {
         // Delete the downloaded source and files, but keep the item metadata in DB
         // so it can be re-downloaded later and still appears in the library
         Timber.tag("Downloader").d("deleteItem: removing source %s for item %s (type=%s)", source.id, item.id, item::class.simpleName)
@@ -170,15 +185,18 @@ class DownloaderImpl(
         if (downloadId == null) {
             return Pair(downloadStatus, progress)
         }
-        val query = DownloadManager.Query()
-            .setFilterById(downloadId)
+        val query =
+            DownloadManager
+                .Query()
+                .setFilterById(downloadId)
         val cursor = downloadManager.query(query)
         if (cursor.moveToFirst()) {
-            downloadStatus = cursor.getInt(
-                cursor.getColumnIndexOrThrow(
-                    DownloadManager.COLUMN_STATUS,
-                ),
-            )
+            downloadStatus =
+                cursor.getInt(
+                    cursor.getColumnIndexOrThrow(
+                        DownloadManager.COLUMN_STATUS,
+                    ),
+                )
             when (downloadStatus) {
                 DownloadManager.STATUS_RUNNING -> {
                     val totalBytes = cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
@@ -207,12 +225,14 @@ class DownloaderImpl(
             val id = UUID.randomUUID()
             val streamPath = Uri.fromFile(File(storageLocation, "downloads/${item.id}.${source.id}.$id.download"))
             database.insertMediaStream(mediaStream.toJellyCastMediaStreamDto(id, source.id, streamPath.path.orEmpty()))
-            val request = DownloadManager.Request(mediaStream.path!!.toUri())
-                .setTitle(mediaStream.title)
-                .setAllowedOverMetered(appPreferences.getValue(appPreferences.downloadOverMobileData))
-                .setAllowedOverRoaming(appPreferences.getValue(appPreferences.downloadWhenRoaming))
-                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
-                .setDestinationUri(streamPath)
+            val request =
+                DownloadManager
+                    .Request(mediaStream.path!!.toUri())
+                    .setTitle(mediaStream.title)
+                    .setAllowedOverMetered(appPreferences.getValue(appPreferences.downloadOverMobileData))
+                    .setAllowedOverRoaming(appPreferences.getValue(appPreferences.downloadWhenRoaming))
+                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
+                    .setDestinationUri(streamPath)
             val downloadId = downloadManager.enqueue(request)
             database.setMediaStreamDownloadId(id, downloadId)
         }
@@ -226,13 +246,14 @@ class DownloaderImpl(
         val maxIndex = ceil(trickplayInfo.thumbnailCount.toDouble().div(trickplayInfo.tileWidth * trickplayInfo.tileHeight)).toInt()
         val byteArrays = mutableListOf<ByteArray>()
         for (i in 0..maxIndex) {
-            jellyfinRepository.getTrickplayData(
-                itemId,
-                trickplayInfo.width,
-                i,
-            )?.let { byteArray ->
-                byteArrays.add(byteArray)
-            }
+            jellyfinRepository
+                .getTrickplayData(
+                    itemId,
+                    trickplayInfo.width,
+                    i,
+                )?.let { byteArray ->
+                    byteArrays.add(byteArray)
+                }
         }
         saveTrickplayData(itemId, sourceId, trickplayInfo, byteArrays)
     }

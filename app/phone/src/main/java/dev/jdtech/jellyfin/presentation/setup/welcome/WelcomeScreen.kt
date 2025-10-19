@@ -30,9 +30,7 @@ import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.setup.R as SetupR
 
 @Composable
-fun WelcomeScreen(
-    onContinueClick: () -> Unit,
-) {
+fun WelcomeScreen(onContinueClick: () -> Unit) {
     val uriHandler = LocalUriHandler.current
 
     WelcomeScreenLayout(
@@ -48,17 +46,16 @@ fun WelcomeScreen(
 }
 
 @Composable
-private fun WelcomeScreenLayout(
-    onAction: (WelcomeAction) -> Unit,
-) {
+private fun WelcomeScreenLayout(onAction: (WelcomeAction) -> Unit) {
     RootLayout(
         padding = PaddingValues(horizontal = 24.dp),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .verticalScroll(rememberScrollState()),
+            modifier =
+                Modifier
+                    .align(Alignment.Center)
+                    .verticalScroll(rememberScrollState()),
         ) {
             Image(
                 painter = painterResource(id = CoreR.drawable.ic_banner),

@@ -37,13 +37,15 @@ fun SettingsMultiSelectCard(
     val optionNames = stringArrayResource(preference.options)
     val noneString = stringResource(CoreR.string.none)
 
-    val options = remember(preference.nameStringResource) {
-        optionValues.zip(optionNames)
-    }
+    val options =
+        remember(preference.nameStringResource) {
+            optionValues.zip(optionNames)
+        }
 
-    val optionsMap = remember(options) {
-        options.toMap()
-    }
+    val optionsMap =
+        remember(options) {
+            options.toMap()
+        }
 
     var showDialog by remember {
         mutableStateOf(false)
@@ -76,9 +78,10 @@ fun SettingsMultiSelectCard(
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.spacings.extraSmall))
                 Text(
-                    text = preference.value
-                        .joinToString(", ") { key -> optionsMap[key].toString() }
-                        .ifEmpty { noneString },
+                    text =
+                        preference.value
+                            .joinToString(", ") { key -> optionsMap[key].toString() }
+                            .ifEmpty { noneString },
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
@@ -105,13 +108,14 @@ fun SettingsMultiSelectCard(
 private fun SettingsSelectCardPreview() {
     JellyCastTheme {
         SettingsMultiSelectCard(
-            preference = PreferenceMultiSelect(
-                nameStringResource = SettingsR.string.pref_player_media_segments_skip_button_type,
-                iconDrawableId = CoreR.drawable.ic_speaker,
-                backendPreference = Preference("", setOf("INTRO", "OUTRO")),
-                options = SettingsR.array.media_segments_type,
-                optionValues = SettingsR.array.media_segments_type_values,
-            ),
+            preference =
+                PreferenceMultiSelect(
+                    nameStringResource = SettingsR.string.pref_player_media_segments_skip_button_type,
+                    iconDrawableId = CoreR.drawable.ic_speaker,
+                    backendPreference = Preference("", setOf("INTRO", "OUTRO")),
+                    options = SettingsR.array.media_segments_type,
+                    optionValues = SettingsR.array.media_segments_type_values,
+                ),
             onUpdate = {},
         )
     }

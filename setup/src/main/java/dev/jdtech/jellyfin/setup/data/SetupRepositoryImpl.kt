@@ -11,8 +11,8 @@ import dev.jdtech.jellyfin.models.UiText
 import dev.jdtech.jellyfin.models.User
 import dev.jdtech.jellyfin.settings.domain.AppPreferences
 import dev.jdtech.jellyfin.setup.domain.SetupRepository
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import org.jellyfin.sdk.discovery.RecommendedServerInfo
 import org.jellyfin.sdk.discovery.RecommendedServerInfoScore
@@ -32,35 +32,25 @@ class SetupRepositoryImpl(
     private val database: ServerDatabaseDao,
     private val appPreferences: AppPreferences,
 ) : SetupRepository {
-    override fun discoverServers(): Flow<ServerDiscoveryInfo> {
-        return jellyfinApi.jellyfin.discovery.discoverLocalServers()
-    }
+    override fun discoverServers(): Flow<ServerDiscoveryInfo> = jellyfinApi.jellyfin.discovery.discoverLocalServers()
 
-    override suspend fun getServers(): List<ServerWithAddresses> {
-        return database.getServersWithAddresses()
-    }
+    override suspend fun getServers(): List<ServerWithAddresses> = database.getServersWithAddresses()
 
-    override suspend fun getCurrentServer(): Server? {
-        return appPreferences.getValue(appPreferences.currentServer)?.let { id ->
+    override suspend fun getCurrentServer(): Server? =
+        appPreferences.getValue(appPreferences.currentServer)?.let { id ->
             database.get(id)
         }
-    }
 
     override suspend fun deleteServer(serverId: String) {
         database.delete(serverId)
     }
 
-    override suspend fun getIsQuickConnectEnabled(): Boolean {
-        return jellyfinApi.quickConnectApi.getQuickConnectEnabled().content
-    }
+    override suspend fun getIsQuickConnectEnabled(): Boolean = jellyfinApi.quickConnectApi.getQuickConnectEnabled().content
 
-    override suspend fun initiateQuickConnect(): QuickConnectResult {
-        return jellyfinApi.quickConnectApi.initiateQuickConnect().content
-    }
+    override suspend fun initiateQuickConnect(): QuickConnectResult = jellyfinApi.quickConnectApi.initiateQuickConnect().content
 
-    override suspend fun getQuickConnectState(secret: String): QuickConnectResult {
-        return jellyfinApi.quickConnectApi.getQuickConnectState(secret).content
-    }
+    override suspend fun getQuickConnectState(secret: String): QuickConnectResult =
+        jellyfinApi.quickConnectApi.getQuickConnectState(secret).content
 
     override suspend fun setCurrentServer(serverId: String) {
         val serverWithAddressAndUser = database.getServerWithAddressAndUser(serverId) ?: return
@@ -83,10 +73,11 @@ class SetupRepositoryImpl(
         }
 
         val candidates = jellyfinApi.jellyfin.discovery.getAddressCandidates(address)
-        val recommended = jellyfinApi.jellyfin.discovery.getRecommendedServers(
-            candidates,
-            RecommendedServerInfoScore.OK,
-        )
+        val recommended =
+            jellyfinApi.jellyfin.discovery.getRecommendedServers(
+                candidates,
+                RecommendedServerInfoScore.OK,
+            )
         val goodServers = mutableListOf<RecommendedServerInfo>()
         val okServers = mutableListOf<RecommendedServerInfo>()
 
@@ -116,8 +107,9 @@ class SetupRepositoryImpl(
     }
 
     private fun saveServerInDatabase(recommendedServerInfo: RecommendedServerInfo): Server {
-        val serverInfo = recommendedServerInfo.systemInfo.getOrNull()
-            ?: throw ExceptionUiText(UiText.StringResource(SetupR.string.add_server_error_no_id))
+        val serverInfo =
+            recommendedServerInfo.systemInfo.getOrNull()
+                ?: throw ExceptionUiText(UiText.StringResource(SetupR.string.add_server_error_no_id))
 
         Timber.d("Connecting to server: ${serverInfo.serverName}")
 
@@ -125,37 +117,41 @@ class SetupRepositoryImpl(
 
         // Check if server is already in the database
         // If so only add a new address to that server if it's different
-        val server = if (serverInDatabase != null) {
-            val addresses = database.getServerWithAddresses(serverInDatabase.id).addresses
-            // If address is not in database, add it
-            if (addresses.none { it.address == recommendedServerInfo.address }) {
-                val serverAddress = ServerAddress(
-                    id = UUID.randomUUID(),
-                    serverId = serverInDatabase.id,
-                    address = recommendedServerInfo.address,
-                )
+        val server =
+            if (serverInDatabase != null) {
+                val addresses = database.getServerWithAddresses(serverInDatabase.id).addresses
+                // If address is not in database, add it
+                if (addresses.none { it.address == recommendedServerInfo.address }) {
+                    val serverAddress =
+                        ServerAddress(
+                            id = UUID.randomUUID(),
+                            serverId = serverInDatabase.id,
+                            address = recommendedServerInfo.address,
+                        )
 
+                    database.insertServerAddress(serverAddress)
+                }
+                serverInDatabase
+            } else {
+                val serverAddress =
+                    ServerAddress(
+                        id = UUID.randomUUID(),
+                        serverId = serverInfo.id!!,
+                        address = recommendedServerInfo.address,
+                    )
+
+                val server =
+                    Server(
+                        id = serverInfo.id!!,
+                        name = serverInfo.serverName!!,
+                        currentServerAddressId = serverAddress.id,
+                        currentUserId = null,
+                    )
+
+                database.insertServer(server)
                 database.insertServerAddress(serverAddress)
+                server
             }
-            serverInDatabase
-        } else {
-            val serverAddress = ServerAddress(
-                id = UUID.randomUUID(),
-                serverId = serverInfo.id!!,
-                address = recommendedServerInfo.address,
-            )
-
-            val server = Server(
-                id = serverInfo.id!!,
-                name = serverInfo.serverName!!,
-                currentServerAddressId = serverAddress.id,
-                currentUserId = null,
-            )
-
-            database.insertServer(server)
-            database.insertServerAddress(serverAddress)
-            server
-        }
 
         jellyfinApi.apply {
             api.update(
@@ -173,8 +169,8 @@ class SetupRepositoryImpl(
      * @param server The server with issues
      * @return A presentable string of issues separated with \n
      */
-    private fun createIssuesString(server: RecommendedServerInfo): Collection<UiText> {
-        return server.issues.map {
+    private fun createIssuesString(server: RecommendedServerInfo): Collection<UiText> =
+        server.issues.map {
             when (it) {
                 is RecommendedServerIssue.OutdatedServerVersion -> {
                     UiText.StringResource(SetupR.string.add_server_error_outdated, it.version)
@@ -193,35 +189,41 @@ class SetupRepositoryImpl(
                 }
             }
         }
-    }
 
-    override suspend fun loadDisclaimer(): String? {
-        return jellyfinApi.brandingApi.getBrandingOptions().content.loginDisclaimer
-    }
+    override suspend fun loadDisclaimer(): String? =
+        jellyfinApi.brandingApi
+            .getBrandingOptions()
+            .content.loginDisclaimer
 
-    override suspend fun login(username: String, password: String) {
+    override suspend fun login(
+        username: String,
+        password: String,
+    ) {
         // Perform network I/O off the main thread to avoid NetworkOnMainThreadException
-        val authenticationResult = withContext(Dispatchers.IO) {
-            val result by jellyfinApi.userApi.authenticateUserByName(
-                data = AuthenticateUserByName(
-                    username = username,
-                    pw = password,
-                ),
-            )
-            result
-        }
+        val authenticationResult =
+            withContext(Dispatchers.IO) {
+                val result by jellyfinApi.userApi.authenticateUserByName(
+                    data =
+                        AuthenticateUserByName(
+                            username = username,
+                            pw = password,
+                        ),
+                )
+                result
+            }
 
         saveAuthenticationResult(authenticationResult)
     }
 
     override suspend fun loginWithSecret(secret: String) {
         // Perform network I/O off the main thread to avoid NetworkOnMainThreadException
-        val authenticationResult = withContext(Dispatchers.IO) {
-            val result by jellyfinApi.userApi.authenticateWithQuickConnect(
-                data = QuickConnectDto(secret = secret),
-            )
-            result
-        }
+        val authenticationResult =
+            withContext(Dispatchers.IO) {
+                val result by jellyfinApi.userApi.authenticateWithQuickConnect(
+                    data = QuickConnectDto(secret = secret),
+                )
+                result
+            }
 
         saveAuthenticationResult(authenticationResult)
     }
@@ -229,12 +231,13 @@ class SetupRepositoryImpl(
     private fun saveAuthenticationResult(authenticationResult: AuthenticationResult) {
         Timber.d("Saving authentication result for userId=%s serverId=%s", authenticationResult.user?.id, authenticationResult.serverId)
 
-        val user = User(
-            id = authenticationResult.user!!.id,
-            name = authenticationResult.user!!.name!!,
-            serverId = authenticationResult.serverId!!,
-            accessToken = authenticationResult.accessToken!!,
-        )
+        val user =
+            User(
+                id = authenticationResult.user!!.id,
+                name = authenticationResult.user!!.name!!,
+                serverId = authenticationResult.serverId!!,
+                accessToken = authenticationResult.accessToken!!,
+            )
 
         database.insertUser(user)
         database.updateServerCurrentUser(authenticationResult.serverId!!, user.id)
@@ -247,9 +250,7 @@ class SetupRepositoryImpl(
         Timber.d("Authentication saved: user=%s server=%s (token redacted)", user.name, user.serverId)
     }
 
-    override suspend fun getUsers(serverId: String): List<User> {
-        return database.getUsers(serverId)
-    }
+    override suspend fun getUsers(serverId: String): List<User> = database.getUsers(serverId)
 
     override suspend fun getPublicUsers(serverId: String): List<User> {
         return jellyfinApi.userApi.getPublicUsers().content.mapNotNull {
@@ -268,6 +269,7 @@ class SetupRepositoryImpl(
 
     override suspend fun deleteUser(userId: UUID) {
         // Let the user delete the current active user for now
+
         /*val currentUser = getCurrentUser() ?: return
         if (userId == currentUser.id) {
             Timber.e("You cannot delete the current user")

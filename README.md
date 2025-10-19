@@ -6,7 +6,8 @@
 
 ![GitHub](https://img.shields.io/github/license/Jordigb44/JellyCast?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/platform-Android-green?style=for-the-badge)
-![Kotlin](https://img.shields.io/badge/Kotlin-1.9+-purple?style=for-the-badge&logo=kotlin)
+![Kotlin](https://img.shields.io/badge/Kotlin-2.2.20-purple?style=for-the-badge&logo=kotlin)
+![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=openjdk)
 
 **A feature-rich Jellyfin client for Android with DLNA casting support**
 
@@ -42,6 +43,26 @@ Beautiful download management with real-time feedback:
 - 🎯 Better visual hierarchy
 - 🔄 Improved state synchronization
 - ⚙️ Settings toggles for DLNA and Chromecast
+
+## 🔧 Development & Quality
+
+### Code Quality
+- ✅ **Ktlint Integration**: Automated code formatting and style checking
+- 🎯 **Zero Violations**: All 289+ style violations resolved
+- 📏 **Consistent Formatting**: 140-character line limit, proper indentation
+- 🔧 **Compose Support**: Custom ktlint rules for Jetpack Compose functions
+
+### Build System
+- 🚀 **Java 21**: Modern JVM with enhanced performance
+- 📦 **Gradle 9.x**: Latest build tool with improved caching
+- 🔄 **Toolchains**: Consistent Java version across all modules
+- 🏗️ **Multi-Module**: Organized architecture with clear separation
+
+### Development Setup
+- 💻 **IDE Ready**: Configured for Android Studio/VS Code
+- 🔍 **Linting**: Integrated code quality checks
+- 🧪 **Testing**: Unit test support with proper tooling
+- 📱 **Device Testing**: Support for phones and Android TV
 
 ## Screenshots
 
@@ -104,25 +125,81 @@ Beautiful download management with real-time feedback:
 - 🎯 **Trickplay**: Thumbnail previews (Jellyfin 10.9+)
 - ⏭️ **Media Segments**: Auto-skip intros/credits (Jellyfin 10.10+)
 
-## 🛠️ Technology Stack
+## � Quick Start
+
+### Prerequisites
+
+- **Java 21** (Eclipse Temurin recommended)
+- **Android Studio** (latest stable) or VS Code with Android extensions
+- **Git** for version control
+
+### Build Instructions
+
+```bash
+# Clone the repository
+git clone https://github.com/Jordigb44/findroid.git
+cd findroid
+
+# Build debug APK
+./gradlew assembleDebug
+
+# Build release APK
+./gradlew assembleRelease
+
+# Run tests
+./gradlew test
+
+# Check code quality
+./gradlew ktlintCheck
+
+# Auto-format code
+./gradlew ktlintFormat
+```
+
+### Development Setup
+
+1. Open project in Android Studio
+2. Ensure JDK 21 is configured as project SDK
+3. Sync project with Gradle files
+4. Run on device or emulator
+
+## �🛠️ Technology Stack
+
+### Core Technologies
+
+- **Java**: 21 (Eclipse Temurin)
+- **Kotlin**: 2.2.20
+- **Android Gradle Plugin**: 8.13.0
+- **Gradle**: 9.x (wrapper)
+- **Ktlint**: 12.3.0 (code quality)
 
 ### DLNA Implementation
+
 - **Server**: Jetty 9.4.54.v20240208
 - **UPnP Stack**: jUPnP 3.0.2
 - **Discovery**: AndroidUpnpServiceConfiguration
 
 ### UI Framework
-- **Compose**: Jetpack Compose with Material 3
+
+- **Compose**: Jetpack Compose 1.9.3 with Material 3
 - **Design**: Material Design 3 components
 - **Effects**: RenderEffect API for blur (Android 12+)
 
 ### Architecture
+
 - **Pattern**: MVVM (Model-View-ViewModel)
 - **Async**: Kotlin Coroutines & Flow
-- **DI**: Hilt for dependency injection
-- **Persistence**: Room database for downloads
+- **DI**: Hilt 2.57.2 for dependency injection
+- **Persistence**: Room 2.8.2 database for downloads
+
+### Media & Playback
+
+- **ExoPlayer**: Media3 1.8.0
+- **FFmpeg**: Custom extension for enhanced codec support
+- **MPV**: Alternative player with software decoding
 
 ## 🚀 Planned Features
+
 - 📺 **Android TV**: Full TV interface support
 - 🔗 **Syncplay**: WebSocket-based synchronized playback
 - 📡 **Enhanced Chromecast**: Improved casting experience
@@ -132,6 +209,7 @@ Beautiful download management with real-time feedback:
 This project is based on [**JellyCast**](https://github.com/jarnedemeulemeester/jellycast) version **0.15.3** by [Jarne De Meulemeester](https://github.com/jarnedemeulemeester).
 
 Special thanks to:
+
 - The original JellyCast project and all its contributors
 - The Jellyfin community
 - All open-source libraries used in this project

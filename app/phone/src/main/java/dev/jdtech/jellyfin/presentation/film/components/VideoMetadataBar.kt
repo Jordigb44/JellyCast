@@ -40,20 +40,22 @@ fun VideoMetadataBar(videoMetadata: VideoMetadata) {
             )
         }
         videoMetadata.displayProfiles.firstOrNull()?.apply {
-            val icon = when (this) {
-                DisplayProfile.DOLBY_VISION -> CoreR.drawable.ic_dolby
-                else -> null
-            }
+            val icon =
+                when (this) {
+                    DisplayProfile.DOLBY_VISION -> CoreR.drawable.ic_dolby
+                    else -> null
+                }
             VideoMetadataBarItem(
                 text = this.raw,
                 icon = icon,
             )
         }
         videoMetadata.audioCodecs.firstOrNull()?.apply {
-            val icon = when (this) {
-                AudioCodec.AC3, AudioCodec.EAC3, AudioCodec.TRUEHD -> CoreR.drawable.ic_dolby
-                else -> null
-            }
+            val icon =
+                when (this) {
+                    AudioCodec.AC3, AudioCodec.EAC3, AudioCodec.TRUEHD -> CoreR.drawable.ic_dolby
+                    else -> null
+                }
             VideoMetadataBarItem(
                 text = this.raw,
                 icon = icon,
@@ -73,13 +75,14 @@ fun VideoMetadataBarItem(
     @DrawableRes icon: Int? = null,
 ) {
     Row(
-        modifier = Modifier
-            .clip(MaterialTheme.shapes.small)
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-            .padding(
-                horizontal = MaterialTheme.spacings.small,
-                vertical = MaterialTheme.spacings.extraSmall,
-            ),
+        modifier =
+            Modifier
+                .clip(MaterialTheme.shapes.small)
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                .padding(
+                    horizontal = MaterialTheme.spacings.small,
+                    vertical = MaterialTheme.spacings.extraSmall,
+                ),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.extraSmall),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -101,14 +104,15 @@ fun VideoMetadataBarItem(
 private fun VideoMetadataBarPreview() {
     JellyCastTheme {
         VideoMetadataBar(
-            videoMetadata = VideoMetadata(
-                resolution = listOf(Resolution.UHD),
-                videoCodecs = listOf(VideoCodec.AV1),
-                displayProfiles = listOf(DisplayProfile.HDR10),
-                audioCodecs = listOf(AudioCodec.TRUEHD),
-                audioChannels = listOf(AudioChannel.CH_7_1),
-                isAtmos = listOf(false),
-            ),
+            videoMetadata =
+                VideoMetadata(
+                    resolution = listOf(Resolution.UHD),
+                    videoCodecs = listOf(VideoCodec.AV1),
+                    displayProfiles = listOf(DisplayProfile.HDR10),
+                    audioCodecs = listOf(AudioCodec.TRUEHD),
+                    audioChannels = listOf(AudioChannel.CH_7_1),
+                    isAtmos = listOf(false),
+                ),
         )
     }
 }

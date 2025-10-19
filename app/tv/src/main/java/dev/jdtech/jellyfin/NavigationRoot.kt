@@ -110,12 +110,13 @@ fun NavigationRoot(
     hasCurrentServer: Boolean,
     hasCurrentUser: Boolean,
 ) {
-    val startDestination = when {
-        hasServers && hasCurrentServer && hasCurrentUser -> MainRoute
-        hasServers && hasCurrentServer -> UsersRoute
-        hasServers -> ServersRoute
-        else -> WelcomeRoute
-    }
+    val startDestination =
+        when {
+            hasServers && hasCurrentServer && hasCurrentUser -> MainRoute
+            hasServers && hasCurrentServer -> UsersRoute
+            hasServers -> ServersRoute
+            else -> WelcomeRoute
+        }
     NavHost(
         navController = navController,
         startDestination = startDestination,
@@ -196,7 +197,9 @@ fun NavigationRoot(
                     navController.navigate(SettingsRoute)
                 },
                 navigateToLibrary = { libraryId, libraryName, libraryType ->
-                    navController.navigate(LibraryRoute(libraryId = libraryId.toString(), libraryName = libraryName, libraryType = libraryType))
+                    navController.navigate(
+                        LibraryRoute(libraryId = libraryId.toString(), libraryName = libraryName, libraryType = libraryType),
+                    )
                 },
                 navigateToMovie = { itemId ->
                     navController.navigate(MovieRoute(itemId.toString()))
@@ -216,7 +219,9 @@ fun NavigationRoot(
                 libraryName = route.libraryName,
                 libraryType = route.libraryType,
                 navigateToLibrary = { libraryId, libraryName, libraryType ->
-                    navController.navigate(LibraryRoute(libraryId = libraryId.toString(), libraryName = libraryName, libraryType = libraryType))
+                    navController.navigate(
+                        LibraryRoute(libraryId = libraryId.toString(), libraryName = libraryName, libraryType = libraryType),
+                    )
                 },
                 navigateToMovie = { itemId ->
                     navController.navigate(MovieRoute(itemId.toString()))

@@ -45,8 +45,9 @@ fun SettingsSelectDialog(
         }
 
         LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(),
             state = lazyListState,
             contentPadding = PaddingValues(bottom = MaterialTheme.spacings.default),
         ) {
@@ -71,14 +72,14 @@ private fun SettingsSelectDialogItem(
     onSelect: (String?) -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                onSelect(option.first)
-            }
-            .padding(
-                horizontal = MaterialTheme.spacings.default,
-            ),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable {
+                    onSelect(option.first)
+                }.padding(
+                    horizontal = MaterialTheme.spacings.default,
+                ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         RadioButton(
@@ -100,18 +101,20 @@ private fun SettingsSelectDialogItem(
 private fun SettingsSelectDialogPreview() {
     JellyCastTheme {
         SettingsSelectDialog(
-            preference = PreferenceSelect(
-                nameStringResource = SettingsR.string.settings_preferred_audio_language,
-                iconDrawableId = CoreR.drawable.ic_speaker,
-                backendPreference = Preference("", ""),
-                options = SettingsR.array.languages,
-                optionValues = SettingsR.array.languages_values,
-            ),
-            options = listOf(
-                "a" to "Option A",
-                "b" to "Option B",
-                "c" to "Option C",
-            ),
+            preference =
+                PreferenceSelect(
+                    nameStringResource = SettingsR.string.settings_preferred_audio_language,
+                    iconDrawableId = CoreR.drawable.ic_speaker,
+                    backendPreference = Preference("", ""),
+                    options = SettingsR.array.languages,
+                    optionValues = SettingsR.array.languages_values,
+                ),
+            options =
+                listOf(
+                    "a" to "Option A",
+                    "b" to "Option B",
+                    "c" to "Option C",
+                ),
             onUpdate = {},
             onDismissRequest = {},
         )

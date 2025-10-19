@@ -33,7 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import dev.jdtech.jellyfin.roku.RokuDevice
@@ -48,44 +47,48 @@ fun RokuDevicePicker(
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    
+
     var devices by remember { mutableStateOf<List<RokuDevice>>(emptyList()) }
     var isScanning by remember { mutableStateOf(true) }
-    
+
     LaunchedEffect(Unit) {
         coroutineScope.launch {
             devices = RokuHelper.discoverRokuDevices(context)
             isScanning = false
         }
     }
-    
+
     Dialog(onDismissRequest = onDismiss) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-            ),
-        ) {
-            Column(
-                modifier = Modifier
+            modifier =
+                Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                ),
+        ) {
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
             ) {
                 Text(
                     text = "Seleccionar dispositivo Roku",
                     style = MaterialTheme.typography.headlineSmall,
                 )
-                
+
                 Spacer(Modifier.height(16.dp))
-                
+
                 if (isScanning) {
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(200.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         Column(
@@ -101,9 +104,10 @@ fun RokuDevicePicker(
                     }
                 } else if (devices.isEmpty()) {
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(200.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         Column(
@@ -130,9 +134,10 @@ fun RokuDevicePicker(
                     }
                 } else {
                     LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(200.dp),
                     ) {
                         items(devices) { device ->
                             RokuDeviceItem(
@@ -145,9 +150,9 @@ fun RokuDevicePicker(
                         }
                     }
                 }
-                
+
                 Spacer(Modifier.height(16.dp))
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
@@ -155,7 +160,7 @@ fun RokuDevicePicker(
                     TextButton(onClick = onDismiss) {
                         Text("Cancelar")
                     }
-                    
+
                     if (!isScanning) {
                         Spacer(Modifier.width(8.dp))
                         TextButton(
@@ -182,17 +187,19 @@ private fun RokuDeviceItem(
     onClick: () -> Unit,
 ) {
     Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(vertical = 8.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(vertical = 8.dp),
         shape = RoundedCornerShape(8.dp),
         color = MaterialTheme.colorScheme.surfaceVariant,
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
@@ -201,9 +208,9 @@ private fun RokuDeviceItem(
                 modifier = Modifier.size(40.dp),
                 tint = MaterialTheme.colorScheme.primary,
             )
-            
+
             Spacer(Modifier.width(16.dp))
-            
+
             Column {
                 Text(
                     text = device.name,

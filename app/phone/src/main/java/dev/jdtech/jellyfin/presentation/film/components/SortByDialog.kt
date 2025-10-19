@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import kotlinx.coroutines.launch
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,8 +29,8 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.TextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -51,6 +50,7 @@ import androidx.compose.ui.window.Dialog
 import dev.jdtech.jellyfin.models.SortBy
 import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
+import kotlinx.coroutines.launch
 import org.jellyfin.sdk.model.api.SortOrder
 import dev.jdtech.jellyfin.core.R as CoreR
 
@@ -93,28 +93,32 @@ fun SortByDialog(
         onDismissRequest = { onDismissRequest() },
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 540.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 540.dp),
             shape = MaterialTheme.shapes.extraLarge,
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            ),
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                ),
         ) {
             Column {
                 Spacer(modifier = Modifier.height(MaterialTheme.spacings.default))
                 Text(
                     text = stringResource(CoreR.string.sort_by),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = MaterialTheme.spacings.default),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = MaterialTheme.spacings.default),
                     style = MaterialTheme.typography.headlineSmall,
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.spacings.medium))
                 SingleChoiceSegmentedButtonRow(
-                    modifier = Modifier
-                        .padding(horizontal = MaterialTheme.spacings.default)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(horizontal = MaterialTheme.spacings.default)
+                            .fillMaxWidth(),
                 ) {
                     orderOptions.forEachIndexed { index, order ->
                         SegmentedButton(
@@ -123,13 +127,15 @@ fun SortByDialog(
                                 selectedOrder = order.first
                                 onUpdate(selectedOption, selectedOrder)
                             },
-                            shape = SegmentedButtonDefaults.itemShape(
-                                index = index,
-                                count = orderOptions.size,
-                            ),
-                            colors = SegmentedButtonDefaults.colors(
-                                inactiveContainerColor = Color.Transparent,
-                            ),
+                            shape =
+                                SegmentedButtonDefaults.itemShape(
+                                    index = index,
+                                    count = orderOptions.size,
+                                ),
+                            colors =
+                                SegmentedButtonDefaults.colors(
+                                    inactiveContainerColor = Color.Transparent,
+                                ),
                             icon = {
                                 AnimatedVisibility(
                                     visible = order.first == selectedOrder,
@@ -152,24 +158,25 @@ fun SortByDialog(
                 if (!isAtTop) {
                     HorizontalDivider()
                 }
-                            LazyColumn(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                state = lazyListState,
-                            ) {
-                                items(options) { option ->
-                                    SortByDialogItem(
-                                        option = option,
-                                        isSelected = option.first == selectedOption,
-                                        onSelect = {
-                                            selectedOption = option.first
-                                            onUpdate(selectedOption, selectedOrder)
-                                        },
-                                    )
-                                }
+                LazyColumn(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
+                    state = lazyListState,
+                ) {
+                    items(options) { option ->
+                        SortByDialogItem(
+                            option = option,
+                            isSelected = option.first == selectedOption,
+                            onSelect = {
+                                selectedOption = option.first
+                                onUpdate(selectedOption, selectedOrder)
+                            },
+                        )
+                    }
 
-                                // Genre selection removed - now handled by genre carousel in main screen
-                            }
+                    // Genre selection removed - now handled by genre carousel in main screen
+                }
                 Spacer(modifier = Modifier.height(MaterialTheme.spacings.medium))
             }
         }
@@ -183,14 +190,14 @@ private fun SortByDialogItem(
     onSelect: (SortBy) -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                onSelect(option.first)
-            }
-            .padding(
-                horizontal = MaterialTheme.spacings.default,
-            ),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable {
+                    onSelect(option.first)
+                }.padding(
+                    horizontal = MaterialTheme.spacings.default,
+                ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         RadioButton(

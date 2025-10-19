@@ -45,30 +45,34 @@ fun HomeHeader(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(56.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(56.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Surface(
             onClick = onServerClick,
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f, fill = false),
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .weight(1f, fill = false),
             shape = CircleShape,
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
         ) {
             Row(
-                modifier = Modifier
-                    .padding(horizontal = MaterialTheme.spacings.medium),
+                modifier =
+                    Modifier
+                        .padding(horizontal = MaterialTheme.spacings.medium),
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.small),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
                     painter = painterResource(CoreR.drawable.ic_logo),
                     contentDescription = null,
-                    modifier = Modifier
-                        .size(32.dp),
+                    modifier =
+                        Modifier
+                            .size(32.dp),
                     tint = Color.Unspecified,
                 )
                 Text(
@@ -76,8 +80,9 @@ fun HomeHeader(
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier
-                        .animateContentSize(),
+                    modifier =
+                        Modifier
+                            .animateContentSize(),
                 )
             }
         }
@@ -94,9 +99,10 @@ fun HomeHeader(
             ) {
                 Surface(
                     onClick = onErrorClick,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .aspectRatio(1f),
+                    modifier =
+                        Modifier
+                            .fillMaxHeight()
+                            .aspectRatio(1f),
                     shape = CircleShape,
                     color = MaterialTheme.colorScheme.errorContainer,
                 ) {
@@ -105,8 +111,9 @@ fun HomeHeader(
                             painter = painterResource(CoreR.drawable.ic_alert_circle),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onErrorContainer,
-                            modifier = Modifier
-                                .align(Alignment.Center),
+                            modifier =
+                                Modifier
+                                    .align(Alignment.Center),
                         )
                     }
                 }
@@ -119,9 +126,10 @@ fun HomeHeader(
             ) {
                 Surface(
                     onClick = onRetryClick,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .aspectRatio(1f),
+                    modifier =
+                        Modifier
+                            .fillMaxHeight()
+                            .aspectRatio(1f),
                     enabled = !isLoading,
                     shape = CircleShape,
                     color = MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -132,15 +140,17 @@ fun HomeHeader(
                                 Icon(
                                     painter = painterResource(CoreR.drawable.ic_rotate_ccw),
                                     contentDescription = null,
-                                    modifier = Modifier
-                                        .align(Alignment.Center),
+                                    modifier =
+                                        Modifier
+                                            .align(Alignment.Center),
                                 )
                             }
                             isLoading -> {
                                 Box(
-                                    modifier = Modifier
-                                        .size(32.dp)
-                                        .align(Alignment.Center),
+                                    modifier =
+                                        Modifier
+                                            .size(32.dp)
+                                            .align(Alignment.Center),
                                 ) {
                                     CircularProgressIndicator()
                                 }
@@ -152,15 +162,17 @@ fun HomeHeader(
 
             Surface(
                 onClick = onUserClick,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .aspectRatio(1f),
+                modifier =
+                    Modifier
+                        .fillMaxHeight()
+                        .aspectRatio(1f),
                 shape = CircleShape,
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {

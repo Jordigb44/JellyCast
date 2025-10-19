@@ -45,11 +45,12 @@ fun PlayButton(
         )
         Spacer(modifier = Modifier.width(MaterialTheme.spacings.small))
         Text(
-            text = if (runtimeMinutes > 0) {
-                stringResource(CoreR.string.runtime_minutes, runtimeMinutes)
-            } else {
-                stringResource(CoreR.string.play)
-            },
+            text =
+                if (runtimeMinutes > 0) {
+                    stringResource(CoreR.string.runtime_minutes, runtimeMinutes)
+                } else {
+                    stringResource(CoreR.string.play)
+                },
         )
     }
 }

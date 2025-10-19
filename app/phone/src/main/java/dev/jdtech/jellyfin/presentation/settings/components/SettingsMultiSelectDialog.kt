@@ -69,9 +69,10 @@ fun SettingsMultiSelectDialog(
             HorizontalDivider()
         }
         LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f, fill = false),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f, fill = false),
             state = lazyListState,
         ) {
             items(
@@ -82,11 +83,12 @@ fun SettingsMultiSelectDialog(
                     option = option,
                     checked = selectedOptions.contains(option.first),
                     onCheckedChange = { key ->
-                        selectedOptions = if (selectedOptions.contains(key)) {
-                            selectedOptions - setOfNotNull(key)
-                        } else {
-                            selectedOptions + listOfNotNull(key)
-                        }
+                        selectedOptions =
+                            if (selectedOptions.contains(key)) {
+                                selectedOptions - setOfNotNull(key)
+                            } else {
+                                selectedOptions + listOfNotNull(key)
+                            }
                     },
                 )
             }
@@ -104,12 +106,13 @@ private fun SettingsMultiSelectDialogItem(
     onCheckedChange: (String?) -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onCheckedChange(option.first) }
-            .padding(
-                horizontal = MaterialTheme.spacings.default,
-            ),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable { onCheckedChange(option.first) }
+                .padding(
+                    horizontal = MaterialTheme.spacings.default,
+                ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Checkbox(
@@ -129,17 +132,19 @@ private fun SettingsMultiSelectDialogItem(
 private fun SettingsMultiSelectDialogPreview() {
     JellyCastTheme {
         SettingsMultiSelectDialog(
-            preference = PreferenceMultiSelect(
-                nameStringResource = SettingsR.string.pref_player_media_segments_skip_button_type,
-                backendPreference = Preference("", emptySet()),
-                options = SettingsR.array.media_segments_type,
-                optionValues = SettingsR.array.media_segments_type_values,
-            ),
-            options = listOf(
-                "a" to "Option A",
-                "b" to "Option B",
-                "c" to "Option C",
-            ),
+            preference =
+                PreferenceMultiSelect(
+                    nameStringResource = SettingsR.string.pref_player_media_segments_skip_button_type,
+                    backendPreference = Preference("", emptySet()),
+                    options = SettingsR.array.media_segments_type,
+                    optionValues = SettingsR.array.media_segments_type_values,
+                ),
+            options =
+                listOf(
+                    "a" to "Option A",
+                    "b" to "Option B",
+                    "c" to "Option C",
+                ),
             onUpdate = {},
             onDismissRequest = {},
         )

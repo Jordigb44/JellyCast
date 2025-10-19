@@ -12,17 +12,17 @@ data class JellyCastItemPersonImage(
     val blurHash: String?,
 )
 
-fun BaseItemPerson.toJellyCastImage(
-    repository: JellyfinRepository,
-): JellyCastItemPersonImage {
+fun BaseItemPerson.toJellyCastImage(repository: JellyfinRepository): JellyCastItemPersonImage {
     val baseUrl = Uri.parse(repository.getBaseUrl())
     return JellyCastItemPersonImage(
-        uri = primaryImageTag?.let { tag ->
-            baseUrl.buildUpon()
-                .appendEncodedPath("items/$id/Images/${ImageType.PRIMARY}")
-                .appendQueryParameter("tag", tag)
-                .build()
-        },
+        uri =
+            primaryImageTag?.let { tag ->
+                baseUrl
+                    .buildUpon()
+                    .appendEncodedPath("items/$id/Images/${ImageType.PRIMARY}")
+                    .appendQueryParameter("tag", tag)
+                    .build()
+            },
         blurHash = imageBlurHashes?.get(ImageType.PRIMARY)?.get(primaryImageTag),
     )
 }
@@ -35,14 +35,11 @@ data class JellyCastItemPerson(
     val image: JellyCastItemPersonImage,
 )
 
-fun BaseItemPerson.toJellyCastPerson(
-    repository: JellyfinRepository,
-): JellyCastItemPerson {
-    return JellyCastItemPerson(
+fun BaseItemPerson.toJellyCastPerson(repository: JellyfinRepository): JellyCastItemPerson =
+    JellyCastItemPerson(
         id = id,
         name = name.orEmpty(),
         type = type,
         role = role.orEmpty(),
         image = toJellyCastImage(repository),
     )
-}

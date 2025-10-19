@@ -12,7 +12,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 
 @Composable
-fun <T> ObserveAsEvents(flow: Flow<T>, onEvent: (T) -> Unit) {
+fun <T> ObserveAsEvents(
+    flow: Flow<T>,
+    onEvent: (T) -> Unit,
+) {
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(flow, lifecycleOwner.lifecycle) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -21,19 +24,20 @@ fun <T> ObserveAsEvents(flow: Flow<T>, onEvent: (T) -> Unit) {
     }
 }
 
-private val DPadEventsKeyCodes = listOf(
-    KeyEvent.KEYCODE_DPAD_LEFT,
-    KeyEvent.KEYCODE_SYSTEM_NAVIGATION_LEFT,
-    KeyEvent.KEYCODE_DPAD_RIGHT,
-    KeyEvent.KEYCODE_SYSTEM_NAVIGATION_RIGHT,
-    KeyEvent.KEYCODE_DPAD_UP,
-    KeyEvent.KEYCODE_SYSTEM_NAVIGATION_UP,
-    KeyEvent.KEYCODE_DPAD_DOWN,
-    KeyEvent.KEYCODE_SYSTEM_NAVIGATION_DOWN,
-    KeyEvent.KEYCODE_DPAD_CENTER,
-    KeyEvent.KEYCODE_ENTER,
-    KeyEvent.KEYCODE_NUMPAD_ENTER,
-)
+private val DPadEventsKeyCodes =
+    listOf(
+        KeyEvent.KEYCODE_DPAD_LEFT,
+        KeyEvent.KEYCODE_SYSTEM_NAVIGATION_LEFT,
+        KeyEvent.KEYCODE_DPAD_RIGHT,
+        KeyEvent.KEYCODE_SYSTEM_NAVIGATION_RIGHT,
+        KeyEvent.KEYCODE_DPAD_UP,
+        KeyEvent.KEYCODE_SYSTEM_NAVIGATION_UP,
+        KeyEvent.KEYCODE_DPAD_DOWN,
+        KeyEvent.KEYCODE_SYSTEM_NAVIGATION_DOWN,
+        KeyEvent.KEYCODE_DPAD_CENTER,
+        KeyEvent.KEYCODE_ENTER,
+        KeyEvent.KEYCODE_NUMPAD_ENTER,
+    )
 
 /**
  * Handles horizontal (Left & Right) D-Pad Keys and consumes the event(s) so that the focus doesn't

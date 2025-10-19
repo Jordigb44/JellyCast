@@ -82,19 +82,21 @@ private fun HomeScreenLayout(
     onAction: (HomeAction) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    val safePadding = rememberSafePadding(
-        handleStartInsets = false,
-    )
+    val safePadding =
+        rememberSafePadding(
+            handleStartInsets = false,
+        )
 
     val paddingStart = safePadding.start + MaterialTheme.spacings.default
     val paddingTop = safePadding.top + MaterialTheme.spacings.small
     val paddingEnd = safePadding.end + MaterialTheme.spacings.default
     val paddingBottom = safePadding.bottom + MaterialTheme.spacings.default
 
-    val itemsPadding = PaddingValues(
-        start = paddingStart,
-        end = paddingEnd,
-    )
+    val itemsPadding =
+        PaddingValues(
+            start = paddingStart,
+            end = paddingEnd,
+        )
 
     val contentPaddingTop = safePadding.top + 88.dp
 
@@ -103,18 +105,21 @@ private fun HomeScreenLayout(
     var showServerSelectionBottomSheet by remember { mutableStateOf(false) }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .semantics { isTraversalGroup = true },
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .semantics { isTraversalGroup = true },
     ) {
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .semantics { traversalIndex = 1f },
-            contentPadding = PaddingValues(
-                top = contentPaddingTop,
-                bottom = paddingBottom,
-            ),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .semantics { traversalIndex = 1f },
+            contentPadding =
+                PaddingValues(
+                    top = contentPaddingTop,
+                    bottom = paddingBottom,
+                ),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.medium),
         ) {
             state.suggestionsSection?.let { section ->
@@ -180,12 +185,13 @@ private fun HomeScreenLayout(
         onUserClick = {
             onAction(HomeAction.OnSettingsClick)
         },
-        modifier = Modifier
-            .padding(
-                start = paddingStart,
-                top = paddingTop,
-                end = paddingEnd,
-            ),
+        modifier =
+            Modifier
+                .padding(
+                    start = paddingStart,
+                    top = paddingTop,
+                    end = paddingEnd,
+                ),
     )
 
     if (showServerSelectionBottomSheet) {
@@ -216,13 +222,14 @@ private fun HomeScreenLayout(
 private fun HomeScreenLayoutPreview() {
     JellyCastTheme {
         HomeScreenLayout(
-            state = HomeState(
-                server = dummyServer,
-                suggestionsSection = dummyHomeSuggestions,
-                resumeSection = dummyHomeSection,
-                views = listOf(dummyHomeView),
-                error = Exception("Failed to load data"),
-            ),
+            state =
+                HomeState(
+                    server = dummyServer,
+                    suggestionsSection = dummyHomeSuggestions,
+                    resumeSection = dummyHomeSection,
+                    views = listOf(dummyHomeView),
+                    error = Exception("Failed to load data"),
+                ),
             onAction = {},
         )
     }

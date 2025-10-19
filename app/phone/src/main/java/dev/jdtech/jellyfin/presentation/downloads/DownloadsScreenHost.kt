@@ -20,19 +20,20 @@ fun DownloadsScreenHost(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val fragmentManager = remember { (context as FragmentActivity).supportFragmentManager }
     val containerId = remember { android.view.View.generateViewId() }
-    
+
     AndroidView(
         modifier = modifier,
         factory = { ctx ->
             android.util.Log.d("DownloadsScreenHost", "Factory: Creating FragmentContainerView with id=$containerId")
-            
+
             FragmentContainerView(ctx).apply {
                 id = containerId
-                layoutParams = android.view.ViewGroup.LayoutParams(
-                    android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-                    android.view.ViewGroup.LayoutParams.MATCH_PARENT
-                )
-                
+                layoutParams =
+                    android.view.ViewGroup.LayoutParams(
+                        android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                        android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                    )
+
                 // Add the Fragment to the container
                 fragmentManager.commit {
                     setReorderingAllowed(true)
@@ -46,9 +47,9 @@ fun DownloadsScreenHost(modifier: Modifier = Modifier) {
             view.visibility = android.view.View.VISIBLE
             view.requestLayout()
             view.invalidate()
-        }
+        },
     )
-    
+
     DisposableEffect(containerId) {
         android.util.Log.d("DownloadsScreenHost", "DisposableEffect: Fragment container created")
         onDispose {

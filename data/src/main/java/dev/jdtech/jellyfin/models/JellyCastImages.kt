@@ -14,46 +14,56 @@ data class JellyCastImages(
     val showLogo: Uri? = null,
 )
 
-fun BaseItemDto.toJellyCastImages(
-    jellyfinRepository: JellyfinRepository,
-): JellyCastImages {
+fun BaseItemDto.toJellyCastImages(jellyfinRepository: JellyfinRepository): JellyCastImages {
     val baseUrl = Uri.parse(jellyfinRepository.getBaseUrl())
-    val primary = imageTags?.get(ImageType.PRIMARY)?.let { tag ->
-        baseUrl.buildUpon()
-            .appendEncodedPath("items/$id/Images/${ImageType.PRIMARY}")
-            .appendQueryParameter("tag", tag)
-            .build()
-    }
-    val backdrop = backdropImageTags?.firstOrNull()?.let { tag ->
-        baseUrl.buildUpon()
-            .appendEncodedPath("items/$id/Images/${ImageType.BACKDROP}/0")
-            .appendQueryParameter("tag", tag)
-            .build()
-    }
-    val logo = imageTags?.get(ImageType.LOGO)?.let { tag ->
-        baseUrl.buildUpon()
-            .appendEncodedPath("items/$id/Images/${ImageType.LOGO}")
-            .appendQueryParameter("tag", tag)
-            .build()
-    }
-    val showPrimary = seriesPrimaryImageTag?.let { tag ->
-        baseUrl.buildUpon()
-            .appendEncodedPath("items/$seriesId/Images/${ImageType.PRIMARY}")
-            .appendQueryParameter("tag", tag)
-            .build()
-    }
-    val showBackdrop = seriesPrimaryImageTag?.let { tag ->
-        baseUrl.buildUpon()
-            .appendEncodedPath("items/$seriesId/Images/${ImageType.BACKDROP}/0")
-            .appendQueryParameter("tag", tag)
-            .build()
-    }
-    val showLogo = seriesPrimaryImageTag?.let { tag ->
-        baseUrl.buildUpon()
-            .appendEncodedPath("items/$seriesId/Images/${ImageType.LOGO}")
-            .appendQueryParameter("tag", tag)
-            .build()
-    }
+    val primary =
+        imageTags?.get(ImageType.PRIMARY)?.let { tag ->
+            baseUrl
+                .buildUpon()
+                .appendEncodedPath("items/$id/Images/${ImageType.PRIMARY}")
+                .appendQueryParameter("tag", tag)
+                .build()
+        }
+    val backdrop =
+        backdropImageTags?.firstOrNull()?.let { tag ->
+            baseUrl
+                .buildUpon()
+                .appendEncodedPath("items/$id/Images/${ImageType.BACKDROP}/0")
+                .appendQueryParameter("tag", tag)
+                .build()
+        }
+    val logo =
+        imageTags?.get(ImageType.LOGO)?.let { tag ->
+            baseUrl
+                .buildUpon()
+                .appendEncodedPath("items/$id/Images/${ImageType.LOGO}")
+                .appendQueryParameter("tag", tag)
+                .build()
+        }
+    val showPrimary =
+        seriesPrimaryImageTag?.let { tag ->
+            baseUrl
+                .buildUpon()
+                .appendEncodedPath("items/$seriesId/Images/${ImageType.PRIMARY}")
+                .appendQueryParameter("tag", tag)
+                .build()
+        }
+    val showBackdrop =
+        seriesPrimaryImageTag?.let { tag ->
+            baseUrl
+                .buildUpon()
+                .appendEncodedPath("items/$seriesId/Images/${ImageType.BACKDROP}/0")
+                .appendQueryParameter("tag", tag)
+                .build()
+        }
+    val showLogo =
+        seriesPrimaryImageTag?.let { tag ->
+            baseUrl
+                .buildUpon()
+                .appendEncodedPath("items/$seriesId/Images/${ImageType.LOGO}")
+                .appendQueryParameter("tag", tag)
+                .build()
+        }
 
     return JellyCastImages(
         primary = primary,

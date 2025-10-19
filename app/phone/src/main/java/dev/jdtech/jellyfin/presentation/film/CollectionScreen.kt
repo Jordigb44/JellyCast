@@ -21,18 +21,18 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -46,9 +46,9 @@ import dev.jdtech.jellyfin.film.presentation.collection.CollectionAction
 import dev.jdtech.jellyfin.film.presentation.collection.CollectionState
 import dev.jdtech.jellyfin.film.presentation.collection.CollectionViewModel
 import dev.jdtech.jellyfin.models.CollectionSection
-import dev.jdtech.jellyfin.models.SortBy
 import dev.jdtech.jellyfin.models.JellyCastEpisode
 import dev.jdtech.jellyfin.models.JellyCastItem
+import dev.jdtech.jellyfin.models.SortBy
 import dev.jdtech.jellyfin.models.UiText
 import dev.jdtech.jellyfin.presentation.film.components.Direction
 import dev.jdtech.jellyfin.presentation.film.components.ItemCard
@@ -104,19 +104,21 @@ fun CollectionScreenLayout(
     onePerGenreState: Boolean,
     onToggleOnePerGenre: () -> Unit,
 ) {
-    val contentPadding = PaddingValues(
-        all = MaterialTheme.spacings.default,
-    )
+    val contentPadding =
+        PaddingValues(
+            all = MaterialTheme.spacings.default,
+        )
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var showSortByDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = remember { SnackbarHostState() }) },
-        modifier = Modifier
-            .fillMaxSize()
-            .recalculateWindowInsets()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .recalculateWindowInsets()
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {
@@ -124,9 +126,9 @@ fun CollectionScreenLayout(
                 },
                 navigationIcon = {
                     IconButton(
-                            onClick = {
-                                onBack()
-                            },
+                        onClick = {
+                            onBack()
+                        },
                     ) {
                         Icon(
                             painter = painterResource(CoreR.drawable.ic_arrow_left),
@@ -135,7 +137,8 @@ fun CollectionScreenLayout(
                     }
                 },
                 actions = {
-                    dev.jdtech.jellyfin.presentation.components.CastButton()
+                    dev.jdtech.jellyfin.presentation.components
+                        .CastButton()
                     IconButton(onClick = { showSortByDialog = true }) {
                         Icon(
                             painter = painterResource(id = CoreR.drawable.ic_arrow_down_up),
@@ -152,16 +155,17 @@ fun CollectionScreenLayout(
             LazyVerticalGrid(
                 columns = GridCellsAdaptiveWithMinColumns(minSize = 160.dp, minColumns = 2),
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = if (state.genres.isNotEmpty()) {
-                    // When genres exist, remove top padding to make carousel stick to top
-                    PaddingValues(
-                        start = MaterialTheme.spacings.default,
-                        end = MaterialTheme.spacings.default,
-                        bottom = MaterialTheme.spacings.default,
-                    ) + innerPadding
-                } else {
-                    contentPadding + innerPadding
-                },
+                contentPadding =
+                    if (state.genres.isNotEmpty()) {
+                        // When genres exist, remove top padding to make carousel stick to top
+                        PaddingValues(
+                            start = MaterialTheme.spacings.default,
+                            end = MaterialTheme.spacings.default,
+                            bottom = MaterialTheme.spacings.default,
+                        ) + innerPadding
+                    } else {
+                        contentPadding + innerPadding
+                    },
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.default),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.default),
             ) {
@@ -169,9 +173,10 @@ fun CollectionScreenLayout(
                 if (state.genres.isNotEmpty()) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         LazyRow(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = MaterialTheme.spacings.small),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = MaterialTheme.spacings.small),
                             contentPadding = PaddingValues(horizontal = MaterialTheme.spacings.medium),
                             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.small),
                         ) {
@@ -194,7 +199,7 @@ fun CollectionScreenLayout(
                         }
                     }
                 }
-                
+
                 // Show all items from all sections without headers
                 state.sections.forEach { section ->
                     items(
@@ -217,7 +222,8 @@ fun CollectionScreenLayout(
                 SortByDialog(
                     currentSortBy = SortBy.NAME,
                     currentSortOrder = org.jellyfin.sdk.model.api.SortOrder.ASCENDING,
-                    onUpdate = { _, _ -> /* collection sorting not wired here */ },
+                    onUpdate = { _, _ -> // collection sorting not wired here
+                    },
                     onDismissRequest = { showSortByDialog = false },
                     genres = state.genres,
                     currentGenre = state.selectedGenre,
@@ -237,12 +243,18 @@ private fun CollectionScreenLayoutPreview() {
     JellyCastTheme {
         CollectionScreenLayout(
             collectionName = "Marvel",
-            state = CollectionState(sections = listOf(CollectionSection(id = 0, name = UiText.StringResource(CoreR.string.movies_label), items = dummyMovies))),
+            state =
+                CollectionState(
+                    sections =
+                        listOf(
+                            CollectionSection(id = 0, name = UiText.StringResource(CoreR.string.movies_label), items = dummyMovies),
+                        ),
+                ),
             onBack = {},
             onItemClick = {},
             onGenreSelected = {},
             onePerGenreState = false,
-            onToggleOnePerGenre = {}
+            onToggleOnePerGenre = {},
         )
     }
 }

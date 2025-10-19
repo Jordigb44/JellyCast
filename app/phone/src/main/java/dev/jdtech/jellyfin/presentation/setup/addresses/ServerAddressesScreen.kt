@@ -98,9 +98,10 @@ fun ServerAddressesLayout(
     var openDeleteDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {
@@ -144,12 +145,13 @@ fun ServerAddressesLayout(
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(
-                    start = paddingStart + innerPadding.calculateStartPadding(layoutDirection),
-                    top = paddingTop,
-                    end = paddingEnd + innerPadding.calculateEndPadding(layoutDirection),
-                    bottom = paddingBottom + innerPadding.calculateBottomPadding(),
-                ),
+                contentPadding =
+                    PaddingValues(
+                        start = paddingStart + innerPadding.calculateStartPadding(layoutDirection),
+                        top = paddingTop,
+                        end = paddingEnd + innerPadding.calculateEndPadding(layoutDirection),
+                        bottom = paddingBottom + innerPadding.calculateBottomPadding(),
+                    ),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.medium),
             ) {
                 items(
@@ -157,19 +159,19 @@ fun ServerAddressesLayout(
                     key = { it.id },
                 ) { address ->
                     Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(CardDefaults.outlinedShape)
-                            .combinedClickable(
-                                onClick = {},
-                                onLongClick = {
-                                    selectedAddress = address
-                                    openDeleteDialog = true
-                                },
-                            )
-                            .padding(
-                                MaterialTheme.spacings.small,
-                            ),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .clip(CardDefaults.outlinedShape)
+                                .combinedClickable(
+                                    onClick = {},
+                                    onLongClick = {
+                                        selectedAddress = address
+                                        openDeleteDialog = true
+                                    },
+                                ).padding(
+                                    MaterialTheme.spacings.small,
+                                ),
                     ) {
                         Text(address.address)
                     }
@@ -209,9 +211,10 @@ fun ServerAddressesLayout(
 private fun ServerAddressesLayoutPreview() {
     JellyCastTheme {
         ServerAddressesLayout(
-            state = ServerAddressesState(
-                addresses = listOf(dummyServerAddress),
-            ),
+            state =
+                ServerAddressesState(
+                    addresses = listOf(dummyServerAddress),
+                ),
             onAction = {},
         )
     }

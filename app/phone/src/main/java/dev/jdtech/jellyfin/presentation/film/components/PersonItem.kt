@@ -29,21 +29,22 @@ fun PersonItem(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .width(110.dp)
-            .clip(MaterialTheme.shapes.small)
-            .clickable(onClick = onClick),
+        modifier =
+            modifier
+                .width(110.dp)
+                .clip(MaterialTheme.shapes.small)
+                .clickable(onClick = onClick),
     ) {
         AsyncImage(
             model = person.image.uri,
             contentDescription = null,
-            modifier = Modifier
-                .clip(MaterialTheme.shapes.small)
-                .background(
-                    MaterialTheme.colorScheme.surfaceContainer,
-                )
-                .fillMaxWidth()
-                .height(160.dp),
+            modifier =
+                Modifier
+                    .clip(MaterialTheme.shapes.small)
+                    .background(
+                        MaterialTheme.colorScheme.surfaceContainer,
+                    ).fillMaxWidth()
+                    .height(160.dp),
             contentScale = ContentScale.Crop,
         )
         Spacer(Modifier.height(MaterialTheme.spacings.extraSmall))

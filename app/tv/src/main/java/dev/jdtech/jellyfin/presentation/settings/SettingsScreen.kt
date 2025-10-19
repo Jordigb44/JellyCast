@@ -61,7 +61,8 @@ fun SettingsScreen(
             is SettingsEvent.LaunchIntent -> {
                 try {
                     context.startActivity(event.intent)
-                } catch (_: Exception) { }
+                } catch (_: Exception) {
+                }
             }
         }
     }
@@ -92,9 +93,10 @@ private fun SettingsScreenLayout(
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.default),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.default),
         contentPadding = PaddingValues(horizontal = MaterialTheme.spacings.default * 2, vertical = MaterialTheme.spacings.large),
-        modifier = Modifier
-            .fillMaxSize()
-            .focusRequester(focusRequester),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .focusRequester(focusRequester),
     ) {
         item(span = { GridItemSpan(this.maxLineSpan) }) {
             Text(
@@ -119,28 +121,32 @@ private fun SettingsScreenLayout(
 private fun SettingsScreenLayoutPreview() {
     JellyCastTheme {
         SettingsScreenLayout(
-            state = SettingsState(
-                preferenceGroups = listOf(
-                    PreferenceGroup(
-                        nameStringResource = null,
-                        preferences = listOf(
-                            PreferenceCategory(
-                                nameStringResource = SettingsR.string.settings_category_language,
-                                iconDrawableId = SettingsR.drawable.ic_languages,
+            state =
+                SettingsState(
+                    preferenceGroups =
+                        listOf(
+                            PreferenceGroup(
+                                nameStringResource = null,
+                                preferences =
+                                    listOf(
+                                        PreferenceCategory(
+                                            nameStringResource = SettingsR.string.settings_category_language,
+                                            iconDrawableId = SettingsR.drawable.ic_languages,
+                                        ),
+                                    ),
+                            ),
+                            PreferenceGroup(
+                                nameStringResource = null,
+                                preferences =
+                                    listOf(
+                                        PreferenceCategory(
+                                            nameStringResource = SettingsR.string.settings_category_appearance,
+                                            iconDrawableId = SettingsR.drawable.ic_palette,
+                                        ),
+                                    ),
                             ),
                         ),
-                    ),
-                    PreferenceGroup(
-                        nameStringResource = null,
-                        preferences = listOf(
-                            PreferenceCategory(
-                                nameStringResource = SettingsR.string.settings_category_appearance,
-                                iconDrawableId = SettingsR.drawable.ic_palette,
-                            ),
-                        ),
-                    ),
                 ),
-            ),
             onAction = {},
         )
     }

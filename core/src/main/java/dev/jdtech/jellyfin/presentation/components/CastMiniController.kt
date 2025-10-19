@@ -6,13 +6,11 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,7 +23,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,7 +35,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -80,66 +76,75 @@ fun CastMiniController(
     var totalDuration by remember { mutableStateOf(0L) }
     var isSeeking by remember { mutableStateOf(false) }
     var isPlaying by remember { mutableStateOf(false) }
-    
+
     // Update state periodically
     DisposableEffect(Unit) {
         var updateJob: Job? = null
-        
-        updateJob = CoroutineScope(Dispatchers.Main).launch {
-            while (isActive) {
-                val isCasting = CastHelper.isCastSessionAvailable(context)
-                isVisible = isCasting
-                
-                if (isCasting) {
-                    isPlaying = CastHelper.isPlaying(context)
-                    currentPosition = CastHelper.getCurrentPosition(context)
-                    totalDuration = CastHelper.getDuration(context)
-                    
-                    if (totalDuration > 0 && !isSeeking) {
-                        progress = (currentPosition.toFloat() / totalDuration.toFloat()).coerceIn(0f, 1f)
-                        currentTime = formatTime(currentPosition)
-                        duration = formatTime(totalDuration)
+
+        updateJob =
+            CoroutineScope(Dispatchers.Main).launch {
+                while (isActive) {
+                    val isCasting = CastHelper.isCastSessionAvailable(context)
+                    isVisible = isCasting
+
+                    if (isCasting) {
+                        isPlaying = CastHelper.isPlaying(context)
+                        currentPosition = CastHelper.getCurrentPosition(context)
+                        totalDuration = CastHelper.getDuration(context)
+
+                        if (totalDuration > 0 && !isSeeking) {
+                            progress = (currentPosition.toFloat() / totalDuration.toFloat()).coerceIn(0f, 1f)
+                            currentTime = formatTime(currentPosition)
+                            duration = formatTime(totalDuration)
+                        }
+
+                        // Get media info
+                        title = CastHelper.getMediaTitle(context)
+                        subtitle = CastHelper.getMediaSubtitle(context)
+                        imageUrl = CastHelper.getMediaImageUrl(context)
+                        volume = CastHelper.getVolume(context).toFloat()
                     }
-                    
-                    // Get media info
-                    title = CastHelper.getMediaTitle(context)
-                    subtitle = CastHelper.getMediaSubtitle(context)
-                    imageUrl = CastHelper.getMediaImageUrl(context)
-                    volume = CastHelper.getVolume(context).toFloat()
+
+                    delay(1000) // Update every second
                 }
-                
-                delay(1000) // Update every second
             }
-        }
-        
+
         onDispose {
             updateJob?.cancel()
         }
     }
-    
+
     val playerHeight by animateDpAsState(
         targetValue = if (isExpanded) 500.dp else 80.dp,
-        label = "playerHeight"
+        label = "playerHeight",
     )
-    
+
     // When collapsed and on home page, add bottom padding to stay above navbar (80dp)
     val bottomPadding by animateDpAsState(
-        targetValue = if (isExpanded) 0.dp else if (isOnHomePage) 80.dp else 0.dp,
-        label = "bottomPadding"
+        targetValue =
+            if (isExpanded) {
+                0.dp
+            } else if (isOnHomePage) {
+                80.dp
+            } else {
+                0.dp
+            },
+        label = "bottomPadding",
     )
-    
+
     AnimatedVisibility(
         visible = isVisible,
         enter = slideInVertically(initialOffsetY = { it }),
         exit = slideOutVertically(targetOffsetY = { it }),
-        modifier = modifier.padding(bottom = bottomPadding)
+        modifier = modifier.padding(bottom = bottomPadding),
     ) {
         Surface(
             shadowElevation = 8.dp,
             tonalElevation = 2.dp,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(playerHeight)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(playerHeight),
         ) {
             if (isExpanded) {
                 // Expanded player
@@ -180,7 +185,7 @@ fun CastMiniController(
                     },
                     onCollapse = {
                         isExpanded = false
-                    }
+                    },
                 )
             } else {
                 // Mini player
@@ -208,7 +213,7 @@ fun CastMiniController(
                     },
                     onExpand = {
                         isExpanded = true
-                    }
+                    },
                 )
             }
         }
@@ -229,89 +234,92 @@ private fun MiniCastPlayer(
     onExpand: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surfaceContainer)
-            .clickable { onExpand() }
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surfaceContainer)
+                .clickable { onExpand() },
     ) {
         LinearProgressIndicator(
             progress = { progress },
             modifier = Modifier.fillMaxWidth(),
         )
-        
+
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             // Title and time
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     text = title,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = "$currentTime / $duration",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            
+
             // Controls
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 // Rewind
                 IconButton(
                     onClick = onRewind,
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier.size(40.dp),
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_rewind),
-                        contentDescription = "Rewind"
+                        contentDescription = "Rewind",
                     )
                 }
-                
+
                 // Play/Pause
                 IconButton(
                     onClick = onPlayPauseClick,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(48.dp),
                 ) {
                     Icon(
-                        painter = painterResource(
-                            if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play
-                        ),
+                        painter =
+                            painterResource(
+                                if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play,
+                            ),
                         contentDescription = if (isPlaying) "Pause" else "Play",
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
                 }
-                
+
                 // Forward
                 IconButton(
                     onClick = onForward,
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier.size(40.dp),
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_fast_forward),
-                        contentDescription = "Fast forward"
+                        contentDescription = "Fast forward",
                     )
                 }
-                
+
                 // Stop casting
                 IconButton(
                     onClick = onClose,
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier.size(40.dp),
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_x),
-                        contentDescription = "Stop casting"
+                        contentDescription = "Stop casting",
                     )
                 }
             }
@@ -341,92 +349,94 @@ private fun ExpandedCastPlayer(
     onCollapse: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surfaceContainer)
-            .padding(16.dp)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surfaceContainer)
+                .padding(16.dp),
     ) {
         // Header with close button
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(onClick = onCollapse) {
                 Icon(
                     painter = painterResource(R.drawable.ic_chevron_down),
-                    contentDescription = "Collapse"
+                    contentDescription = "Collapse",
                 )
             }
-            
+
             Text(
                 text = "Reproduciendo en Chromecast",
                 style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            
+
             IconButton(onClick = onClose) {
                 Icon(
                     painter = painterResource(R.drawable.ic_x),
-                    contentDescription = "Stop casting"
+                    contentDescription = "Stop casting",
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         // Album art / Poster
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .clip(RoundedCornerShape(12.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
+            contentAlignment = Alignment.Center,
         ) {
             if (imageUrl != null) {
                 AsyncImage(
                     model = imageUrl,
                     contentDescription = title,
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
                 )
             } else {
                 Icon(
                     painter = painterResource(R.drawable.ic_film),
                     contentDescription = null,
                     modifier = Modifier.size(80.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(24.dp))
-        
+
         // Title and subtitle
         Text(
             text = title,
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             maxLines = 2,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
-        
+
         if (subtitle.isNotEmpty()) {
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
         }
-        
+
         Spacer(modifier = Modifier.height(24.dp))
-        
+
         // Progress slider
         var sliderPosition by remember { mutableFloatStateOf(progress) }
-        
+
         Column {
             Slider(
                 value = sliderPosition,
@@ -438,97 +448,98 @@ private fun ExpandedCastPlayer(
                     val seekPosition = (sliderPosition * totalDuration).toLong()
                     onSeek(seekPosition)
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     text = formatTime((sliderPosition * totalDuration).toLong()),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = duration,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         // Playback controls
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(
                 onClick = onRewind,
-                modifier = Modifier.size(56.dp)
+                modifier = Modifier.size(56.dp),
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_rewind),
                     contentDescription = "Rewind",
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(32.dp),
                 )
             }
-            
+
             IconButton(
                 onClick = onPlayPauseClick,
-                modifier = Modifier.size(72.dp)
+                modifier = Modifier.size(72.dp),
             ) {
                 Icon(
-                    painter = painterResource(
-                        if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play
-                    ),
+                    painter =
+                        painterResource(
+                            if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play,
+                        ),
                     contentDescription = if (isPlaying) "Pause" else "Play",
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(48.dp),
                 )
             }
-            
+
             IconButton(
                 onClick = onForward,
-                modifier = Modifier.size(56.dp)
+                modifier = Modifier.size(56.dp),
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_fast_forward),
                     contentDescription = "Fast forward",
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(32.dp),
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         // Volume control
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_volume),
                 contentDescription = "Volume",
                 modifier = Modifier.size(24.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            
+
             Slider(
                 value = volume,
                 onValueChange = onVolumeChange,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
-            
+
             Text(
                 text = "${(volume * 100).toInt()}%",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.width(40.dp),
-                textAlign = TextAlign.End
+                textAlign = TextAlign.End,
             )
         }
     }
@@ -542,7 +553,7 @@ private fun formatTime(ms: Long): String {
     val hours = totalSeconds / 3600
     val minutes = (totalSeconds % 3600) / 60
     val seconds = totalSeconds % 60
-    
+
     return if (hours > 0) {
         String.format("%d:%02d:%02d", hours, minutes, seconds)
     } else {

@@ -28,19 +28,26 @@ import dev.jdtech.jellyfin.core.R as CoreR
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ServerItem(name: String, address: String, modifier: Modifier = Modifier, onClick: () -> Unit = {}, onLongClick: () -> Unit = {}) {
+fun ServerItem(
+    name: String,
+    address: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    onLongClick: () -> Unit = {},
+) {
     val haptics = LocalHapticFeedback.current
 
     OutlinedCard(
-        modifier = modifier
-            .clip(CardDefaults.outlinedShape)
-            .combinedClickable(
-                onClick = onClick,
-                onLongClick = {
-                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                    onLongClick()
-                },
-            ),
+        modifier =
+            modifier
+                .clip(CardDefaults.outlinedShape)
+                .combinedClickable(
+                    onClick = onClick,
+                    onLongClick = {
+                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onLongClick()
+                    },
+                ),
     ) {
         Row(
             modifier = Modifier.padding(start = 24.dp, top = 16.dp, end = 16.dp, bottom = 16.dp),

@@ -85,14 +85,16 @@ private fun ServersScreenLayout(
     var selectedServer by remember { mutableStateOf<Server?>(null) }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize(),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.Center),
         ) {
             Text(
                 text = stringResource(id = SetupR.string.servers),
@@ -160,20 +162,21 @@ private fun ServersScreenLayout(
                     onClick = {
                         openDeleteDialog = false
                     },
-                    modifier = Modifier.onPreviewKeyEvent { event ->
-                        // Long press on server would trigger the cancel button. This fixes that by capturing the first up event.
-                        when (event.nativeKeyEvent.keyCode) {
-                            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_NUMPAD_ENTER -> {
-                                if (firstInteraction) {
-                                    if (event.nativeKeyEvent.action == KeyEvent.ACTION_UP) {
-                                        firstInteraction = false
+                    modifier =
+                        Modifier.onPreviewKeyEvent { event ->
+                            // Long press on server would trigger the cancel button. This fixes that by capturing the first up event.
+                            when (event.nativeKeyEvent.keyCode) {
+                                KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_NUMPAD_ENTER -> {
+                                    if (firstInteraction) {
+                                        if (event.nativeKeyEvent.action == KeyEvent.ACTION_UP) {
+                                            firstInteraction = false
+                                        }
+                                        return@onPreviewKeyEvent true
                                     }
-                                    return@onPreviewKeyEvent true
                                 }
                             }
-                        }
-                        false
-                    },
+                            false
+                        },
                 ) {
                     Text(text = stringResource(SetupR.string.cancel))
                 }
@@ -187,21 +190,24 @@ private fun ServersScreenLayout(
 private fun ServersScreenLayoutPreview() {
     JellyCastTheme {
         ServersScreenLayout(
-            state = ServersState(
-                servers = listOf(
-                    ServerWithAddresses(
-                        server = dummyServer,
-                        addresses = listOf(
-                            ServerAddress(
-                                id = UUID.randomUUID(),
-                                address = dummyDiscoveredServer.address,
-                                serverId = "",
+            state =
+                ServersState(
+                    servers =
+                        listOf(
+                            ServerWithAddresses(
+                                server = dummyServer,
+                                addresses =
+                                    listOf(
+                                        ServerAddress(
+                                            id = UUID.randomUUID(),
+                                            address = dummyDiscoveredServer.address,
+                                            serverId = "",
+                                        ),
+                                    ),
+                                user = null,
                             ),
                         ),
-                        user = null,
-                    ),
                 ),
-            ),
             onAction = {},
         )
     }

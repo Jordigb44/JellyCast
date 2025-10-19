@@ -25,10 +25,11 @@ fun LoadingButton(
         if (isLoading) {
             CircularProgressIndicator(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-                modifier = Modifier
-                    .size(24.dp)
-                    .align(Alignment.CenterStart)
-                    .offset(x = 8.dp),
+                modifier =
+                    Modifier
+                        .size(24.dp)
+                        .align(Alignment.CenterStart)
+                        .offset(x = 8.dp),
             )
         }
         Button(

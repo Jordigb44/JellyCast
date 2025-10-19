@@ -20,8 +20,8 @@ data class JellyCastMediaStream(
     val videoDoViTitle: String?,
 )
 
-fun MediaStream.toJellyCastMediaStream(jellyfinRepository: JellyfinRepository): JellyCastMediaStream {
-    return JellyCastMediaStream(
+fun MediaStream.toJellyCastMediaStream(jellyfinRepository: JellyfinRepository): JellyCastMediaStream =
+    JellyCastMediaStream(
         title = title.orEmpty(),
         displayTitle = displayTitle,
         language = language.orEmpty(),
@@ -35,10 +35,9 @@ fun MediaStream.toJellyCastMediaStream(jellyfinRepository: JellyfinRepository): 
         width = width,
         videoDoViTitle = videoDoViTitle,
     )
-}
 
-fun JellyCastMediaStreamDto.toJellyCastMediaStream(): JellyCastMediaStream {
-    return JellyCastMediaStream(
+fun JellyCastMediaStreamDto.toJellyCastMediaStream(): JellyCastMediaStream =
+    JellyCastMediaStream(
         title = title,
         displayTitle = displayTitle,
         language = language,
@@ -52,4 +51,3 @@ fun JellyCastMediaStreamDto.toJellyCastMediaStream(): JellyCastMediaStream {
         width = width,
         videoDoViTitle = videoDoViTitle,
     )
-}

@@ -29,10 +29,11 @@ fun ErrorCard(
 ) {
     OutlinedCard(
         modifier = modifier,
-        colors = CardDefaults.outlinedCardColors(
-            containerColor = MaterialTheme.colorScheme.errorContainer,
-            contentColor = MaterialTheme.colorScheme.onErrorContainer,
-        ),
+        colors =
+            CardDefaults.outlinedCardColors(
+                containerColor = MaterialTheme.colorScheme.errorContainer,
+                contentColor = MaterialTheme.colorScheme.onErrorContainer,
+            ),
         border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.error),
     ) {
         Row {
@@ -40,15 +41,17 @@ fun ErrorCard(
             Icon(
                 painter = painterResource(CoreR.drawable.ic_alert_circle),
                 contentDescription = null,
-                modifier = Modifier
-                    .align(Alignment.CenterVertically),
+                modifier =
+                    Modifier
+                        .align(Alignment.CenterVertically),
             )
             Spacer(modifier = Modifier.width(MaterialTheme.spacings.small))
             Text(
                 text = stringResource(CoreR.string.error_loading_data),
-                modifier = Modifier
-                    .weight(1f)
-                    .align(Alignment.CenterVertically),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .align(Alignment.CenterVertically),
             )
             IconButton(
                 onClick = onShowStacktrace,

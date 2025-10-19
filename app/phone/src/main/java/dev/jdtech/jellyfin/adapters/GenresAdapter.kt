@@ -8,12 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import dev.jdtech.jellyfin.R
 
-data class GenreItem(val name: String, val isSelected: Boolean)
+data class GenreItem(
+    val name: String,
+    val isSelected: Boolean,
+)
 
 class GenresAdapter(
     private val onGenreClick: (String?) -> Unit,
 ) : ListAdapter<GenreItem, GenresAdapter.GenreViewHolder>(DiffCallback) {
-
     class GenreViewHolder(
         private val chip: Chip,
         private val onGenreClick: (String?) -> Unit,
@@ -28,22 +30,32 @@ class GenresAdapter(
     }
 
     companion object DiffCallback : DiffUtil.ItemCallback<GenreItem>() {
-        override fun areItemsTheSame(oldItem: GenreItem, newItem: GenreItem): Boolean {
-            return oldItem.name == newItem.name
-        }
+        override fun areItemsTheSame(
+            oldItem: GenreItem,
+            newItem: GenreItem,
+        ): Boolean = oldItem.name == newItem.name
 
-        override fun areContentsTheSame(oldItem: GenreItem, newItem: GenreItem): Boolean {
-            return oldItem == newItem
-        }
+        override fun areContentsTheSame(
+            oldItem: GenreItem,
+            newItem: GenreItem,
+        ): Boolean = oldItem == newItem
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GenreViewHolder {
-        val chip = LayoutInflater.from(parent.context)
-            .inflate(R.layout.genre_chip, parent, false) as Chip
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): GenreViewHolder {
+        val chip =
+            LayoutInflater
+                .from(parent.context)
+                .inflate(R.layout.genre_chip, parent, false) as Chip
         return GenreViewHolder(chip, onGenreClick)
     }
 
-    override fun onBindViewHolder(holder: GenreViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: GenreViewHolder,
+        position: Int,
+    ) {
         holder.bind(getItem(position))
     }
 }
