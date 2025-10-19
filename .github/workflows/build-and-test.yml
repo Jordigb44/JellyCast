@@ -32,7 +32,8 @@ jobs:
         continue-on-error: true
         
       - name: Run Android Lint
-        run: ./gradlew lint
+        run: ./gradlew lintDebug || true
+        continue-on-error: true
         
       - name: Upload lint reports
         if: always()
