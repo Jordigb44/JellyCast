@@ -14,29 +14,31 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyMovies
 import dev.jdtech.jellyfin.film.presentation.home.HomeAction
-import dev.jdtech.jellyfin.models.FindroidItem
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.models.JellyCastItem
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import kotlinx.coroutines.delay
 
-private val dynamicPageSize = object : PageSize {
-    override fun Density.calculateMainAxisPageSize(
-        availableSpace: Int,
-        pageSpacing: Int,
-    ): Int {
-        val nPages = when {
-            availableSpace.toDp() >= 840.dp -> 3
-            availableSpace.toDp() >= 600.dp -> 2
-            else -> 1
-        }
+private val dynamicPageSize =
+    object : PageSize {
+        override fun Density.calculateMainAxisPageSize(
+            availableSpace: Int,
+            pageSpacing: Int,
+        ): Int {
+            val nPages =
+                when {
+                    availableSpace.toDp() >= 840.dp -> 3
+                    availableSpace.toDp() >= 600.dp -> 2
+                    else -> 1
+                }
 
-        return (availableSpace - (nPages - 1) * pageSpacing) / nPages
+            return (availableSpace - (nPages - 1) * pageSpacing) / nPages
+        }
     }
-}
 
 @Composable
 fun HomeCarousel(
-    items: List<FindroidItem>,
+    items: List<JellyCastItem>,
     itemsPadding: PaddingValues,
     onAction: (HomeAction) -> Unit,
 ) {
@@ -49,11 +51,12 @@ fun HomeCarousel(
         LaunchedEffect(pagerState) {
             while (true) {
                 delay(autoScrollDelay)
-                val nextPage = if (pagerState.canScrollForward) {
-                    pagerState.currentPage + 1
-                } else {
-                    0
-                }
+                val nextPage =
+                    if (pagerState.canScrollForward) {
+                        pagerState.currentPage + 1
+                    } else {
+                        0
+                    }
                 pagerState.animateScrollToPage(nextPage)
             }
         }
@@ -73,7 +76,7 @@ fun HomeCarousel(
 @Composable
 @Preview(showBackground = true)
 private fun HomeCarouselPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         HomeCarousel(
             items = dummyMovies,
             itemsPadding = PaddingValues(horizontal = 0.dp),

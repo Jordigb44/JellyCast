@@ -28,35 +28,38 @@ import androidx.tv.material3.Text
 import coil3.compose.AsyncImage
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyMovie
 import dev.jdtech.jellyfin.film.presentation.home.HomeAction
-import dev.jdtech.jellyfin.models.FindroidItem
-import dev.jdtech.jellyfin.models.FindroidMovie
-import dev.jdtech.jellyfin.models.FindroidShow
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.models.JellyCastItem
+import dev.jdtech.jellyfin.models.JellyCastMovie
+import dev.jdtech.jellyfin.models.JellyCastShow
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 
 @Composable
 fun HomeCarouselItem(
-    item: FindroidItem,
+    item: JellyCastItem,
     onAction: (HomeAction) -> Unit,
 ) {
-    val colorStops = arrayOf(
-        0.0f to Color.Black.copy(alpha = 0.1f),
-        0.5f to Color.Black.copy(alpha = 0.5f),
-        1f to Color.Black.copy(alpha = 0.6f),
-    )
+    val colorStops =
+        arrayOf(
+            0.0f to Color.Black.copy(alpha = 0.1f),
+            0.5f to Color.Black.copy(alpha = 0.5f),
+            1f to Color.Black.copy(alpha = 0.6f),
+        )
 
     Surface(
         onClick = { onAction(HomeAction.OnItemClick(item)) },
         shape = ClickableSurfaceDefaults.shape(shape = MaterialTheme.shapes.large),
-        border = ClickableSurfaceDefaults.border(
-            focusedBorder = Border(
-                BorderStroke(
-                    4.dp,
-                    Color.White,
-                ),
-                shape = MaterialTheme.shapes.large,
+        border =
+            ClickableSurfaceDefaults.border(
+                focusedBorder =
+                    Border(
+                        BorderStroke(
+                            4.dp,
+                            Color.White,
+                        ),
+                        shape = MaterialTheme.shapes.large,
+                    ),
             ),
-        ),
         scale = ClickableSurfaceScale.None,
     ) {
         Box {
@@ -65,33 +68,37 @@ fun HomeCarouselItem(
                 placeholder = ColorPainter(MaterialTheme.colorScheme.surface),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
             )
             Canvas(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier =
+                    Modifier
+                        .fillMaxSize(),
             ) {
                 drawRect(
-                    brush = Brush.verticalGradient(
-                        colorStops = colorStops,
-                    ),
+                    brush =
+                        Brush.verticalGradient(
+                            colorStops = colorStops,
+                        ),
                 )
             }
             Column(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.medium),
-                modifier = Modifier
-                    .padding(
-                        horizontal = MaterialTheme.spacings.default,
-                        vertical = MaterialTheme.spacings.default,
-                    )
-                    .align(Alignment.BottomStart),
+                modifier =
+                    Modifier
+                        .padding(
+                            horizontal = MaterialTheme.spacings.default,
+                            vertical = MaterialTheme.spacings.default,
+                        ).align(Alignment.BottomStart),
             ) {
-                val genres = when (item) {
-                    is FindroidMovie -> item.genres
-                    is FindroidShow -> item.genres
-                    else -> emptyList()
-                }
+                val genres =
+                    when (item) {
+                        is JellyCastMovie -> item.genres
+                        is JellyCastShow -> item.genres
+                        else -> emptyList()
+                    }
                 Text(
                     text = genres.joinToString(),
                     color = Color.LightGray,
@@ -109,8 +116,9 @@ fun HomeCarouselItem(
                 )
                 Text(
                     text = item.overview,
-                    modifier = Modifier
-                        .width(640.dp),
+                    modifier =
+                        Modifier
+                            .width(640.dp),
                     color = Color.LightGray,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 3,
@@ -124,7 +132,7 @@ fun HomeCarouselItem(
 @Composable
 @Preview(showBackground = true)
 private fun HomeCarouselItemPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         HomeCarouselItem(
             item = dummyMovie,
             onAction = {},

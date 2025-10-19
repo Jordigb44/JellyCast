@@ -29,7 +29,7 @@ import androidx.tv.material3.Text
 import dev.jdtech.jellyfin.presentation.settings.components.SettingsGroupCard
 import dev.jdtech.jellyfin.presentation.settings.components.SettingsMultiSelectDetailsCard
 import dev.jdtech.jellyfin.presentation.settings.components.SettingsSelectDetailsCard
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.settings.domain.models.Preference
 import dev.jdtech.jellyfin.settings.presentation.enums.DeviceType
@@ -66,10 +66,13 @@ fun SettingsSubScreen(
             is SettingsEvent.NavigateToServers -> navigateToServers()
             is SettingsEvent.NavigateToAbout -> Unit
             is SettingsEvent.UpdateTheme -> Unit
+            is SettingsEvent.RestartApp -> Unit
+            is SettingsEvent.LaunchPlayerPicker -> Unit // TV doesn't support player picker
             is SettingsEvent.LaunchIntent -> {
                 try {
                     context.startActivity(event.intent)
-                } catch (_: Exception) { }
+                } catch (_: Exception) {
+                }
             }
         }
     }
@@ -98,17 +101,23 @@ private fun SettingsSubScreenLayout(
     val focusRequester = remember { FocusRequester() }
 
     var focusedPreference by remember(state.preferenceGroups.isNotEmpty()) {
-        mutableStateOf(state.preferenceGroups.firstOrNull()?.preferences?.firstOrNull())
+        mutableStateOf(
+            state.preferenceGroups
+                .firstOrNull()
+                ?.preferences
+                ?.firstOrNull(),
+        )
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                start = MaterialTheme.spacings.large,
-                top = MaterialTheme.spacings.default * 2,
-                end = MaterialTheme.spacings.large,
-            ),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(
+                    start = MaterialTheme.spacings.large,
+                    top = MaterialTheme.spacings.default * 2,
+                    end = MaterialTheme.spacings.large,
+                ),
     ) {
         Column {
             Text(
@@ -126,9 +135,10 @@ private fun SettingsSubScreenLayout(
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.default),
                 contentPadding = PaddingValues(vertical = MaterialTheme.spacings.large),
-                modifier = Modifier
-                    .weight(1f)
-                    .focusRequester(focusRequester),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .focusRequester(focusRequester),
             ) {
                 items(state.preferenceGroups) { group ->
                     SettingsGroupCard(
@@ -150,9 +160,10 @@ private fun SettingsSubScreenLayout(
                         is PreferenceSelect -> {
                             SettingsSelectDetailsCard(
                                 preference = preference,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(bottom = MaterialTheme.spacings.large),
+                                modifier =
+                                    Modifier
+                                        .fillMaxSize()
+                                        .padding(bottom = MaterialTheme.spacings.large),
                                 onUpdate = { value ->
                                     onAction(
                                         SettingsAction.OnUpdate(
@@ -165,9 +176,10 @@ private fun SettingsSubScreenLayout(
                         is PreferenceMultiSelect -> {
                             SettingsMultiSelectDetailsCard(
                                 preference = preference,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(bottom = MaterialTheme.spacings.large),
+                                modifier =
+                                    Modifier
+                                        .fillMaxSize()
+                                        .padding(bottom = MaterialTheme.spacings.large),
                                 onUpdate = { value ->
                                     onAction(
                                         SettingsAction.OnUpdate(
@@ -190,23 +202,26 @@ private fun SettingsSubScreenLayout(
 @Preview(device = "id:tv_1080p")
 @Composable
 private fun SettingsSubScreenLayoutPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         SettingsSubScreenLayout(
             title = SettingsR.string.title_settings,
-            state = SettingsState(
-                preferenceGroups = listOf(
-                    PreferenceGroup(
-                        preferences = listOf(
-                            PreferenceSelect(
-                                nameStringResource = SettingsR.string.pref_player_mpv_hwdec,
-                                backendPreference = Preference("", ""),
-                                options = SettingsR.array.mpv_hwdec,
-                                optionValues = SettingsR.array.mpv_hwdec,
+            state =
+                SettingsState(
+                    preferenceGroups =
+                        listOf(
+                            PreferenceGroup(
+                                preferences =
+                                    listOf(
+                                        PreferenceSelect(
+                                            nameStringResource = SettingsR.string.pref_player_mpv_hwdec,
+                                            backendPreference = Preference("", ""),
+                                            options = SettingsR.array.mpv_hwdec,
+                                            optionValues = SettingsR.array.mpv_hwdec,
+                                        ),
+                                    ),
                             ),
                         ),
-                    ),
                 ),
-            ),
             onAction = {},
         )
     }

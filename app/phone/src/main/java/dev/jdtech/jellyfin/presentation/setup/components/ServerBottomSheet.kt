@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.setup.R as SetupR
@@ -48,9 +48,10 @@ fun ServerBottomSheet(
             ServerItem(
                 name = name,
                 address = address,
-                modifier = Modifier
-                    .padding(horizontal = MaterialTheme.spacings.medium)
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .padding(horizontal = MaterialTheme.spacings.medium)
+                        .fillMaxWidth(),
             )
             Column {
                 ServerBottomSheetItem(
@@ -76,12 +77,12 @@ private fun ServerBottomSheetItem(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(
-                onClick = onClick,
-            )
-            .padding(MaterialTheme.spacings.medium),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable(
+                    onClick = onClick,
+                ).padding(MaterialTheme.spacings.medium),
     ) {
         Icon(painter = icon, contentDescription = null)
         Spacer(Modifier.width(MaterialTheme.spacings.medium))
@@ -93,7 +94,7 @@ private fun ServerBottomSheetItem(
 @Preview
 @Composable
 private fun ServerBottomSheetPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         ServerBottomSheet(
             name = "Jellyfin Server",
             address = "http://192.168.0.10:8096",
@@ -108,7 +109,7 @@ private fun ServerBottomSheetPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun ServerBottomSheetItemPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         ServerBottomSheetItem(
             icon = painterResource(CoreR.drawable.ic_globe),
             text = stringResource(SetupR.string.addresses),

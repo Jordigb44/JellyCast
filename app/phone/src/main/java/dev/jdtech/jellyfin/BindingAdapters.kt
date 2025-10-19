@@ -3,9 +3,10 @@ package dev.jdtech.jellyfin
 import android.view.View
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
-import dev.jdtech.jellyfin.models.FindroidEpisode
-import dev.jdtech.jellyfin.models.FindroidItem
-import dev.jdtech.jellyfin.models.FindroidMovie
+import coil3.load
+import dev.jdtech.jellyfin.models.JellyCastEpisode
+import dev.jdtech.jellyfin.models.JellyCastItem
+import dev.jdtech.jellyfin.models.JellyCastMovie
 import dev.jdtech.jellyfin.models.User
 import org.jellyfin.sdk.model.api.BaseItemDto
 import org.jellyfin.sdk.model.api.BaseItemKind
@@ -14,27 +15,43 @@ import org.jellyfin.sdk.model.api.ImageType
 import java.util.UUID
 import dev.jdtech.jellyfin.core.R as CoreR
 
-fun bindItemImage(imageView: ImageView, item: BaseItemDto) {
+fun bindItemImage(
+    imageView: ImageView,
+    item: BaseItemDto,
+) {
     val itemId =
-        if (item.type == BaseItemKind.EPISODE || item.type == BaseItemKind.SEASON && item.imageTags.isNullOrEmpty()) item.seriesId else item.id
+        if (item.type == BaseItemKind.EPISODE ||
+            item.type == BaseItemKind.SEASON && item.imageTags.isNullOrEmpty()
+        ) {
+            item.seriesId
+        } else {
+            item.id
+        }
 
     imageView
         .loadImage("/items/$itemId/Images/${ImageType.PRIMARY}")
         .posterDescription(item.name)
 }
 
-fun bindItemImage(imageView: ImageView, item: FindroidItem) {
-    val itemId = when (item) {
-        is FindroidEpisode -> item.seriesId
-        else -> item.id
-    }
+fun bindItemImage(
+    imageView: ImageView,
+    item: JellyCastItem,
+) {
+    // Use the images from JellyCastItem which already have full URIs
+    val imageUri =
+        when (item) {
+            is JellyCastEpisode -> item.images.showPrimary ?: item.images.primary
+            else -> item.images.primary
+        }
 
-    imageView
-        .loadImage("/items/$itemId/Images/${ImageType.PRIMARY}")
-        .posterDescription(item.name)
+    imageView.load(imageUri)
+    imageView.contentDescription = imageView.context.resources.getString(CoreR.string.image_description_poster, item.name)
 }
 
-fun bindItemBackdropImage(imageView: ImageView, item: FindroidItem?) {
+fun bindItemBackdropImage(
+    imageView: ImageView,
+    item: JellyCastItem?,
+) {
     if (item == null) return
 
     imageView
@@ -42,32 +59,47 @@ fun bindItemBackdropImage(imageView: ImageView, item: FindroidItem?) {
         .backdropDescription(item.name)
 }
 
-fun bindItemBackdropById(imageView: ImageView, itemId: UUID) {
+fun bindItemBackdropById(
+    imageView: ImageView,
+    itemId: UUID,
+) {
     imageView.loadImage("/items/$itemId/Images/${ImageType.BACKDROP}")
 }
 
-fun bindPersonImage(imageView: ImageView, person: BaseItemPerson) {
+fun bindPersonImage(
+    imageView: ImageView,
+    person: BaseItemPerson,
+) {
     imageView
         .loadImage("/items/${person.id}/Images/${ImageType.PRIMARY}", placeholderId = CoreR.drawable.person_placeholder)
         .posterDescription(person.name)
 }
 
-fun bindCardItemImage(imageView: ImageView, item: FindroidItem) {
-    val imageType = when (item) {
-        is FindroidMovie -> ImageType.BACKDROP
-        else -> ImageType.PRIMARY
-    }
+fun bindCardItemImage(
+    imageView: ImageView,
+    item: JellyCastItem,
+) {
+    val imageUri =
+        when (item) {
+            is JellyCastMovie -> item.images.backdrop ?: item.images.primary
+            else -> item.images.primary
+        }
 
-    imageView
-        .loadImage("/items/${item.id}/Images/$imageType")
-        .posterDescription(item.name)
+    imageView.load(imageUri)
+    imageView.contentDescription = imageView.context.resources.getString(CoreR.string.image_description_poster, item.name)
 }
 
-fun bindSeasonPoster(imageView: ImageView, seasonId: UUID) {
+fun bindSeasonPoster(
+    imageView: ImageView,
+    seasonId: UUID,
+) {
     imageView.loadImage("/items/$seasonId/Images/${ImageType.PRIMARY}")
 }
 
-fun bindUserImage(imageView: ImageView, user: User) {
+fun bindUserImage(
+    imageView: ImageView,
+    user: User,
+) {
     imageView
         .loadImage("/users/${user.id}/Images/${ImageType.PRIMARY}", placeholderId = CoreR.drawable.user_placeholder)
         .posterDescription(user.name)
@@ -76,9 +108,7 @@ fun bindUserImage(imageView: ImageView, user: User) {
 private fun ImageView.loadImage(
     url: String,
     @DrawableRes placeholderId: Int = CoreR.color.neutral_800,
-): View {
-    return this
-}
+): View = this
 
 private fun View.posterDescription(name: String?) {
     contentDescription = context.resources.getString(CoreR.string.image_description_poster, name)

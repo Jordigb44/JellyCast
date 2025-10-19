@@ -24,7 +24,10 @@ import javax.inject.Inject
 import kotlin.time.ExperimentalTime
 
 @HiltAndroidApp
-class BaseApplication : Application(), Configuration.Provider, SingletonImageLoader.Factory {
+class BaseApplication :
+    Application(),
+    Configuration.Provider,
+    SingletonImageLoader.Factory {
     @Inject
     lateinit var appPreferences: AppPreferences
 
@@ -32,9 +35,11 @@ class BaseApplication : Application(), Configuration.Provider, SingletonImageLoa
     lateinit var workerFactory: HiltWorkerFactory
 
     override val workManagerConfiguration: Configuration
-        get() = Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
+        get() =
+            Configuration
+                .Builder()
+                .setWorkerFactory(workerFactory)
+                .build()
 
     override fun onCreate() {
         super.onCreate()
@@ -44,12 +49,13 @@ class BaseApplication : Application(), Configuration.Provider, SingletonImageLoa
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-            val mode = when (appPreferences.getValue(appPreferences.theme)) {
-                "system" -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                "light" -> AppCompatDelegate.MODE_NIGHT_NO
-                "dark" -> AppCompatDelegate.MODE_NIGHT_YES
-                else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-            }
+            val mode =
+                when (appPreferences.getValue(appPreferences.theme)) {
+                    "system" -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                    "light" -> AppCompatDelegate.MODE_NIGHT_NO
+                    "dark" -> AppCompatDelegate.MODE_NIGHT_YES
+                    else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                }
             AppCompatDelegate.setDefaultNightMode(mode)
         }
 
@@ -59,8 +65,9 @@ class BaseApplication : Application(), Configuration.Provider, SingletonImageLoa
     }
 
     @OptIn(ExperimentalCoilApi::class, ExperimentalTime::class)
-    override fun newImageLoader(context: PlatformContext): ImageLoader {
-        return ImageLoader.Builder(context)
+    override fun newImageLoader(context: PlatformContext): ImageLoader =
+        ImageLoader
+            .Builder(context)
             .components {
                 add(
                     OkHttpNetworkFetcherFactory(
@@ -68,15 +75,13 @@ class BaseApplication : Application(), Configuration.Provider, SingletonImageLoa
                     ),
                 )
                 add(SvgDecoder.Factory())
-            }
-            .diskCachePolicy(if (appPreferences.getValue(appPreferences.imageCache)) CachePolicy.ENABLED else CachePolicy.DISABLED)
+            }.diskCachePolicy(if (appPreferences.getValue(appPreferences.imageCache)) CachePolicy.ENABLED else CachePolicy.DISABLED)
             .diskCache {
-                DiskCache.Builder()
+                DiskCache
+                    .Builder()
                     .directory(context.cacheDir.resolve("image_cache").toOkioPath())
                     .maxSizeBytes(appPreferences.getValue(appPreferences.imageCacheSize) * 1024L * 1024)
                     .build()
-            }
-            .crossfade(true)
+            }.crossfade(true)
             .build()
-    }
 }

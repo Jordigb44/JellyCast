@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
-    alias(libs.plugins.ktlint)
 }
 
 android {
@@ -41,11 +40,6 @@ android {
     }
 }
 
-ktlint {
-    version.set(Versions.KTLINT)
-    android.set(true)
-    ignoreFailures.set(false)
-}
 
 dependencies {
     implementation(projects.data)
@@ -53,8 +47,20 @@ dependencies {
     implementation(projects.settings)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.coil.compose)
     implementation(libs.androidx.core)
     implementation(libs.androidx.hilt.work)
+    implementation(libs.androidx.mediarouter)
+    implementation(libs.google.cast.framework)
+    implementation(libs.jupnp.core)
+    implementation(libs.jupnp.support)
+    implementation(libs.jupnp.android)
+    implementation(libs.jetty.server)
+    implementation(libs.jetty.servlet)
+    implementation(libs.jetty.client)
     ksp(libs.androidx.hilt.compiler)
     implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.paging)

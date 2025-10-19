@@ -21,7 +21,7 @@ import dev.jdtech.jellyfin.film.presentation.media.MediaAction
 import dev.jdtech.jellyfin.film.presentation.media.MediaState
 import dev.jdtech.jellyfin.film.presentation.media.MediaViewModel
 import dev.jdtech.jellyfin.models.CollectionType
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.ui.components.Direction
 import dev.jdtech.jellyfin.ui.components.ItemCard
@@ -72,12 +72,13 @@ private fun LibrariesScreenLayout(
         columns = GridCells.Fixed(3),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.large),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.large),
-        contentPadding = PaddingValues(
-            start = MaterialTheme.spacings.large,
-            top = MaterialTheme.spacings.small,
-            end = MaterialTheme.spacings.large,
-            bottom = MaterialTheme.spacings.large,
-        ),
+        contentPadding =
+            PaddingValues(
+                start = MaterialTheme.spacings.large,
+                top = MaterialTheme.spacings.small,
+                end = MaterialTheme.spacings.large,
+                bottom = MaterialTheme.spacings.large,
+            ),
         modifier = Modifier.focusRequester(focusRequester),
     ) {
         items(state.libraries, key = { it.id }) { library ->
@@ -95,7 +96,7 @@ private fun LibrariesScreenLayout(
 @Preview(device = "id:tv_1080p")
 @Composable
 private fun LibrariesScreenLayoutPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         LibrariesScreenLayout(
             state = MediaState(libraries = dummyCollections),
             onAction = {},

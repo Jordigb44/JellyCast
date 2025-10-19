@@ -36,7 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.jdtech.jellyfin.models.User
 import dev.jdtech.jellyfin.presentation.setup.components.RootLayout
 import dev.jdtech.jellyfin.presentation.setup.components.UserItem
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.setup.presentation.users.UsersAction
 import dev.jdtech.jellyfin.setup.presentation.users.UsersEvent
 import dev.jdtech.jellyfin.setup.presentation.users.UsersState
@@ -95,19 +95,21 @@ private fun UsersScreenLayout(
 
     RootLayout {
         Column(
-            modifier = Modifier
-                .padding(horizontal = 24.dp)
-                .widthIn(max = 480.dp)
-                .fillMaxWidth()
-                .align(Alignment.Center),
+            modifier =
+                Modifier
+                    .padding(horizontal = 24.dp)
+                    .widthIn(max = 480.dp)
+                    .fillMaxWidth()
+                    .align(Alignment.Center),
         ) {
             Spacer(modifier = Modifier.weight(0.2f))
             Image(
                 painter = painterResource(id = CoreR.drawable.ic_banner),
                 contentDescription = null,
-                modifier = Modifier
-                    .width(250.dp)
-                    .align(Alignment.CenterHorizontally),
+                modifier =
+                    Modifier
+                        .width(250.dp)
+                        .align(Alignment.CenterHorizontally),
             )
             Spacer(modifier = Modifier.height(32.dp))
             Text(
@@ -128,9 +130,10 @@ private fun UsersScreenLayout(
             } else {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
                 ) {
                     items(state.users) { user ->
                         UserItem(
@@ -148,9 +151,10 @@ private fun UsersScreenLayout(
                     items(state.publicUsers) { user ->
                         UserItem(
                             name = user.name,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .alpha(0.7f),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .alpha(0.7f),
                             onClick = {
                                 onAction(UsersAction.OnPublicUserClick(username = user.name))
                             },
@@ -170,9 +174,10 @@ private fun UsersScreenLayout(
         }
         IconButton(
             onClick = { onAction(UsersAction.OnChangeServerClick) },
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(end = 8.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(end = 8.dp),
         ) {
             Icon(painter = painterResource(CoreR.drawable.ic_server), contentDescription = null)
         }
@@ -180,9 +185,10 @@ private fun UsersScreenLayout(
             onClick = { onAction(UsersAction.OnAddClick) },
             icon = { Icon(painterResource(CoreR.drawable.ic_plus), contentDescription = null) },
             text = { Text(text = stringResource(SetupR.string.users_btn_add_user)) },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(24.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(24.dp),
         )
 
         if (openDeleteDialog && selectedUser != null) {
@@ -223,24 +229,27 @@ private fun UsersScreenLayout(
 @PreviewScreenSizes
 @Composable
 private fun UsersScreenLayoutPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         UsersScreenLayout(
-            state = UsersState(
-                users = listOf(
-                    User(
-                        id = UUID.randomUUID(),
-                        name = "Bob",
-                        serverId = "",
-                    ),
+            state =
+                UsersState(
+                    users =
+                        listOf(
+                            User(
+                                id = UUID.randomUUID(),
+                                name = "Bob",
+                                serverId = "",
+                            ),
+                        ),
+                    publicUsers =
+                        listOf(
+                            User(
+                                id = UUID.randomUUID(),
+                                name = "Alice",
+                                serverId = "",
+                            ),
+                        ),
                 ),
-                publicUsers = listOf(
-                    User(
-                        id = UUID.randomUUID(),
-                        name = "Alice",
-                        serverId = "",
-                    ),
-                ),
-            ),
             onAction = {},
         )
     }

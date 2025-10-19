@@ -24,7 +24,7 @@ import dev.jdtech.jellyfin.api.JellyfinApi
 import dev.jdtech.jellyfin.core.R
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyUser
 import dev.jdtech.jellyfin.models.User
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import org.jellyfin.sdk.model.api.ImageType
 
 @Composable
@@ -39,30 +39,35 @@ fun ProfileButton(
         onClick = {
             onClick()
         },
-        colors = ClickableSurfaceDefaults.colors(
-            containerColor = Color.Transparent,
-            focusedContainerColor = Color.Transparent,
-        ),
-        border = ClickableSurfaceDefaults.border(
-            border = Border(BorderStroke(1.dp, Color.White), shape = CircleShape),
-            focusedBorder = Border(BorderStroke(4.dp, Color.White), shape = CircleShape),
-        ),
-        shape = ClickableSurfaceDefaults.shape(
-            shape = CircleShape,
-            focusedShape = CircleShape,
-        ),
-        modifier = modifier
-            .width(32.dp)
-            .aspectRatio(1f),
+        colors =
+            ClickableSurfaceDefaults.colors(
+                containerColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
+            ),
+        border =
+            ClickableSurfaceDefaults.border(
+                border = Border(BorderStroke(1.dp, Color.White), shape = CircleShape),
+                focusedBorder = Border(BorderStroke(4.dp, Color.White), shape = CircleShape),
+            ),
+        shape =
+            ClickableSurfaceDefaults.shape(
+                shape = CircleShape,
+                focusedShape = CircleShape,
+            ),
+        modifier =
+            modifier
+                .width(32.dp)
+                .aspectRatio(1f),
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_user),
             contentDescription = null,
             tint = Color.White,
-            modifier = Modifier
-                .width(16.dp)
-                .height(16.dp)
-                .align(Alignment.Center),
+            modifier =
+                Modifier
+                    .width(16.dp)
+                    .height(16.dp)
+                    .align(Alignment.Center),
         )
         user?.let {
             AsyncImage(
@@ -78,7 +83,7 @@ fun ProfileButton(
 @Preview
 @Composable
 private fun ProfileButtonPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         ProfileButton(
             user = dummyUser,
             onClick = {},

@@ -21,9 +21,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dev.jdtech.jellyfin.film.presentation.home.HomeAction
-import dev.jdtech.jellyfin.models.FindroidCollection
-import dev.jdtech.jellyfin.models.FindroidImages
 import dev.jdtech.jellyfin.models.HomeItem
+import dev.jdtech.jellyfin.models.JellyCastCollection
+import dev.jdtech.jellyfin.models.JellyCastImages
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.film.R as FilmR
@@ -39,10 +39,11 @@ fun HomeView(
         modifier = modifier,
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(42.dp)
-                .padding(itemsPadding),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(42.dp)
+                    .padding(itemsPadding),
         ) {
             Text(
                 text = stringResource(FilmR.string.latest_library, view.view.name),
@@ -53,10 +54,10 @@ fun HomeView(
                 onClick = {
                     onAction(
                         HomeAction.OnLibraryClick(
-                            FindroidCollection(
+                            JellyCastCollection(
                                 id = view.view.id,
                                 name = view.view.name,
-                                images = FindroidImages(),
+                                images = JellyCastImages(),
                                 type = view.view.type,
                             ),
                         ),

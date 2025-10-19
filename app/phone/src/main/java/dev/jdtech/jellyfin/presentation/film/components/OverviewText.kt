@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyMovie
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 
 @Composable
 fun OverviewText(
@@ -30,9 +30,10 @@ fun OverviewText(
     ) {
         Text(
             text = text,
-            modifier = Modifier
-                .then(if (showChevron) Modifier.clickable { isOverviewExpanded = !isOverviewExpanded } else Modifier)
-                .animateContentSize(),
+            modifier =
+                Modifier
+                    .then(if (showChevron) Modifier.clickable { isOverviewExpanded = !isOverviewExpanded } else Modifier)
+                    .animateContentSize(),
             overflow = TextOverflow.Ellipsis,
             maxLines = if (isOverviewExpanded) Int.MAX_VALUE else maxCollapsedLines,
             onTextLayout = { textLayoutResult ->
@@ -48,7 +49,7 @@ fun OverviewText(
 @Composable
 @Preview(showBackground = true)
 private fun OverviewTextPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         OverviewText(
             text = dummyMovie.overview,
             maxCollapsedLines = 3,

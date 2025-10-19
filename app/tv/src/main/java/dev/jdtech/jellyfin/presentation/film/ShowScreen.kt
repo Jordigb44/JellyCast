@@ -62,8 +62,8 @@ import dev.jdtech.jellyfin.core.presentation.theme.Yellow
 import dev.jdtech.jellyfin.film.presentation.show.ShowAction
 import dev.jdtech.jellyfin.film.presentation.show.ShowState
 import dev.jdtech.jellyfin.film.presentation.show.ShowViewModel
-import dev.jdtech.jellyfin.models.FindroidItem
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.models.JellyCastItem
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.ui.components.Direction
 import dev.jdtech.jellyfin.ui.components.ItemCard
@@ -74,7 +74,7 @@ import dev.jdtech.jellyfin.core.R as CoreR
 @Composable
 fun ShowScreen(
     showId: UUID,
-    navigateToItem: (item: FindroidItem) -> Unit,
+    navigateToItem: (item: JellyCastItem) -> Unit,
     navigateToPlayer: (itemId: UUID) -> Unit,
     viewModel: ShowViewModel = hiltViewModel(),
 ) {
@@ -133,60 +133,66 @@ private fun ShowScreenLayout(
                 mutableStateOf(Size.Zero)
             }
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .onGloballyPositioned { coordinates ->
-                        size = coordinates.size.toSize()
-                    },
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .onGloballyPositioned { coordinates ->
+                            size = coordinates.size.toSize()
+                        },
             ) {
                 AsyncImage(
                     model = show.images.backdrop,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier =
+                        Modifier
+                            .fillMaxSize(),
                 )
                 if (size != Size.Zero) {
                     Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                Brush.radialGradient(
-                                    listOf(Color.Black.copy(alpha = .2f), Color.Black),
-                                    center = Offset(size.width, 0f),
-                                    radius = size.width * .8f,
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .background(
+                                    Brush.radialGradient(
+                                        listOf(Color.Black.copy(alpha = .2f), Color.Black),
+                                        center = Offset(size.width, 0f),
+                                        radius = size.width * .8f,
+                                    ),
                                 ),
-                            ),
                     )
                 }
                 LazyColumn(
                     state = listState,
-                    contentPadding = PaddingValues(
-                        top = 112.dp,
-                        bottom = MaterialTheme.spacings.large,
-                    ),
+                    contentPadding =
+                        PaddingValues(
+                            top = 112.dp,
+                            bottom = MaterialTheme.spacings.large,
+                        ),
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.medium),
                     userScrollEnabled = false,
-                    modifier = Modifier.onPreviewKeyEvent { keyEvent ->
-                        when (keyEvent.key.nativeKeyCode) {
-                            KeyEvent.KEYCODE_DPAD_DOWN -> {
-                                currentIndex = (++currentIndex).coerceIn(0, listSize.intValue - 1)
-                            }
+                    modifier =
+                        Modifier.onPreviewKeyEvent { keyEvent ->
+                            when (keyEvent.key.nativeKeyCode) {
+                                KeyEvent.KEYCODE_DPAD_DOWN -> {
+                                    currentIndex = (++currentIndex).coerceIn(0, listSize.intValue - 1)
+                                }
 
-                            KeyEvent.KEYCODE_DPAD_UP -> {
-                                currentIndex = (--currentIndex).coerceIn(0, listSize.intValue - 1)
+                                KeyEvent.KEYCODE_DPAD_UP -> {
+                                    currentIndex = (--currentIndex).coerceIn(0, listSize.intValue - 1)
+                                }
                             }
-                        }
-                        false
-                    },
+                            false
+                        },
                 ) {
                     item {
                         Column(
-                            modifier = Modifier
-                                .padding(
-                                    start = MaterialTheme.spacings.default * 2,
-                                    end = MaterialTheme.spacings.default * 2,
-                                ),
+                            modifier =
+                                Modifier
+                                    .padding(
+                                        start = MaterialTheme.spacings.default * 2,
+                                        end = MaterialTheme.spacings.default * 2,
+                                    ),
                         ) {
                             Text(
                                 text = show.name,
@@ -287,7 +293,12 @@ private fun ShowScreenLayout(
                                         tint = if (show.played) Color.Red else LocalContentColor.current,
                                     )
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text(text = stringResource(id = if (show.played) CoreR.string.unmark_as_played else CoreR.string.mark_as_played))
+                                    Text(
+                                        text =
+                                            stringResource(
+                                                id = if (show.played) CoreR.string.unmark_as_played else CoreR.string.mark_as_played,
+                                            ),
+                                    )
                                 }
                                 Button(
                                     onClick = {
@@ -298,12 +309,25 @@ private fun ShowScreenLayout(
                                     },
                                 ) {
                                     Icon(
-                                        painter = painterResource(id = if (show.favorite) CoreR.drawable.ic_heart_filled else CoreR.drawable.ic_heart),
+                                        painter =
+                                            painterResource(
+                                                id = if (show.favorite) CoreR.drawable.ic_heart_filled else CoreR.drawable.ic_heart,
+                                            ),
                                         contentDescription = null,
                                         tint = if (show.favorite) Color.Red else LocalContentColor.current,
                                     )
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text(text = stringResource(id = if (show.favorite) CoreR.string.remove_from_favorites else CoreR.string.add_to_favorites))
+                                    Text(
+                                        text =
+                                            stringResource(
+                                                id =
+                                                    if (show.favorite) {
+                                                        CoreR.string.remove_from_favorites
+                                                    } else {
+                                                        CoreR.string.add_to_favorites
+                                                    },
+                                            ),
+                                    )
                                 }
                             }
                             Spacer(modifier = Modifier.height(MaterialTheme.spacings.default))
@@ -317,7 +341,8 @@ private fun ShowScreenLayout(
                                         color = Color.White.copy(alpha = .5f),
                                     )
                                     Text(
-                                        text = show.genres.joinToString(),
+                                        text =
+                                            show.genres.joinToString(),
                                         style = MaterialTheme.typography.bodyMedium,
                                     )
                                 }
@@ -341,7 +366,8 @@ private fun ShowScreenLayout(
                                         color = Color.White.copy(alpha = .5f),
                                     )
                                     Text(
-                                        text = state.writers.joinToString { it.name },
+                                        text =
+                                            state.writers.joinToString { it.name },
                                         style = MaterialTheme.typography.bodyMedium,
                                     )
                                 }
@@ -377,8 +403,9 @@ private fun ShowScreenLayout(
             }
         } ?: run {
             CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
+                modifier =
+                    Modifier
+                        .align(Alignment.Center),
             )
         }
     }
@@ -387,12 +414,13 @@ private fun ShowScreenLayout(
 @Preview(device = "id:tv_1080p")
 @Composable
 private fun ShowScreenLayoutPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         ShowScreenLayout(
-            state = ShowState(
-                show = dummyShow,
-                nextUp = dummyEpisode,
-            ),
+            state =
+                ShowState(
+                    show = dummyShow,
+                    nextUp = dummyEpisode,
+                ),
             onAction = {},
         )
     }

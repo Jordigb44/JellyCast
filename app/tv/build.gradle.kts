@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.ktlint)
 }
 
 android {
@@ -14,13 +13,39 @@ android {
     compileSdk = Versions.COMPILE_SDK
     buildToolsVersion = Versions.BUILD_TOOLS
 
+    signingConfigs {
+        create("release") {
+            val keystorePath = System.getenv("JELLYCAST_KEYSTORE")
+            if (!keystorePath.isNullOrBlank()) {
+                storeFile = file(keystorePath)
+                storePassword = System.getenv("JELLYCAST_KEYSTORE_PASSWORD") ?: ""
+                keyAlias = System.getenv("JELLYCAST_KEY_ALIAS") ?: ""
+                keyPassword = System.getenv("JELLYCAST_KEY_PASSWORD") ?: ""
+            }
+        }
+    }
+
     defaultConfig {
-        applicationId = "dev.jdtech.jellyfin"
+        applicationId = "dev.jdtech.jellycast"
         minSdk = Versions.MIN_SDK
         targetSdk = Versions.TARGET_SDK
 
         versionCode = Versions.APP_CODE
         versionName = Versions.APP_NAME
+
+        multiDexEnabled = true
+    }
+
+    applicationVariants.all {
+        val variant = this
+        variant.outputs
+            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
+            .forEach { output ->
+                if (variant.buildType.name == "release") {
+                    val outputFileName = "jellycast-tv-v${variant.versionName}-${variant.flavorName}-${output.getFilter("ABI")}.apk"
+                    output.outputFileName = outputFileName
+                }
+            }
     }
 
     buildTypes {
@@ -30,6 +55,10 @@ android {
         named("release") {
             isMinifyEnabled = true
             isShrinkResources = true
+            val keystorePath = System.getenv("JELLYCAST_KEYSTORE")
+            if (!keystorePath.isNullOrBlank()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
@@ -49,13 +78,15 @@ android {
         }
     }
 
-    splits {
-        abi {
-            isEnable = true
-            reset()
-            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-        }
-    }
+    // Splits disabled for App Bundle (.aab) generation
+    // Enable this only for APK builds
+    // splits {
+    //     abi {
+    //         isEnable = true
+    //         reset()
+    //         include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+    //     }
+    // }
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
@@ -83,11 +114,6 @@ android {
     }
 }
 
-ktlint {
-    version.set(Versions.KTLINT)
-    android.set(true)
-    ignoreFailures.set(false)
-}
 
 dependencies {
     implementation(projects.core)
@@ -120,6 +146,7 @@ dependencies {
     implementation(libs.media3.ffmpeg.decoder)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.navigation.compose)
+    implementation("androidx.multidex:multidex:2.0.1")
 
     coreLibraryDesugaring(libs.android.desugar.jdk)
 

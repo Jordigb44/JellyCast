@@ -1,4 +1,4 @@
-Findroid is a third-party Android application for Jellyfin that provides a native user interface to browse and play movies and series.
+JellyCast is a third-party Android application for Jellyfin that provides a native user interface to browse and play movies and series.
 
 To use this app you must have a Jellyfin server.
 

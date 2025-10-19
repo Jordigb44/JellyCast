@@ -27,7 +27,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import dev.jdtech.jellyfin.presentation.components.BaseDialog
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.settings.presentation.models.Preference
 import dev.jdtech.jellyfin.settings.presentation.models.PreferenceIntInput
@@ -41,9 +41,10 @@ fun SettingsIntInputDialog(
     onUpdate: (value: Int) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
-    val suffix = preference.suffixRes?.let {
-        stringResource(it)
-    }
+    val suffix =
+        preference.suffixRes?.let {
+            stringResource(it)
+        }
 
     SettingsNumberInputDialog(
         preference = preference,
@@ -64,9 +65,10 @@ fun SettingsLongInputDialog(
     onUpdate: (value: Long) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
-    val suffix = preference.suffixRes?.let {
-        stringResource(it)
-    }
+    val suffix =
+        preference.suffixRes?.let {
+            stringResource(it)
+        }
 
     SettingsNumberInputDialog(
         preference = preference,
@@ -147,23 +149,26 @@ fun SettingsNumberInputDialog(
                         textFieldValue = it
                     }
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester),
                 suffix = {
                     suffix?.let {
                         Text(text = it)
                     }
                 },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Done,
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        onUpdate(textFieldValue.text)
-                    },
-                ),
+                keyboardOptions =
+                    KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done,
+                    ),
+                keyboardActions =
+                    KeyboardActions(
+                        onDone = {
+                            onUpdate(textFieldValue.text)
+                        },
+                    ),
                 singleLine = true,
             )
         }
@@ -173,14 +178,15 @@ fun SettingsNumberInputDialog(
 @Preview
 @Composable
 private fun SettingsNumberInputDialogPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         SettingsNumberInputDialog(
-            preference = PreferenceIntInput(
-                nameStringResource = SettingsR.string.settings_cache_size,
-                descriptionStringRes = SettingsR.string.settings_cache_size_message,
-                backendPreference = PreferenceBackend("", 0),
-                suffixRes = SettingsR.string.mb,
-            ),
+            preference =
+                PreferenceIntInput(
+                    nameStringResource = SettingsR.string.settings_cache_size,
+                    descriptionStringRes = SettingsR.string.settings_cache_size_message,
+                    backendPreference = PreferenceBackend("", 0),
+                    suffixRes = SettingsR.string.mb,
+                ),
             initialValue = "20",
             onUpdate = {},
             onDismissRequest = {},

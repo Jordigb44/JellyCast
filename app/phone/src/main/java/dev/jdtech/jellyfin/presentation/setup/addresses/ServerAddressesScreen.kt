@@ -43,7 +43,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyServerAddress
 import dev.jdtech.jellyfin.models.ServerAddress
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.presentation.utils.rememberSafePadding
 import dev.jdtech.jellyfin.setup.presentation.addresses.ServerAddressesAction
@@ -98,9 +98,10 @@ fun ServerAddressesLayout(
     var openDeleteDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {
@@ -144,12 +145,13 @@ fun ServerAddressesLayout(
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(
-                    start = paddingStart + innerPadding.calculateStartPadding(layoutDirection),
-                    top = paddingTop,
-                    end = paddingEnd + innerPadding.calculateEndPadding(layoutDirection),
-                    bottom = paddingBottom + innerPadding.calculateBottomPadding(),
-                ),
+                contentPadding =
+                    PaddingValues(
+                        start = paddingStart + innerPadding.calculateStartPadding(layoutDirection),
+                        top = paddingTop,
+                        end = paddingEnd + innerPadding.calculateEndPadding(layoutDirection),
+                        bottom = paddingBottom + innerPadding.calculateBottomPadding(),
+                    ),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.medium),
             ) {
                 items(
@@ -157,19 +159,19 @@ fun ServerAddressesLayout(
                     key = { it.id },
                 ) { address ->
                     Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(CardDefaults.outlinedShape)
-                            .combinedClickable(
-                                onClick = {},
-                                onLongClick = {
-                                    selectedAddress = address
-                                    openDeleteDialog = true
-                                },
-                            )
-                            .padding(
-                                MaterialTheme.spacings.small,
-                            ),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .clip(CardDefaults.outlinedShape)
+                                .combinedClickable(
+                                    onClick = {},
+                                    onLongClick = {
+                                        selectedAddress = address
+                                        openDeleteDialog = true
+                                    },
+                                ).padding(
+                                    MaterialTheme.spacings.small,
+                                ),
                     ) {
                         Text(address.address)
                     }
@@ -207,11 +209,12 @@ fun ServerAddressesLayout(
 @PreviewScreenSizes
 @Composable
 private fun ServerAddressesLayoutPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         ServerAddressesLayout(
-            state = ServerAddressesState(
-                addresses = listOf(dummyServerAddress),
-            ),
+            state =
+                ServerAddressesState(
+                    addresses = listOf(dummyServerAddress),
+                ),
             onAction = {},
         )
     }

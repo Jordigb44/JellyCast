@@ -23,7 +23,7 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyDiscoveredServer
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 
 @Composable
@@ -36,34 +36,41 @@ fun ServerItem(
     Surface(
         onClick = onClick,
         onLongClick = onLongClick,
-        colors = ClickableSurfaceDefaults.colors(
-            containerColor = Color(0xFF132026),
-            focusedContainerColor = Color(0xFF132026),
-        ),
-        shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(16.dp)),
-        border = ClickableSurfaceDefaults.border(
-            focusedBorder = Border(
-                BorderStroke(
-                    4.dp,
-                    Color.White,
-                ),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+        colors =
+            ClickableSurfaceDefaults.colors(
+                containerColor = Color(0xFF132026),
+                focusedContainerColor = Color(0xFF132026),
             ),
-        ),
-        modifier = Modifier
-            .width(270.dp)
-            .height(115.dp),
+        shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(16.dp)),
+        border =
+            ClickableSurfaceDefaults.border(
+                focusedBorder =
+                    Border(
+                        BorderStroke(
+                            4.dp,
+                            Color.White,
+                        ),
+                        shape =
+                            androidx.compose.foundation.shape
+                                .RoundedCornerShape(16.dp),
+                    ),
+            ),
+        modifier =
+            Modifier
+                .width(270.dp)
+                .height(115.dp),
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .align(Alignment.Center)
-                    .padding(
-                        vertical = MaterialTheme.spacings.default,
-                        horizontal = MaterialTheme.spacings.medium,
-                    ),
+                modifier =
+                    Modifier
+                        .fillMaxHeight()
+                        .align(Alignment.Center)
+                        .padding(
+                            vertical = MaterialTheme.spacings.default,
+                            horizontal = MaterialTheme.spacings.medium,
+                        ),
             ) {
                 Text(
                     text = name,
@@ -86,7 +93,7 @@ fun ServerItem(
 @Preview
 @Composable
 private fun ServerItemPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         ServerItem(
             name = dummyDiscoveredServer.name,
             address = dummyDiscoveredServer.address,

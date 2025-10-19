@@ -46,7 +46,7 @@ import androidx.tv.material3.OutlinedButton
 import androidx.tv.material3.Text
 import dev.jdtech.jellyfin.core.R
 import dev.jdtech.jellyfin.models.UiText
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.setup.presentation.login.LoginAction
 import dev.jdtech.jellyfin.setup.presentation.login.LoginEvent
@@ -105,24 +105,27 @@ private fun LoginScreenLayout(
     val doLogin = { onAction(LoginAction.OnLoginClick(username, password)) }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize(),
     ) {
         IconButton(
             onClick = {
                 onAction(LoginAction.OnChangeServerClick)
             },
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(MaterialTheme.spacings.small),
+            modifier =
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(MaterialTheme.spacings.small),
         ) {
             Icon(painter = painterResource(R.drawable.ic_server), contentDescription = null)
         }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.Center),
         ) {
             Text(
                 text = stringResource(id = dev.jdtech.jellyfin.setup.R.string.login),
@@ -130,10 +133,11 @@ private fun LoginScreenLayout(
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacings.small))
             Text(
-                text = stringResource(
-                    dev.jdtech.jellyfin.setup.R.string.server_subtitle,
-                    state.serverName ?: "",
-                ),
+                text =
+                    stringResource(
+                        dev.jdtech.jellyfin.setup.R.string.server_subtitle,
+                        state.serverName ?: "",
+                    ),
                 style = MaterialTheme.typography.titleMedium,
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacings.default))
@@ -148,16 +152,18 @@ private fun LoginScreenLayout(
                 onValueChange = { username = it },
                 label = { Text(text = stringResource(id = dev.jdtech.jellyfin.setup.R.string.edit_text_username_hint)) },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    autoCorrectEnabled = false,
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                ),
+                keyboardOptions =
+                    KeyboardOptions(
+                        autoCorrectEnabled = false,
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next,
+                    ),
                 isError = state.error != null,
                 enabled = !state.isLoading,
-                modifier = Modifier
-                    .width(360.dp)
-                    .focusRequester(focusRequester),
+                modifier =
+                    Modifier
+                        .width(360.dp)
+                        .focusRequester(focusRequester),
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacings.medium))
             OutlinedTextField(
@@ -171,14 +177,16 @@ private fun LoginScreenLayout(
                 onValueChange = { password = it },
                 label = { Text(text = stringResource(id = dev.jdtech.jellyfin.setup.R.string.edit_text_password_hint)) },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    autoCorrectEnabled = false,
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Go,
-                ),
-                keyboardActions = KeyboardActions(
-                    onGo = { doLogin() },
-                ),
+                keyboardOptions =
+                    KeyboardOptions(
+                        autoCorrectEnabled = false,
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Go,
+                    ),
+                keyboardActions =
+                    KeyboardActions(
+                        onGo = { doLogin() },
+                    ),
                 visualTransformation = PasswordVisualTransformation(),
                 isError = state.error != null,
                 enabled = !state.isLoading,
@@ -190,8 +198,9 @@ private fun LoginScreenLayout(
                         )
                     }
                 },
-                modifier = Modifier
-                    .width(360.dp),
+                modifier =
+                    Modifier
+                        .width(360.dp),
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacings.default))
             Box {
@@ -206,9 +215,10 @@ private fun LoginScreenLayout(
                         if (state.isLoading) {
                             CircularProgressIndicator(
                                 color = LocalContentColor.current,
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .align(Alignment.CenterStart),
+                                modifier =
+                                    Modifier
+                                        .size(24.dp)
+                                        .align(Alignment.CenterStart),
                             )
                         }
                         Text(
@@ -249,19 +259,21 @@ private fun LoginScreenLayout(
                                 if (state.quickConnectCode != null) {
                                     CircularProgressIndicator(
                                         color = LocalContentColor.current,
-                                        modifier = Modifier
-                                            .size(24.dp)
-                                            .align(Alignment.CenterStart),
+                                        modifier =
+                                            Modifier
+                                                .size(24.dp)
+                                                .align(Alignment.CenterStart),
                                     )
                                 }
                                 Text(
-                                    text = if (state.quickConnectCode != null) {
-                                        state.quickConnectCode!!
-                                    } else {
-                                        stringResource(
-                                            dev.jdtech.jellyfin.setup.R.string.login_btn_quick_connect,
-                                        )
-                                    },
+                                    text =
+                                        if (state.quickConnectCode != null) {
+                                            state.quickConnectCode!!
+                                        } else {
+                                            stringResource(
+                                                dev.jdtech.jellyfin.setup.R.string.login_btn_quick_connect,
+                                            )
+                                        },
                                     modifier = Modifier.align(Alignment.Center),
                                 )
                             }
@@ -286,12 +298,13 @@ private fun LoginScreenLayout(
 @Preview(device = "id:tv_1080p")
 @Composable
 private fun LoginScreenLayoutPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         LoginScreenLayout(
-            state = LoginState(
-                serverName = "Demo Server",
-                quickConnectEnabled = true,
-            ),
+            state =
+                LoginState(
+                    serverName = "Demo Server",
+                    quickConnectEnabled = true,
+                ),
             onAction = {},
         )
     }
@@ -300,12 +313,13 @@ private fun LoginScreenLayoutPreview() {
 @Preview(device = "id:tv_1080p")
 @Composable
 private fun LoginScreenLayoutPreviewError() {
-    FindroidTheme {
+    JellyCastTheme {
         LoginScreenLayout(
-            state = LoginState(
-                serverName = "Demo Server",
-                error = UiText.DynamicString("Invalid username or password"),
-            ),
+            state =
+                LoginState(
+                    serverName = "Demo Server",
+                    error = UiText.DynamicString("Invalid username or password"),
+                ),
             onAction = {},
         )
     }

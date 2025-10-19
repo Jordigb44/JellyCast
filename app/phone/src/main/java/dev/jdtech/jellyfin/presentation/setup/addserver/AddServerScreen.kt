@@ -45,7 +45,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.jdtech.jellyfin.presentation.setup.components.DiscoveredServerItem
 import dev.jdtech.jellyfin.presentation.setup.components.LoadingButton
 import dev.jdtech.jellyfin.presentation.setup.components.RootLayout
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.setup.presentation.addserver.AddServerAction
 import dev.jdtech.jellyfin.setup.presentation.addserver.AddServerEvent
 import dev.jdtech.jellyfin.setup.presentation.addserver.AddServerState
@@ -106,19 +106,21 @@ private fun AddServerScreenLayout(
     RootLayout {
         Column(
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(horizontal = 24.dp)
-                .widthIn(max = 480.dp)
-                .align(Alignment.Center)
-                .verticalScroll(scrollState),
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .padding(horizontal = 24.dp)
+                    .widthIn(max = 480.dp)
+                    .align(Alignment.Center)
+                    .verticalScroll(scrollState),
         ) {
             Image(
                 painter = painterResource(id = CoreR.drawable.ic_banner),
                 contentDescription = null,
-                modifier = Modifier
-                    .width(250.dp)
-                    .align(Alignment.CenterHorizontally),
+                modifier =
+                    Modifier
+                        .width(250.dp)
+                        .align(Alignment.CenterHorizontally),
             )
             Spacer(modifier = Modifier.height(32.dp))
             Text(text = stringResource(SetupR.string.add_server), style = MaterialTheme.typography.headlineMedium)
@@ -153,31 +155,35 @@ private fun AddServerScreenLayout(
                     )
                 },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    autoCorrectEnabled = false,
-                    keyboardType = KeyboardType.Uri,
-                    imeAction = ImeAction.Go,
-                ),
-                keyboardActions = KeyboardActions(
-                    onGo = { doConnect() },
-                ),
+                keyboardOptions =
+                    KeyboardOptions(
+                        autoCorrectEnabled = false,
+                        keyboardType = KeyboardType.Uri,
+                        imeAction = ImeAction.Go,
+                    ),
+                keyboardActions =
+                    KeyboardActions(
+                        onGo = { doConnect() },
+                    ),
                 isError = state.error != null,
                 enabled = !state.isLoading,
                 supportingText = {
                     if (state.error != null) {
                         Text(
-                            text = state.error!!.joinToString {
-                                it.asString(
-                                    context.resources,
-                                )
-                            },
+                            text =
+                                state.error!!.joinToString {
+                                    it.asString(
+                                        context.resources,
+                                    )
+                                },
                             color = MaterialTheme.colorScheme.error,
                         )
                     }
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester),
             )
             LoadingButton(
                 text = stringResource(SetupR.string.add_server_btn_connect),
@@ -198,7 +204,7 @@ private fun AddServerScreenLayout(
 @PreviewScreenSizes
 @Composable
 private fun AddServerScreenLayoutPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         AddServerScreenLayout(
             state = AddServerState(),
             onAction = {},

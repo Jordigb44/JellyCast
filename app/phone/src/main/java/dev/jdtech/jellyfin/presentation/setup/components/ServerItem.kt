@@ -23,24 +23,31 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.core.R as CoreR
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ServerItem(name: String, address: String, modifier: Modifier = Modifier, onClick: () -> Unit = {}, onLongClick: () -> Unit = {}) {
+fun ServerItem(
+    name: String,
+    address: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    onLongClick: () -> Unit = {},
+) {
     val haptics = LocalHapticFeedback.current
 
     OutlinedCard(
-        modifier = modifier
-            .clip(CardDefaults.outlinedShape)
-            .combinedClickable(
-                onClick = onClick,
-                onLongClick = {
-                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                    onLongClick()
-                },
-            ),
+        modifier =
+            modifier
+                .clip(CardDefaults.outlinedShape)
+                .combinedClickable(
+                    onClick = onClick,
+                    onLongClick = {
+                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onLongClick()
+                    },
+                ),
     ) {
         Row(
             modifier = Modifier.padding(start = 24.dp, top = 16.dp, end = 16.dp, bottom = 16.dp),
@@ -63,7 +70,7 @@ fun ServerItem(name: String, address: String, modifier: Modifier = Modifier, onC
 @Composable
 @Preview
 private fun ServerItemPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         ServerItem(
             name = "Jellyfin Server",
             address = "http://192.168.0.10:8096",

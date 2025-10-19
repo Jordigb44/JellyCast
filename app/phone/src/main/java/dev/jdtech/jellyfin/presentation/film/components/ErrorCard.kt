@@ -17,7 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.core.R as CoreR
 
@@ -29,10 +29,11 @@ fun ErrorCard(
 ) {
     OutlinedCard(
         modifier = modifier,
-        colors = CardDefaults.outlinedCardColors(
-            containerColor = MaterialTheme.colorScheme.errorContainer,
-            contentColor = MaterialTheme.colorScheme.onErrorContainer,
-        ),
+        colors =
+            CardDefaults.outlinedCardColors(
+                containerColor = MaterialTheme.colorScheme.errorContainer,
+                contentColor = MaterialTheme.colorScheme.onErrorContainer,
+            ),
         border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.error),
     ) {
         Row {
@@ -40,15 +41,17 @@ fun ErrorCard(
             Icon(
                 painter = painterResource(CoreR.drawable.ic_alert_circle),
                 contentDescription = null,
-                modifier = Modifier
-                    .align(Alignment.CenterVertically),
+                modifier =
+                    Modifier
+                        .align(Alignment.CenterVertically),
             )
             Spacer(modifier = Modifier.width(MaterialTheme.spacings.small))
             Text(
                 text = stringResource(CoreR.string.error_loading_data),
-                modifier = Modifier
-                    .weight(1f)
-                    .align(Alignment.CenterVertically),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .align(Alignment.CenterVertically),
             )
             IconButton(
                 onClick = onShowStacktrace,
@@ -73,7 +76,7 @@ fun ErrorCard(
 @Preview
 @Composable
 private fun ErrorCardPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         ErrorCard(
             onShowStacktrace = {},
             onRetryClick = {},

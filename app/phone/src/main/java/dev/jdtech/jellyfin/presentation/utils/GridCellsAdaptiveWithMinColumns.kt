@@ -9,7 +9,10 @@ import androidx.compose.ui.unit.dp
  * Based on [GridCells.Adaptive] with the added [minColumns] variable.
  * [minColumns] takes precedence over [minSize].
  */
-class GridCellsAdaptiveWithMinColumns(private val minSize: Dp, private val minColumns: Int) : GridCells {
+class GridCellsAdaptiveWithMinColumns(
+    private val minSize: Dp,
+    private val minColumns: Int,
+) : GridCells {
     init {
         require(minSize > 0.dp) { "Provided min size $minSize should be larger than zero." }
         require(minColumns > 0) { "Provided min columns $minColumns should be larger than zero." }
@@ -36,11 +39,8 @@ class GridCellsAdaptiveWithMinColumns(private val minSize: Dp, private val minCo
         }
     }
 
-    override fun hashCode(): Int {
-        return minSize.hashCode()
-    }
+    override fun hashCode(): Int = minSize.hashCode()
 
-    override fun equals(other: Any?): Boolean {
-        return other is GridCellsAdaptiveWithMinColumns && minSize == other.minSize && minColumns == other.minColumns
-    }
+    override fun equals(other: Any?): Boolean =
+        other is GridCellsAdaptiveWithMinColumns && minSize == other.minSize && minColumns == other.minColumns
 }

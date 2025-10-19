@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.settings.presentation.models.PreferenceCategory
 import dev.jdtech.jellyfin.core.R as CoreR
@@ -70,12 +70,13 @@ fun SettingsCategoryCard(
 @Preview
 @Composable
 private fun SettingsCategoryCardPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         SettingsCategoryCard(
-            preference = PreferenceCategory(
-                nameStringResource = SettingsR.string.settings_category_player,
-                iconDrawableId = CoreR.drawable.ic_play,
-            ),
+            preference =
+                PreferenceCategory(
+                    nameStringResource = SettingsR.string.settings_category_player,
+                    iconDrawableId = CoreR.drawable.ic_play,
+                ),
         )
     }
 }

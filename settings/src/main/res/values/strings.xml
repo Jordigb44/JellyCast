@@ -27,6 +27,12 @@
     <string name="pref_player_chapter_markers_summary">Display chapter markers on the timebar</string>
     <string name="pref_player_gestures_seek_trickplay">Trickplay on seek gesture</string>
     <string name="pref_player_gestures_seek_trickplay_summary">Display preview images on seek gesture</string>
+    <string name="pref_player_external">Use external player</string>
+    <string name="pref_player_external_summary">Open videos with an external player app instead of the built-in player</string>
+    <string name="pref_player_external_app">External player app</string>
+    <string name="pref_player_external_app_summary">Select which external player to use (tap to choose)</string>
+    <string name="select_external_player">Select external player</string>
+    <string name="no_external_player_selected">No player selected</string>
     <string name="mpv_player">mpv player</string>
     <string name="download_mobile_data">Download using mobile data</string>
     <string name="download_roaming">Download when roaming</string>
@@ -100,4 +106,9 @@
     <string name="media_segments_type_outro">Outro</string>
     <string name="media_segments_type_intro">Intro</string>
     <string name="none">None</string>
+    <string name="settings_category_casting">Casting</string>
+    <string name="enable_dlna">Enable DLNA</string>
+    <string name="enable_dlna_summary">Allow casting to DLNA/UPnP devices</string>
+    <string name="enable_chromecast">Enable Chromecast</string>
+    <string name="enable_chromecast_summary">Allow casting to Chromecast devices</string>
 </resources>

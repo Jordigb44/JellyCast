@@ -29,7 +29,7 @@ import androidx.tv.material3.RadioButton
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 import dev.jdtech.jellyfin.player.core.domain.models.Track
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import kotlinx.parcelize.Parcelize
 import dev.jdtech.jellyfin.core.R as CoreR
@@ -47,11 +47,12 @@ fun VideoPlayerTrackSelectorDialog(
     tracks: Array<Track>,
     // resultNavigator: ResultBackNavigator<VideoPlayerTrackSelectorDialogResult>,
 ) {
-    val dialogTitle = when (trackType) {
-        C.TRACK_TYPE_AUDIO -> PlayerLocalR.string.select_audio_track
-        C.TRACK_TYPE_TEXT -> PlayerLocalR.string.select_subtile_track
-        else -> CoreR.string.unknown_error
-    }
+    val dialogTitle =
+        when (trackType) {
+            C.TRACK_TYPE_AUDIO -> PlayerLocalR.string.select_audio_track
+            C.TRACK_TYPE_TEXT -> PlayerLocalR.string.select_subtile_track
+            else -> CoreR.string.unknown_error
+        }
     Surface {
         Column(
             modifier = Modifier.padding(MaterialTheme.spacings.medium),
@@ -72,20 +73,23 @@ fun VideoPlayerTrackSelectorDialog(
                         },
                         enabled = track.supported,
                         shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(4.dp)),
-                        colors = ClickableSurfaceDefaults.colors(
-                            containerColor = Color.Transparent,
-                            focusedContainerColor = Color.Transparent,
-                            disabledContainerColor = Color.Transparent,
-                        ),
-                        border = ClickableSurfaceDefaults.border(
-                            focusedBorder = Border(
-                                BorderStroke(
-                                    4.dp,
-                                    Color.White,
-                                ),
-                                shape = RoundedCornerShape(10.dp),
+                        colors =
+                            ClickableSurfaceDefaults.colors(
+                                containerColor = Color.Transparent,
+                                focusedContainerColor = Color.Transparent,
+                                disabledContainerColor = Color.Transparent,
                             ),
-                        ),
+                        border =
+                            ClickableSurfaceDefaults.border(
+                                focusedBorder =
+                                    Border(
+                                        BorderStroke(
+                                            4.dp,
+                                            Color.White,
+                                        ),
+                                        shape = RoundedCornerShape(10.dp),
+                                    ),
+                            ),
                         scale = ClickableSurfaceScale.None,
                     ) {
                         Row(
@@ -99,10 +103,11 @@ fun VideoPlayerTrackSelectorDialog(
                             )
                             Spacer(modifier = Modifier.width(MaterialTheme.spacings.medium))
                             Text(
-                                text = listOf(track.label, track.language, track.codec)
-                                    .mapNotNull { it }
-                                    .joinToString(" - ")
-                                    .ifEmpty { stringResource(id = PlayerLocalR.string.none) },
+                                text =
+                                    listOf(track.label, track.language, track.codec)
+                                        .mapNotNull { it }
+                                        .joinToString(" - ")
+                                        .ifEmpty { stringResource(id = PlayerLocalR.string.none) },
                                 style = MaterialTheme.typography.bodyLarge,
                             )
                         }
@@ -116,35 +121,36 @@ fun VideoPlayerTrackSelectorDialog(
 @Preview
 @Composable
 private fun VideoPlayerTrackSelectorDialogPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         VideoPlayerTrackSelectorDialog(
             trackType = C.TRACK_TYPE_AUDIO,
-            tracks = arrayOf(
-                Track(
-                    id = 0,
-                    label = null,
-                    language = "English",
-                    codec = "flac",
-                    selected = true,
-                    supported = true,
+            tracks =
+                arrayOf(
+                    Track(
+                        id = 0,
+                        label = null,
+                        language = "English",
+                        codec = "flac",
+                        selected = true,
+                        supported = true,
+                    ),
+                    Track(
+                        id = 0,
+                        label = null,
+                        language = "Japanese",
+                        codec = "flac",
+                        selected = false,
+                        supported = true,
+                    ),
+                    Track(
+                        id = 0,
+                        label = null,
+                        language = "English",
+                        codec = "truehd",
+                        selected = false,
+                        supported = false,
+                    ),
                 ),
-                Track(
-                    id = 0,
-                    label = null,
-                    language = "Japanese",
-                    codec = "flac",
-                    selected = false,
-                    supported = true,
-                ),
-                Track(
-                    id = 0,
-                    label = null,
-                    language = "English",
-                    codec = "truehd",
-                    selected = false,
-                    supported = false,
-                ),
-            ),
         )
     }
 }

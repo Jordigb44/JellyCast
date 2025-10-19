@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.ktlint)
 }
 
 android {
@@ -29,11 +28,6 @@ android {
     }
 }
 
-ktlint {
-    version.set(Versions.KTLINT)
-    android.set(true)
-    ignoreFailures.set(false)
-}
 
 dependencies {
     implementation(libs.timber)

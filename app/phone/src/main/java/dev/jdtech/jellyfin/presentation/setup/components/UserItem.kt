@@ -21,33 +21,40 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.core.R as CoreR
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun UserItem(name: String, modifier: Modifier = Modifier, onClick: () -> Unit = {}, onLongClick: () -> Unit = {}) {
+fun UserItem(
+    name: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    onLongClick: () -> Unit = {},
+) {
     val haptics = LocalHapticFeedback.current
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.medium),
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .clip(CardDefaults.outlinedShape)
-            .combinedClickable(
-                onClick = onClick,
-                onLongClick = {
-                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                    onLongClick()
-                },
-            ),
+        modifier =
+            modifier
+                .clip(CardDefaults.outlinedShape)
+                .combinedClickable(
+                    onClick = onClick,
+                    onLongClick = {
+                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onLongClick()
+                    },
+                ),
     ) {
         Surface(
             color = MaterialTheme.colorScheme.surfaceTint,
             shape = MaterialTheme.shapes.small,
-            modifier = Modifier
-                .size(48.dp),
+            modifier =
+                Modifier
+                    .size(48.dp),
         ) {
             Box {
                 Icon(
@@ -67,7 +74,7 @@ fun UserItem(name: String, modifier: Modifier = Modifier, onClick: () -> Unit = 
 @Composable
 @Preview(showBackground = true)
 private fun UserItemPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         UserItem(
             name = "Bob",
             modifier = Modifier.width(240.dp),

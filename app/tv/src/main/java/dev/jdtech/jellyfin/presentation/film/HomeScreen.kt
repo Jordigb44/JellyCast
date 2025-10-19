@@ -20,13 +20,13 @@ import dev.jdtech.jellyfin.core.presentation.dummy.dummyHomeView
 import dev.jdtech.jellyfin.film.presentation.home.HomeAction
 import dev.jdtech.jellyfin.film.presentation.home.HomeState
 import dev.jdtech.jellyfin.film.presentation.home.HomeViewModel
-import dev.jdtech.jellyfin.models.FindroidEpisode
-import dev.jdtech.jellyfin.models.FindroidMovie
-import dev.jdtech.jellyfin.models.FindroidShow
+import dev.jdtech.jellyfin.models.JellyCastEpisode
+import dev.jdtech.jellyfin.models.JellyCastMovie
+import dev.jdtech.jellyfin.models.JellyCastShow
 import dev.jdtech.jellyfin.presentation.film.components.HomeCarousel
 import dev.jdtech.jellyfin.presentation.film.components.HomeSection
 import dev.jdtech.jellyfin.presentation.film.components.HomeView
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import org.jellyfin.sdk.model.api.BaseItemKind
 import java.util.UUID
@@ -55,9 +55,9 @@ fun HomeScreen(
             when (action) {
                 is HomeAction.OnItemClick -> {
                     when (action.item) {
-                        is FindroidMovie -> navigateToMovie(action.item.id)
-                        is FindroidShow -> navigateToShow(action.item.id)
-                        is FindroidEpisode -> {
+                        is JellyCastMovie -> navigateToMovie(action.item.id)
+                        is JellyCastShow -> navigateToShow(action.item.id)
+                        is JellyCastEpisode -> {
                             navigateToPlayer(action.item.id, BaseItemKind.EPISODE)
                         }
                     }
@@ -74,13 +74,15 @@ private fun HomeScreenLayout(
     state: HomeState,
     onAction: (HomeAction) -> Unit,
 ) {
-    val itemsPadding = PaddingValues(
-        horizontal = MaterialTheme.spacings.large,
-    )
+    val itemsPadding =
+        PaddingValues(
+            horizontal = MaterialTheme.spacings.large,
+        )
 
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize(),
         contentPadding = PaddingValues(top = MaterialTheme.spacings.extraSmall, bottom = MaterialTheme.spacings.large),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.large),
     ) {
@@ -89,9 +91,10 @@ private fun HomeScreenLayout(
                 HomeCarousel(
                     items = section.items,
                     onAction = onAction,
-                    modifier = Modifier
-                        .animateItem()
-                        .padding(itemsPadding),
+                    modifier =
+                        Modifier
+                            .animateItem()
+                            .padding(itemsPadding),
                 )
             }
         }
@@ -129,13 +132,14 @@ private fun HomeScreenLayout(
 @Preview(device = "id:tv_1080p")
 @Composable
 private fun HomeScreenLayoutPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         HomeScreenLayout(
-            state = HomeState(
-                suggestionsSection = dummyHomeSuggestions,
-                resumeSection = dummyHomeSection,
-                views = listOf(dummyHomeView),
-            ),
+            state =
+                HomeState(
+                    suggestionsSection = dummyHomeSuggestions,
+                    resumeSection = dummyHomeSection,
+                    views = listOf(dummyHomeView),
+                ),
             onAction = {},
         )
     }

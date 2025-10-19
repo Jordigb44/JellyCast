@@ -27,34 +27,38 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyEpisode
-import dev.jdtech.jellyfin.models.FindroidEpisode
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.models.JellyCastEpisode
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 
 @Composable
 fun EpisodeCard(
-    episode: FindroidEpisode,
-    onClick: (FindroidEpisode) -> Unit,
+    episode: JellyCastEpisode,
+    onClick: (JellyCastEpisode) -> Unit,
 ) {
     Surface(
         onClick = { onClick(episode) },
         shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(10.dp)),
-        colors = ClickableSurfaceDefaults.colors(
-            containerColor = Color.Transparent,
-            focusedContainerColor = Color.Transparent,
-        ),
-        border = ClickableSurfaceDefaults.border(
-            focusedBorder = Border(
-                BorderStroke(
-                    4.dp,
-                    Color.White,
-                ),
-                shape = RoundedCornerShape(10.dp),
+        colors =
+            ClickableSurfaceDefaults.colors(
+                containerColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
             ),
-        ),
+        border =
+            ClickableSurfaceDefaults.border(
+                focusedBorder =
+                    Border(
+                        BorderStroke(
+                            4.dp,
+                            Color.White,
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                    ),
+            ),
         scale = ClickableSurfaceScale.None,
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier =
+            Modifier
+                .fillMaxWidth(),
     ) {
         Row(
             modifier = Modifier.padding(MaterialTheme.spacings.small),
@@ -67,19 +71,21 @@ fun EpisodeCard(
                 )
                 ProgressBadge(
                     item = episode,
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(PaddingValues(MaterialTheme.spacings.small)),
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(PaddingValues(MaterialTheme.spacings.small)),
                 )
             }
             Spacer(modifier = Modifier.width(MaterialTheme.spacings.medium))
             Column {
                 Text(
-                    text = stringResource(
-                        id = dev.jdtech.jellyfin.core.R.string.episode_name,
-                        episode.indexNumber,
-                        episode.name,
-                    ),
+                    text =
+                        stringResource(
+                            id = dev.jdtech.jellyfin.core.R.string.episode_name,
+                            episode.indexNumber,
+                            episode.name,
+                        ),
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -99,7 +105,7 @@ fun EpisodeCard(
 @Preview
 @Composable
 private fun ItemCardPreviewEpisode() {
-    FindroidTheme {
+    JellyCastTheme {
         EpisodeCard(
             episode = dummyEpisode,
             onClick = {},

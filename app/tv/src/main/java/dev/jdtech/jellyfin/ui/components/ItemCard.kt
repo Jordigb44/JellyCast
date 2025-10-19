@@ -27,38 +27,42 @@ import androidx.tv.material3.Text
 import dev.jdtech.jellyfin.core.R
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyEpisode
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyMovie
-import dev.jdtech.jellyfin.models.FindroidEpisode
-import dev.jdtech.jellyfin.models.FindroidItem
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.models.JellyCastEpisode
+import dev.jdtech.jellyfin.models.JellyCastItem
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 
 @Composable
 fun ItemCard(
-    item: FindroidItem,
+    item: JellyCastItem,
     direction: Direction,
-    onClick: (FindroidItem) -> Unit,
+    onClick: (JellyCastItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val width = when (direction) {
-        Direction.HORIZONTAL -> 260
-        Direction.VERTICAL -> 150
-    }
+    val width =
+        when (direction) {
+            Direction.HORIZONTAL -> 260
+            Direction.VERTICAL -> 150
+        }
     Column(
-        modifier = modifier
-            .width(width.dp),
+        modifier =
+            modifier
+                .width(width.dp),
     ) {
         Surface(
             onClick = { onClick(item) },
             shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(10.dp)),
-            border = ClickableSurfaceDefaults.border(
-                focusedBorder = Border(
-                    BorderStroke(
-                        4.dp,
-                        Color.White,
-                    ),
-                    shape = RoundedCornerShape(10.dp),
+            border =
+                ClickableSurfaceDefaults.border(
+                    focusedBorder =
+                        Border(
+                            BorderStroke(
+                                4.dp,
+                                Color.White,
+                            ),
+                            shape = RoundedCornerShape(10.dp),
+                        ),
                 ),
-            ),
             scale = ClickableSurfaceScale.None,
         ) {
             Box {
@@ -68,34 +72,34 @@ fun ItemCard(
                 )
                 ProgressBadge(
                     item = item,
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(MaterialTheme.spacings.small),
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(MaterialTheme.spacings.small),
                 )
                 if (direction == Direction.HORIZONTAL) {
                     Column(
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(MaterialTheme.spacings.small),
+                        modifier =
+                            Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(MaterialTheme.spacings.small),
                     ) {
                         Box(
-                            modifier = Modifier
-                                .height(4.dp)
-                                .width(
-                                    item.playbackPositionTicks
-                                        .div(
-                                            item.runtimeTicks.toFloat(),
-                                        )
-                                        .times(
-                                            width - 16,
-                                        ).dp,
-                                )
-                                .clip(
-                                    MaterialTheme.shapes.extraSmall,
-                                )
-                                .background(
-                                    MaterialTheme.colorScheme.primary,
-                                ),
+                            modifier =
+                                Modifier
+                                    .height(4.dp)
+                                    .width(
+                                        item.playbackPositionTicks
+                                            .div(
+                                                item.runtimeTicks.toFloat(),
+                                            ).times(
+                                                width - 16,
+                                            ).dp,
+                                    ).clip(
+                                        MaterialTheme.shapes.extraSmall,
+                                    ).background(
+                                        MaterialTheme.colorScheme.primary,
+                                    ),
                         )
                     }
                 }
@@ -103,19 +107,20 @@ fun ItemCard(
         }
         Spacer(modifier = Modifier.height(MaterialTheme.spacings.small))
         Text(
-            text = if (item is FindroidEpisode) item.seriesName else item.name,
+            text = if (item is JellyCastEpisode) item.seriesName else item.name,
             style = MaterialTheme.typography.titleMedium,
             maxLines = if (direction == Direction.HORIZONTAL) 1 else 2,
             overflow = TextOverflow.Ellipsis,
         )
-        if (item is FindroidEpisode) {
+        if (item is JellyCastEpisode) {
             Text(
-                text = stringResource(
-                    id = R.string.episode_name_extended,
-                    item.parentIndexNumber,
-                    item.indexNumber,
-                    item.name,
-                ),
+                text =
+                    stringResource(
+                        id = R.string.episode_name_extended,
+                        item.parentIndexNumber,
+                        item.indexNumber,
+                        item.name,
+                    ),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                 maxLines = 1,
@@ -128,7 +133,7 @@ fun ItemCard(
 @Preview
 @Composable
 private fun ItemCardPreviewMovie() {
-    FindroidTheme {
+    JellyCastTheme {
         ItemCard(
             item = dummyMovie,
             direction = Direction.HORIZONTAL,
@@ -140,7 +145,7 @@ private fun ItemCardPreviewMovie() {
 @Preview
 @Composable
 private fun ItemCardPreviewMovieVertical() {
-    FindroidTheme {
+    JellyCastTheme {
         ItemCard(
             item = dummyMovie,
             direction = Direction.VERTICAL,
@@ -152,7 +157,7 @@ private fun ItemCardPreviewMovieVertical() {
 @Preview
 @Composable
 private fun ItemCardPreviewEpisode() {
-    FindroidTheme {
+    JellyCastTheme {
         ItemCard(
             item = dummyEpisode,
             direction = Direction.HORIZONTAL,

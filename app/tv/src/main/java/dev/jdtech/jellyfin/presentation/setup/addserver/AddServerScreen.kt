@@ -44,7 +44,7 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyDiscoveredServer
 import dev.jdtech.jellyfin.presentation.setup.components.DiscoveredServerItem
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.setup.R
 import dev.jdtech.jellyfin.setup.presentation.addserver.AddServerAction
@@ -97,14 +97,16 @@ private fun AddServerScreenLayout(
     }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize(),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.Center),
         ) {
             Text(
                 text = stringResource(id = R.string.add_server),
@@ -144,31 +146,35 @@ private fun AddServerScreenLayout(
                     )
                 },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    autoCorrectEnabled = false,
-                    keyboardType = KeyboardType.Uri,
-                    imeAction = ImeAction.Go,
-                ),
-                keyboardActions = KeyboardActions(
-                    onGo = { doConnect() },
-                ),
+                keyboardOptions =
+                    KeyboardOptions(
+                        autoCorrectEnabled = false,
+                        keyboardType = KeyboardType.Uri,
+                        imeAction = ImeAction.Go,
+                    ),
+                keyboardActions =
+                    KeyboardActions(
+                        onGo = { doConnect() },
+                    ),
                 isError = state.error != null,
                 enabled = !state.isLoading,
                 supportingText = {
                     if (state.error != null) {
                         Text(
-                            text = state.error!!.joinToString {
-                                it.asString(
-                                    context.resources,
-                                )
-                            },
+                            text =
+                                state.error!!.joinToString {
+                                    it.asString(
+                                        context.resources,
+                                    )
+                                },
                             color = MaterialTheme.colorScheme.error,
                         )
                     }
                 },
-                modifier = Modifier
-                    .width(360.dp)
-                    .focusRequester(focusRequester),
+                modifier =
+                    Modifier
+                        .width(360.dp)
+                        .focusRequester(focusRequester),
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacings.medium))
             Box {
@@ -183,9 +189,10 @@ private fun AddServerScreenLayout(
                         if (state.isLoading) {
                             CircularProgressIndicator(
                                 color = LocalContentColor.current,
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .align(Alignment.CenterStart),
+                                modifier =
+                                    Modifier
+                                        .size(24.dp)
+                                        .align(Alignment.CenterStart),
                             )
                         }
                         Text(
@@ -202,7 +209,7 @@ private fun AddServerScreenLayout(
 @Preview(device = "id:tv_1080p")
 @Composable
 private fun AddServerScreenLayoutPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         AddServerScreenLayout(
             state = AddServerState(),
             onAction = {},
@@ -213,11 +220,12 @@ private fun AddServerScreenLayoutPreview() {
 @Preview(device = "id:tv_1080p")
 @Composable
 private fun AddServerScreenLayoutDiscoveredPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         AddServerScreenLayout(
-            state = AddServerState(
-                discoveredServers = listOf(dummyDiscoveredServer),
-            ),
+            state =
+                AddServerState(
+                    discoveredServers = listOf(dummyDiscoveredServer),
+                ),
             onAction = {},
         )
     }

@@ -18,7 +18,50 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Findroid.Image" />
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.JellyCast.Image" />
+
+    <!-- Blur overlay for downloading items -->
+    <View
+        android:id="@+id/download_blur_overlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#80000000"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/episode_image"
+        app:layout_constraintEnd_toEndOf="@id/episode_image"
+        app:layout_constraintStart_toStartOf="@id/episode_image"
+        app:layout_constraintTop_toTopOf="@id/episode_image" />
+
+    <!-- Circular progress indicator in center of image -->
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/circular_progress"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:indeterminate="false"
+        android:visibility="gone"
+        app:indicatorColor="?attr/colorPrimary"
+        app:indicatorSize="64dp"
+        app:layout_constraintBottom_toBottomOf="@id/episode_image"
+        app:layout_constraintEnd_toEndOf="@id/episode_image"
+        app:layout_constraintStart_toStartOf="@id/episode_image"
+        app:layout_constraintTop_toTopOf="@id/episode_image"
+        app:trackColor="#40FFFFFF"
+        app:trackThickness="4dp" />
+
+    <!-- Progress percentage text in center -->
+    <TextView
+        android:id="@+id/circular_progress_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/circular_progress"
+        app:layout_constraintEnd_toEndOf="@id/circular_progress"
+        app:layout_constraintStart_toStartOf="@id/circular_progress"
+        app:layout_constraintTop_toTopOf="@id/circular_progress"
+        tools:text="42%" />
 
     <TextView
         android:id="@+id/primary_name"
@@ -57,6 +100,21 @@
         android:src="@drawable/ic_download"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/episode_image"
+        app:layout_constraintTop_toTopOf="@id/episode_image"
+        app:tint="?attr/colorOnPrimary"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/item_overflow"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/circle_background"
+        android:contentDescription="@string/more_options"
+        android:padding="4dp"
+        android:src="@drawable/ic_trash"
+        app:layout_constraintEnd_toStartOf="@id/downloaded_icon"
         app:layout_constraintTop_toTopOf="@id/episode_image"
         app:tint="?attr/colorOnPrimary"
         tools:visibility="visible" />

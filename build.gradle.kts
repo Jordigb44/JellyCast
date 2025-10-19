@@ -19,6 +19,19 @@ allprojects {
         google()
         mavenCentral()
     }
+    
+    // Apply ktlint plugin to all projects
+    plugins.apply("org.jlleitschuh.gradle.ktlint")
+    
+    // Configure ktlint
+    configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+        filter {
+            exclude { element ->
+                element.file.path.contains("build.gradle.kts") ||
+                element.file.path.contains("settings.gradle.kts")
+            }
+        }
+    }
 }
 
 // Align Kotlin JVM target with Java toolchain (21) for all modules

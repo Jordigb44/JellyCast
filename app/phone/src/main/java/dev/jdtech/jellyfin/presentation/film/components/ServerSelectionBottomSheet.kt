@@ -25,7 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyServer
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyServerAddress
 import dev.jdtech.jellyfin.models.ServerWithAddresses
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.setup.presentation.servers.ServersAction
 import dev.jdtech.jellyfin.setup.presentation.servers.ServersEvent
@@ -84,11 +84,12 @@ private fun ServerSelectionBottomSheetLayout(
         sheetState = sheetState,
     ) {
         LazyColumn(
-            contentPadding = PaddingValues(
-                start = MaterialTheme.spacings.medium,
-                end = MaterialTheme.spacings.medium,
-                bottom = MaterialTheme.spacings.default,
-            ),
+            contentPadding =
+                PaddingValues(
+                    start = MaterialTheme.spacings.medium,
+                    end = MaterialTheme.spacings.medium,
+                    bottom = MaterialTheme.spacings.default,
+                ),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.medium),
         ) {
             items(
@@ -106,8 +107,9 @@ private fun ServerSelectionBottomSheetLayout(
                     onClickAddress = { addressId ->
                         onAction(ServersAction.OnAddressClick(addressId = addressId))
                     },
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
                 )
             }
             item(
@@ -115,8 +117,9 @@ private fun ServerSelectionBottomSheetLayout(
             ) {
                 OutlinedButton(
                     onClick = onManage,
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
                 ) {
                     Text(
                         text = stringResource(CoreR.string.manage_servers),
@@ -131,20 +134,23 @@ private fun ServerSelectionBottomSheetLayout(
 @Composable
 @Preview
 private fun ServerSelectionBottomSheetPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         ServerSelectionBottomSheetLayout(
             currentServerId = "",
-            state = ServersState(
-                servers = listOf(
-                    ServerWithAddresses(
-                        server = dummyServer,
-                        addresses = listOf(
-                            dummyServerAddress,
+            state =
+                ServersState(
+                    servers =
+                        listOf(
+                            ServerWithAddresses(
+                                server = dummyServer,
+                                addresses =
+                                    listOf(
+                                        dummyServerAddress,
+                                    ),
+                                user = null,
+                            ),
                         ),
-                        user = null,
-                    ),
                 ),
-            ),
             onManage = {},
             onAction = {},
             onDismissRequest = {},

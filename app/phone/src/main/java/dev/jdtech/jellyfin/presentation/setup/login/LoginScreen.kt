@@ -48,7 +48,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.jdtech.jellyfin.presentation.setup.components.LoadingButton
 import dev.jdtech.jellyfin.presentation.setup.components.RootLayout
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.setup.presentation.login.LoginAction
 import dev.jdtech.jellyfin.setup.presentation.login.LoginEvent
 import dev.jdtech.jellyfin.setup.presentation.login.LoginState
@@ -115,19 +115,21 @@ private fun LoginScreenLayout(
     RootLayout {
         Column(
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(horizontal = 24.dp)
-                .widthIn(max = 480.dp)
-                .align(Alignment.Center)
-                .verticalScroll(scrollState),
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .padding(horizontal = 24.dp)
+                    .widthIn(max = 480.dp)
+                    .align(Alignment.Center)
+                    .verticalScroll(scrollState),
         ) {
             Image(
                 painter = painterResource(id = CoreR.drawable.ic_banner),
                 contentDescription = null,
-                modifier = Modifier
-                    .width(250.dp)
-                    .align(Alignment.CenterHorizontally),
+                modifier =
+                    Modifier
+                        .width(250.dp)
+                        .align(Alignment.CenterHorizontally),
             )
             Spacer(modifier = Modifier.height(32.dp))
             Text(
@@ -155,10 +157,11 @@ private fun LoginScreenLayout(
                     )
                 },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    autoCorrectEnabled = false,
-                    imeAction = ImeAction.Next,
-                ),
+                keyboardOptions =
+                    KeyboardOptions(
+                        autoCorrectEnabled = false,
+                        imeAction = ImeAction.Next,
+                    ),
                 isError = state.error != null,
                 enabled = !state.isLoading,
                 modifier = Modifier.fillMaxWidth(),
@@ -177,7 +180,14 @@ private fun LoginScreenLayout(
                         onClick = { passwordVisible = !passwordVisible },
                     ) {
                         Icon(
-                            painter = if (passwordVisible) painterResource(CoreR.drawable.ic_eye_off) else painterResource(CoreR.drawable.ic_eye),
+                            painter =
+                                if (passwordVisible) {
+                                    painterResource(
+                                        CoreR.drawable.ic_eye_off,
+                                    )
+                                } else {
+                                    painterResource(CoreR.drawable.ic_eye)
+                                },
                             contentDescription = null,
                         )
                     }
@@ -189,14 +199,16 @@ private fun LoginScreenLayout(
                     )
                 },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    autoCorrectEnabled = false,
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Go,
-                ),
-                keyboardActions = KeyboardActions(
-                    onGo = { doLogin() },
-                ),
+                keyboardOptions =
+                    KeyboardOptions(
+                        autoCorrectEnabled = false,
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Go,
+                    ),
+                keyboardActions =
+                    KeyboardActions(
+                        onGo = { doLogin() },
+                    ),
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 isError = state.error != null,
                 enabled = !state.isLoading,
@@ -235,17 +247,27 @@ private fun LoginScreenLayout(
                         if (state.quickConnectCode != null) {
                             CircularProgressIndicator(
                                 color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .align(Alignment.CenterStart)
-                                    .offset(x = 8.dp),
+                                modifier =
+                                    Modifier
+                                        .size(24.dp)
+                                        .align(Alignment.CenterStart)
+                                        .offset(x = 8.dp),
                             )
                         }
                         OutlinedButton(
                             onClick = { onAction(LoginAction.OnQuickConnectClick) },
                             modifier = Modifier.fillMaxWidth(),
                         ) {
-                            Text(text = if (state.quickConnectCode != null) state.quickConnectCode!! else stringResource(SetupR.string.login_btn_quick_connect))
+                            Text(
+                                text =
+                                    if (state.quickConnectCode !=
+                                        null
+                                    ) {
+                                        state.quickConnectCode!!
+                                    } else {
+                                        stringResource(SetupR.string.login_btn_quick_connect)
+                                    },
+                            )
                         }
                     }
                 }
@@ -263,9 +285,10 @@ private fun LoginScreenLayout(
         }
         IconButton(
             onClick = { onAction(LoginAction.OnChangeServerClick) },
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(end = 8.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(end = 8.dp),
         ) {
             Icon(painter = painterResource(CoreR.drawable.ic_server), contentDescription = null)
         }
@@ -275,13 +298,14 @@ private fun LoginScreenLayout(
 @PreviewScreenSizes
 @Composable
 private fun AddServerScreenLayoutPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         LoginScreenLayout(
-            state = LoginState(
-                serverName = "Demo Server",
-                quickConnectEnabled = true,
-                disclaimer = "Sample disclaimer",
-            ),
+            state =
+                LoginState(
+                    serverName = "Demo Server",
+                    quickConnectEnabled = true,
+                    disclaimer = "Sample disclaimer",
+                ),
             onAction = {},
         )
     }

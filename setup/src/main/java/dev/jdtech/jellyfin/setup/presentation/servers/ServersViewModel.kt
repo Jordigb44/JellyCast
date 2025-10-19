@@ -15,63 +15,63 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ServersViewModel
-@Inject
-constructor(
-    private val repository: SetupRepository,
-    private val appPreferences: AppPreferences,
-) : ViewModel() {
-    private val _state = MutableStateFlow(ServersState())
-    val state = _state.asStateFlow()
+    @Inject
+    constructor(
+        private val repository: SetupRepository,
+        private val appPreferences: AppPreferences,
+    ) : ViewModel() {
+        private val _state = MutableStateFlow(ServersState())
+        val state = _state.asStateFlow()
 
-    private val eventsChannel = Channel<ServersEvent>()
-    val events = eventsChannel.receiveAsFlow()
+        private val eventsChannel = Channel<ServersEvent>()
+        val events = eventsChannel.receiveAsFlow()
 
-    fun loadServers() {
-        viewModelScope.launch {
-            val servers = repository.getServers()
-            _state.emit(
-                ServersState(servers = servers),
-            )
-        }
-    }
-
-    private fun setCurrentServer(serverId: String) {
-        viewModelScope.launch {
-            repository.setCurrentServer(serverId)
-
-            appPreferences.setValue(appPreferences.currentServer, serverId)
-
-            eventsChannel.send(ServersEvent.ServerChanged)
-        }
-    }
-
-    private fun setCurrentAddress(addressId: UUID) {
-        viewModelScope.launch {
-            repository.setCurrentAddress(addressId)
-
-            eventsChannel.send(ServersEvent.AddressChanged)
-        }
-    }
-
-    private fun deleteServer(serverId: String) {
-        viewModelScope.launch {
-            repository.deleteServer(serverId)
-            loadServers()
-        }
-    }
-
-    fun onAction(action: ServersAction) {
-        when (action) {
-            is ServersAction.OnServerClick -> {
-                setCurrentServer(action.serverId)
+        fun loadServers() {
+            viewModelScope.launch {
+                val servers = repository.getServers()
+                _state.emit(
+                    ServersState(servers = servers),
+                )
             }
-            is ServersAction.OnAddressClick -> {
-                setCurrentAddress(action.addressId)
+        }
+
+        private fun setCurrentServer(serverId: String) {
+            viewModelScope.launch {
+                repository.setCurrentServer(serverId)
+
+                appPreferences.setValue(appPreferences.currentServer, serverId)
+
+                eventsChannel.send(ServersEvent.ServerChanged)
             }
-            is ServersAction.DeleteServer -> {
-                deleteServer(action.serverId)
+        }
+
+        private fun setCurrentAddress(addressId: UUID) {
+            viewModelScope.launch {
+                repository.setCurrentAddress(addressId)
+
+                eventsChannel.send(ServersEvent.AddressChanged)
             }
-            else -> Unit
+        }
+
+        private fun deleteServer(serverId: String) {
+            viewModelScope.launch {
+                repository.deleteServer(serverId)
+                loadServers()
+            }
+        }
+
+        fun onAction(action: ServersAction) {
+            when (action) {
+                is ServersAction.OnServerClick -> {
+                    setCurrentServer(action.serverId)
+                }
+                is ServersAction.OnAddressClick -> {
+                    setCurrentAddress(action.addressId)
+                }
+                is ServersAction.DeleteServer -> {
+                    deleteServer(action.serverId)
+                }
+                else -> Unit
+            }
         }
     }
-}

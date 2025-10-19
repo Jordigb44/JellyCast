@@ -12,7 +12,5 @@ import javax.inject.Singleton
 object FilmModule {
     @Singleton
     @Provides
-    fun provideVideoMetadataParser(): VideoMetadataParser {
-        return VideoMetadataParser()
-    }
+    fun provideVideoMetadataParser(): VideoMetadataParser = VideoMetadataParser()
 }

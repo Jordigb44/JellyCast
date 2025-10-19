@@ -20,7 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.settings.domain.models.Preference
 import dev.jdtech.jellyfin.settings.presentation.models.PreferenceSelect
@@ -37,20 +37,22 @@ fun SettingsSelectCard(
     val optionNames = stringArrayResource(preference.options)
     val notSetString = stringResource(CoreR.string.not_set)
 
-    val options = remember(preference.nameStringResource) {
-        val options = mutableListOf<Pair<String?, String>>()
+    val options =
+        remember(preference.nameStringResource) {
+            val options = mutableListOf<Pair<String?, String>>()
 
-        if (preference.optionsIncludeNull) {
-            options.add(Pair(null, notSetString))
+            if (preference.optionsIncludeNull) {
+                options.add(Pair(null, notSetString))
+            }
+            options.addAll(optionValues.zip(optionNames))
+
+            options
         }
-        options.addAll(optionValues.zip(optionNames))
 
-        options
-    }
-
-    val optionsMap = remember(options) {
-        options.toMap()
-    }
+    val optionsMap =
+        remember(options) {
+            options.toMap()
+        }
 
     var showDialog by remember {
         mutableStateOf(false)
@@ -108,15 +110,16 @@ fun SettingsSelectCard(
 @Preview
 @Composable
 private fun SettingsSelectCardPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         SettingsSelectCard(
-            preference = PreferenceSelect(
-                nameStringResource = SettingsR.string.settings_preferred_audio_language,
-                iconDrawableId = CoreR.drawable.ic_speaker,
-                backendPreference = Preference("", ""),
-                options = SettingsR.array.languages,
-                optionValues = SettingsR.array.languages_values,
-            ),
+            preference =
+                PreferenceSelect(
+                    nameStringResource = SettingsR.string.settings_preferred_audio_language,
+                    iconDrawableId = CoreR.drawable.ic_speaker,
+                    backendPreference = Preference("", ""),
+                    options = SettingsR.array.languages,
+                    optionValues = SettingsR.array.languages_values,
+                ),
             onUpdate = {},
         )
     }

@@ -8,18 +8,17 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyMovies
-import dev.jdtech.jellyfin.film.presentation.collection.CollectionAction
 import dev.jdtech.jellyfin.film.presentation.collection.CollectionState
 import dev.jdtech.jellyfin.film.presentation.favorites.FavoritesViewModel
 import dev.jdtech.jellyfin.models.CollectionSection
-import dev.jdtech.jellyfin.models.FindroidItem
+import dev.jdtech.jellyfin.models.JellyCastItem
 import dev.jdtech.jellyfin.models.UiText
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.core.R as CoreR
 
 @Composable
 fun FavoritesScreen(
-    onItemClick: (item: FindroidItem) -> Unit,
+    onItemClick: (item: JellyCastItem) -> Unit,
     navigateBack: () -> Unit,
     viewModel: FavoritesViewModel = hiltViewModel(),
 ) {
@@ -43,23 +42,25 @@ fun FavoritesScreen(
 @PreviewScreenSizes
 @Composable
 private fun CollectionScreenLayoutPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         CollectionScreenLayout(
             collectionName = "Favorites",
-            state = CollectionState(
-                sections = listOf(
-                    CollectionSection(
-                        id = 0,
-                        name = UiText.StringResource(CoreR.string.title_favorite),
-                        items = dummyMovies,
-                    ),
+            state =
+                CollectionState(
+                    sections =
+                        listOf(
+                            CollectionSection(
+                                id = 0,
+                                name = UiText.StringResource(CoreR.string.title_favorite),
+                                items = dummyMovies,
+                            ),
+                        ),
                 ),
-            ),
-                onBack = {},
-                onItemClick = {},
-                onGenreSelected = {},
-                onePerGenreState = false,
-                onToggleOnePerGenre = {},
+            onBack = {},
+            onItemClick = {},
+            onGenreSelected = {},
+            onePerGenreState = false,
+            onToggleOnePerGenre = {},
         )
     }
 }

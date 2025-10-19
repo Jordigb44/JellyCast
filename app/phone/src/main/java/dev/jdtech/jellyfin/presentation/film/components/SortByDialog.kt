@@ -14,15 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
-import kotlinx.coroutines.launch
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +25,6 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.TextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -49,7 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import dev.jdtech.jellyfin.models.SortBy
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import org.jellyfin.sdk.model.api.SortOrder
 import dev.jdtech.jellyfin.core.R as CoreR
@@ -93,28 +87,32 @@ fun SortByDialog(
         onDismissRequest = { onDismissRequest() },
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 540.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 540.dp),
             shape = MaterialTheme.shapes.extraLarge,
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            ),
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                ),
         ) {
             Column {
                 Spacer(modifier = Modifier.height(MaterialTheme.spacings.default))
                 Text(
                     text = stringResource(CoreR.string.sort_by),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = MaterialTheme.spacings.default),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = MaterialTheme.spacings.default),
                     style = MaterialTheme.typography.headlineSmall,
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.spacings.medium))
                 SingleChoiceSegmentedButtonRow(
-                    modifier = Modifier
-                        .padding(horizontal = MaterialTheme.spacings.default)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(horizontal = MaterialTheme.spacings.default)
+                            .fillMaxWidth(),
                 ) {
                     orderOptions.forEachIndexed { index, order ->
                         SegmentedButton(
@@ -123,13 +121,15 @@ fun SortByDialog(
                                 selectedOrder = order.first
                                 onUpdate(selectedOption, selectedOrder)
                             },
-                            shape = SegmentedButtonDefaults.itemShape(
-                                index = index,
-                                count = orderOptions.size,
-                            ),
-                            colors = SegmentedButtonDefaults.colors(
-                                inactiveContainerColor = Color.Transparent,
-                            ),
+                            shape =
+                                SegmentedButtonDefaults.itemShape(
+                                    index = index,
+                                    count = orderOptions.size,
+                                ),
+                            colors =
+                                SegmentedButtonDefaults.colors(
+                                    inactiveContainerColor = Color.Transparent,
+                                ),
                             icon = {
                                 AnimatedVisibility(
                                     visible = order.first == selectedOrder,
@@ -152,86 +152,25 @@ fun SortByDialog(
                 if (!isAtTop) {
                     HorizontalDivider()
                 }
-                            LazyColumn(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                state = lazyListState,
-                            ) {
-                                items(options) { option ->
-                                    SortByDialogItem(
-                                        option = option,
-                                        isSelected = option.first == selectedOption,
-                                        onSelect = {
-                                            selectedOption = option.first
-                                            onUpdate(selectedOption, selectedOrder)
-                                        },
-                                    )
-                                }
+                LazyColumn(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
+                    state = lazyListState,
+                ) {
+                    items(options) { option ->
+                        SortByDialogItem(
+                            option = option,
+                            isSelected = option.first == selectedOption,
+                            onSelect = {
+                                selectedOption = option.first
+                                onUpdate(selectedOption, selectedOrder)
+                            },
+                        )
+                    }
 
-                                if (genres.isNotEmpty()) {
-                                    // Genre dropdown as a single list item
-                                    item {
-                                        Spacer(modifier = Modifier.height(MaterialTheme.spacings.medium))
-                                        Text(
-                                            text = stringResource(CoreR.string.genre_label),
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(horizontal = MaterialTheme.spacings.default),
-                                            style = MaterialTheme.typography.titleMedium,
-                                        )
-                                        Spacer(modifier = Modifier.height(MaterialTheme.spacings.small))
-
-                                        var expanded by remember { mutableStateOf(false) }
-                                        val allGenresText = stringResource(CoreR.string.all_genres)
-                                        val displayText = currentGenre ?: allGenresText
-
-                                        ExposedDropdownMenuBox(
-                                            expanded = expanded,
-                                            onExpandedChange = { expanded = !expanded },
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(horizontal = MaterialTheme.spacings.default),
-                                        ) {
-                                            TextField(
-                                                value = displayText,
-                                                onValueChange = {},
-                                                readOnly = true,
-                                                modifier = Modifier
-                                                    .menuAnchor()
-                                                    .fillMaxWidth(),
-                                                trailingIcon = {
-                                                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                                                },
-                                                colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                                            )
-                                            ExposedDropdownMenu(
-                                                expanded = expanded,
-                                                onDismissRequest = { expanded = false },
-                                            ) {
-                                                // "All" option
-                                                DropdownMenuItem(
-                                                    text = { Text(text = stringResource(CoreR.string.all_genres)) },
-                                                    onClick = {
-                                                        expanded = false
-                                                        onGenreSelected(null)
-                                                        onDismissRequest()
-                                                    },
-                                                )
-                                                genres.forEach { genre ->
-                                                    DropdownMenuItem(
-                                                        text = { Text(text = genre) },
-                                                        onClick = {
-                                                            expanded = false
-                                                            onGenreSelected(genre)
-                                                            onDismissRequest()
-                                                        },
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                    // Genre selection removed - now handled by genre carousel in main screen
+                }
                 Spacer(modifier = Modifier.height(MaterialTheme.spacings.medium))
             }
         }
@@ -245,14 +184,14 @@ private fun SortByDialogItem(
     onSelect: (SortBy) -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                onSelect(option.first)
-            }
-            .padding(
-                horizontal = MaterialTheme.spacings.default,
-            ),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable {
+                    onSelect(option.first)
+                }.padding(
+                    horizontal = MaterialTheme.spacings.default,
+                ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         RadioButton(
@@ -271,7 +210,7 @@ private fun SortByDialogItem(
 @Preview
 @Composable
 private fun SortByDialogPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         SortByDialog(
             currentSortBy = SortBy.NAME,
             currentSortOrder = SortOrder.ASCENDING,
@@ -284,7 +223,7 @@ private fun SortByDialogPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun SortByDialogItemPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         SortByDialogItem(
             option = Pair(SortBy.NAME, "Title"),
             isSelected = true,

@@ -34,6 +34,8 @@ import androidx.media3.common.C
 import androidx.media3.ui.DefaultTimeBar
 import androidx.media3.ui.PlayerControlView
 import androidx.media3.ui.PlayerView
+import androidx.mediarouter.app.MediaRouteButton
+import com.google.android.gms.cast.framework.CastButtonFactory
 import dagger.hilt.android.AndroidEntryPoint
 import dev.jdtech.jellyfin.databinding.ActivityPlayerBinding
 import dev.jdtech.jellyfin.player.local.presentation.PlayerEvents
@@ -53,7 +55,6 @@ var isControlsLocked: Boolean = false
 
 @AndroidEntryPoint
 class PlayerActivity : BasePlayerActivity() {
-
     @Inject
     lateinit var appPreferences: AppPreferences
 
@@ -82,12 +83,13 @@ class PlayerActivity : BasePlayerActivity() {
     }
 
     private val handler = Handler(Looper.getMainLooper())
-    private val skipButtonTimeout = Runnable {
-        if (!binding.playerView.isControllerFullyVisible) {
-            skipSegmentButton.isVisible = false
-            skipButtonTimeoutExpired = true
+    private val skipButtonTimeout =
+        Runnable {
+            if (!binding.playerView.isControllerFullyVisible) {
+                skipSegmentButton.isVisible = false
+                skipButtonTimeoutExpired = true
+            }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,12 +120,13 @@ class PlayerActivity : BasePlayerActivity() {
         configureInsets(lockedControls)
 
         if (appPreferences.getValue(appPreferences.playerGestures)) {
-            playerGestureHelper = PlayerGestureHelper(
-                appPreferences,
-                this,
-                binding.playerView,
-                getSystemService(AUDIO_SERVICE) as AudioManager,
-            )
+            playerGestureHelper =
+                PlayerGestureHelper(
+                    appPreferences,
+                    this,
+                    binding.playerView,
+                    getSystemService(AUDIO_SERVICE) as AudioManager,
+                )
         }
 
         binding.playerView.findViewById<View>(R.id.back_button).setOnClickListener {
@@ -139,6 +142,18 @@ class PlayerActivity : BasePlayerActivity() {
         val pipButton = binding.playerView.findViewById<ImageButton>(R.id.btn_pip)
         val lockButton = binding.playerView.findViewById<ImageButton>(R.id.btn_lockview)
         val unlockButton = binding.playerView.findViewById<ImageButton>(R.id.btn_unlock)
+
+        // Initialize Cast button - only if Chromecast is enabled
+        val castButton = binding.playerView.findViewById<MediaRouteButton>(R.id.cast_button)
+        val prefsName = packageName + "_preferences"
+        val sharedPreferences = getSharedPreferences(prefsName, MODE_PRIVATE)
+        val chromecastEnabled = sharedPreferences.getBoolean("pref_chromecast_enabled", true)
+
+        if (chromecastEnabled) {
+            CastButtonFactory.setUpMediaRouteButton(applicationContext, castButton)
+        } else {
+            castButton.visibility = android.view.View.GONE
+        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -225,7 +240,8 @@ class PlayerActivity : BasePlayerActivity() {
                                 if (appPreferences.getValue(appPreferences.playerPipGesture)) {
                                     try {
                                         setPictureInPictureParams(pipParams(event.isPlaying))
-                                    } catch (_: IllegalArgumentException) { }
+                                    } catch (_: IllegalArgumentException) {
+                                    }
                                 }
                             }
                         }
@@ -239,7 +255,9 @@ class PlayerActivity : BasePlayerActivity() {
                     }
                 }
 
-                if (appPreferences.getValue(appPreferences.playerMediaSegmentsSkipButton) || appPreferences.getValue(appPreferences.playerMediaSegmentsAutoSkip)) {
+                if (appPreferences.getValue(appPreferences.playerMediaSegmentsSkipButton) ||
+                    appPreferences.getValue(appPreferences.playerMediaSegmentsAutoSkip)
+                ) {
                     launch {
                         while (true) {
                             viewModel.updateCurrentSegment()
@@ -319,11 +337,12 @@ class PlayerActivity : BasePlayerActivity() {
 
         if (appPreferences.getValue(appPreferences.playerTrickplay)) {
             val imagePreview = binding.playerView.findViewById<ImageView>(R.id.image_preview)
-            previewScrubListener = PreviewScrubListener(
-                imagePreview,
-                timeBar,
-                viewModel.player,
-            )
+            previewScrubListener =
+                PreviewScrubListener(
+                    imagePreview,
+                    timeBar,
+                    viewModel.player,
+                )
 
             timeBar.addListener(previewScrubListener!!)
         }
@@ -375,36 +394,40 @@ class PlayerActivity : BasePlayerActivity() {
     private fun pipParams(enableAutoEnter: Boolean = viewModel.player.isPlaying): PictureInPictureParams {
         val displayAspectRatio = Rational(binding.playerView.width, binding.playerView.height)
 
-        val aspectRatio = binding.playerView.player?.videoSize?.let {
-            Rational(
-                it.width.coerceAtMost((it.height * 2.39f).toInt()),
-                it.height.coerceAtMost((it.width * 2.39f).toInt()),
-            )
-        }
+        val aspectRatio =
+            binding.playerView.player?.videoSize?.let {
+                Rational(
+                    it.width.coerceAtMost((it.height * 2.39f).toInt()),
+                    it.height.coerceAtMost((it.width * 2.39f).toInt()),
+                )
+            }
 
-        val sourceRectHint = if (displayAspectRatio < aspectRatio!!) {
-            val space =
-                ((binding.playerView.height - (binding.playerView.width.toFloat() / aspectRatio.toFloat())) / 2).toInt()
-            Rect(
-                0,
-                space,
-                binding.playerView.width,
-                (binding.playerView.width.toFloat() / aspectRatio.toFloat()).toInt() + space,
-            )
-        } else {
-            val space =
-                ((binding.playerView.width - (binding.playerView.height.toFloat() * aspectRatio.toFloat())) / 2).toInt()
-            Rect(
-                space,
-                0,
-                (binding.playerView.height.toFloat() * aspectRatio.toFloat()).toInt() + space,
-                binding.playerView.height,
-            )
-        }
+        val sourceRectHint =
+            if (displayAspectRatio < aspectRatio!!) {
+                val space =
+                    ((binding.playerView.height - (binding.playerView.width.toFloat() / aspectRatio.toFloat())) / 2).toInt()
+                Rect(
+                    0,
+                    space,
+                    binding.playerView.width,
+                    (binding.playerView.width.toFloat() / aspectRatio.toFloat()).toInt() + space,
+                )
+            } else {
+                val space =
+                    ((binding.playerView.width - (binding.playerView.height.toFloat() * aspectRatio.toFloat())) / 2).toInt()
+                Rect(
+                    space,
+                    0,
+                    (binding.playerView.height.toFloat() * aspectRatio.toFloat()).toInt() + space,
+                    binding.playerView.height,
+                )
+            }
 
-        val builder = PictureInPictureParams.Builder()
-            .setAspectRatio(aspectRatio)
-            .setSourceRectHint(sourceRectHint)
+        val builder =
+            PictureInPictureParams
+                .Builder()
+                .setAspectRatio(aspectRatio)
+                .setSourceRectHint(sourceRectHint)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             builder.setAutoEnterEnabled(enableAutoEnter)
@@ -439,9 +462,10 @@ class PlayerActivity : BasePlayerActivity() {
                 playerGestureHelper?.updateZoomMode(false)
 
                 // Brightness mode Auto
-                window.attributes = window.attributes.apply {
-                    screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
-                }
+                window.attributes =
+                    window.attributes.apply {
+                        screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
+                    }
             }
 
             false -> {
@@ -449,17 +473,19 @@ class PlayerActivity : BasePlayerActivity() {
                 playerGestureHelper?.updateZoomMode(wasZoom)
 
                 // Override auto brightness
-                window.attributes = window.attributes.apply {
-                    screenBrightness =
-                        if (appPreferences.getValue(appPreferences.playerGesturesBrightnessRemember)) {
-                            appPreferences.getValue(appPreferences.playerBrightness)
-                        } else {
-                            Settings.System.getInt(
-                                contentResolver,
-                                Settings.System.SCREEN_BRIGHTNESS,
-                            ).toFloat() / 255
-                        }
-                }
+                window.attributes =
+                    window.attributes.apply {
+                        screenBrightness =
+                            if (appPreferences.getValue(appPreferences.playerGesturesBrightnessRemember)) {
+                                appPreferences.getValue(appPreferences.playerBrightness)
+                            } else {
+                                Settings.System
+                                    .getInt(
+                                        contentResolver,
+                                        Settings.System.SCREEN_BRIGHTNESS,
+                                    ).toFloat() / 255
+                            }
+                    }
             }
         }
     }

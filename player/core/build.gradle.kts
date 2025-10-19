@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.ktlint)
 }
 
 android {
@@ -27,12 +26,6 @@ android {
         sourceCompatibility = Versions.JAVA
         targetCompatibility = Versions.JAVA
     }
-}
-
-ktlint {
-    version.set(Versions.KTLINT)
-    android.set(true)
-    ignoreFailures.set(false)
 }
 
 dependencies {

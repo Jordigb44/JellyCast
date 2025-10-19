@@ -1,7 +1,7 @@
 package dev.jdtech.jellyfin.database
 
 import androidx.room.TypeConverter
-import dev.jdtech.jellyfin.models.FindroidChapter
+import dev.jdtech.jellyfin.models.JellyCastChapter
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jellyfin.sdk.model.DateTime
@@ -10,32 +10,20 @@ import java.util.UUID
 
 class Converters {
     @TypeConverter
-    fun fromStringToUUID(value: String?): UUID? {
-        return value?.let { UUID.fromString(it) }
-    }
+    fun fromStringToUUID(value: String?): UUID? = value?.let { UUID.fromString(it) }
 
     @TypeConverter
-    fun fromUUIDToString(value: UUID?): String? {
-        return value?.toString()
-    }
+    fun fromUUIDToString(value: UUID?): String? = value?.toString()
 
     @TypeConverter
-    fun fromDateTimeToLong(value: DateTime?): Long? {
-        return value?.toEpochSecond(ZoneOffset.UTC)
-    }
+    fun fromDateTimeToLong(value: DateTime?): Long? = value?.toEpochSecond(ZoneOffset.UTC)
 
     @TypeConverter
-    fun fromLongToDatetime(value: Long?): DateTime? {
-        return value?.let { DateTime.ofEpochSecond(it, 0, ZoneOffset.UTC) }
-    }
+    fun fromLongToDatetime(value: Long?): DateTime? = value?.let { DateTime.ofEpochSecond(it, 0, ZoneOffset.UTC) }
 
     @TypeConverter
-    fun fromFindroidChaptersToString(value: List<FindroidChapter>?): String? {
-        return value?.let { Json.encodeToString(value) }
-    }
+    fun fromJellyCastChaptersToString(value: List<JellyCastChapter>?): String? = value?.let { Json.encodeToString(value) }
 
     @TypeConverter
-    fun fromStringToFindroidChapters(value: String?): List<FindroidChapter>? {
-        return value?.let { Json.decodeFromString(value) }
-    }
+    fun fromStringToJellyCastChapters(value: String?): List<JellyCastChapter>? = value?.let { Json.decodeFromString(value) }
 }

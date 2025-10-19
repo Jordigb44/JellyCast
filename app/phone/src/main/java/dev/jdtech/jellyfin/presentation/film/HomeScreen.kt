@@ -33,25 +33,25 @@ import dev.jdtech.jellyfin.core.presentation.dummy.dummyServer
 import dev.jdtech.jellyfin.film.presentation.home.HomeAction
 import dev.jdtech.jellyfin.film.presentation.home.HomeState
 import dev.jdtech.jellyfin.film.presentation.home.HomeViewModel
-import dev.jdtech.jellyfin.models.FindroidCollection
-import dev.jdtech.jellyfin.models.FindroidItem
+import dev.jdtech.jellyfin.models.JellyCastCollection
+import dev.jdtech.jellyfin.models.JellyCastItem
 import dev.jdtech.jellyfin.presentation.components.ErrorDialog
 import dev.jdtech.jellyfin.presentation.film.components.HomeCarousel
 import dev.jdtech.jellyfin.presentation.film.components.HomeHeader
 import dev.jdtech.jellyfin.presentation.film.components.HomeSection
 import dev.jdtech.jellyfin.presentation.film.components.HomeView
 import dev.jdtech.jellyfin.presentation.film.components.ServerSelectionBottomSheet
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.presentation.utils.rememberSafePadding
 import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
-    onLibraryClick: (library: FindroidCollection) -> Unit,
+    onLibraryClick: (library: JellyCastCollection) -> Unit,
     onSettingsClick: () -> Unit,
     onManageServers: () -> Unit,
-    onItemClick: (item: FindroidItem) -> Unit,
+    onItemClick: (item: JellyCastItem) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -82,19 +82,21 @@ private fun HomeScreenLayout(
     onAction: (HomeAction) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    val safePadding = rememberSafePadding(
-        handleStartInsets = false,
-    )
+    val safePadding =
+        rememberSafePadding(
+            handleStartInsets = false,
+        )
 
     val paddingStart = safePadding.start + MaterialTheme.spacings.default
     val paddingTop = safePadding.top + MaterialTheme.spacings.small
     val paddingEnd = safePadding.end + MaterialTheme.spacings.default
     val paddingBottom = safePadding.bottom + MaterialTheme.spacings.default
 
-    val itemsPadding = PaddingValues(
-        start = paddingStart,
-        end = paddingEnd,
-    )
+    val itemsPadding =
+        PaddingValues(
+            start = paddingStart,
+            end = paddingEnd,
+        )
 
     val contentPaddingTop = safePadding.top + 88.dp
 
@@ -103,18 +105,21 @@ private fun HomeScreenLayout(
     var showServerSelectionBottomSheet by remember { mutableStateOf(false) }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .semantics { isTraversalGroup = true },
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .semantics { isTraversalGroup = true },
     ) {
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .semantics { traversalIndex = 1f },
-            contentPadding = PaddingValues(
-                top = contentPaddingTop,
-                bottom = paddingBottom,
-            ),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .semantics { traversalIndex = 1f },
+            contentPadding =
+                PaddingValues(
+                    top = contentPaddingTop,
+                    bottom = paddingBottom,
+                ),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.medium),
         ) {
             state.suggestionsSection?.let { section ->
@@ -180,12 +185,13 @@ private fun HomeScreenLayout(
         onUserClick = {
             onAction(HomeAction.OnSettingsClick)
         },
-        modifier = Modifier
-            .padding(
-                start = paddingStart,
-                top = paddingTop,
-                end = paddingEnd,
-            ),
+        modifier =
+            Modifier
+                .padding(
+                    start = paddingStart,
+                    top = paddingTop,
+                    end = paddingEnd,
+                ),
     )
 
     if (showServerSelectionBottomSheet) {
@@ -214,15 +220,16 @@ private fun HomeScreenLayout(
 @PreviewScreenSizes
 @Composable
 private fun HomeScreenLayoutPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         HomeScreenLayout(
-            state = HomeState(
-                server = dummyServer,
-                suggestionsSection = dummyHomeSuggestions,
-                resumeSection = dummyHomeSection,
-                views = listOf(dummyHomeView),
-                error = Exception("Failed to load data"),
-            ),
+            state =
+                HomeState(
+                    server = dummyServer,
+                    suggestionsSection = dummyHomeSuggestions,
+                    resumeSection = dummyHomeSection,
+                    views = listOf(dummyHomeView),
+                    error = Exception("Failed to load data"),
+                ),
             onAction = {},
         )
     }

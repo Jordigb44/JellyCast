@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 
 @Composable
@@ -37,20 +37,23 @@ fun BaseDialog(
         onDismissRequest = onDismiss,
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 540.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 540.dp),
             shape = RoundedCornerShape(28.dp),
         ) {
             Column(
-                modifier = Modifier
-                    .padding(top = MaterialTheme.spacings.default),
+                modifier =
+                    Modifier
+                        .padding(top = MaterialTheme.spacings.default),
             ) {
                 Text(
                     text = title,
-                    modifier = Modifier
-                        .padding(horizontal = MaterialTheme.spacings.default)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(horizontal = MaterialTheme.spacings.default)
+                            .fillMaxWidth(),
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.headlineSmall,
                 )
@@ -76,9 +79,10 @@ fun BaseDialog(
         content(contentPadding)
         Spacer(modifier = Modifier.height(MaterialTheme.spacings.default))
         Row(
-            modifier = Modifier
-                .padding(horizontal = MaterialTheme.spacings.default)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(horizontal = MaterialTheme.spacings.default)
+                    .fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
         ) {
             negativeButton()
@@ -91,15 +95,16 @@ fun BaseDialog(
 @Preview
 @Composable
 private fun BaseDialogPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         BaseDialog(
             title = "Dialog Title",
             onDismiss = {},
         ) {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Red),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(Color.Red),
             )
         }
     }
@@ -108,7 +113,7 @@ private fun BaseDialogPreview() {
 @Preview
 @Composable
 private fun BaseDialogButtonsPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         BaseDialog(
             title = "Dialog Title",
             negativeButton = {
@@ -132,10 +137,11 @@ private fun BaseDialogButtonsPreview() {
             onDismiss = {},
         ) {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f, fill = false)
-                    .background(Color.Red),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .weight(1f, fill = false)
+                        .background(Color.Red),
             )
         }
     }

@@ -22,7 +22,5 @@ object DownloaderModule {
         serverDatabase: ServerDatabaseDao,
         jellyfinRepository: JellyfinRepository,
         appPreferences: AppPreferences,
-    ): Downloader {
-        return DownloaderImpl(application, serverDatabase, jellyfinRepository, appPreferences)
-    }
+    ): Downloader = DownloaderImpl(application, serverDatabase, jellyfinRepository, appPreferences)
 }

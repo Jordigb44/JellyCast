@@ -21,7 +21,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import dev.jdtech.jellyfin.presentation.components.BaseDialog
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.setup.R as SetupR
 
@@ -72,17 +72,19 @@ fun AddServerAddressDialog(
             onValueChange = {
                 textFieldValue = it
             },
-            modifier = Modifier
-                .padding(contentPadding)
-                .fillMaxWidth()
-                .focusRequester(focusRequester),
+            modifier =
+                Modifier
+                    .padding(contentPadding)
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
             placeholder = {
                 Text("http://<server_ip>:8096")
             },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Uri,
-                imeAction = ImeAction.Done,
-            ),
+            keyboardOptions =
+                KeyboardOptions(
+                    keyboardType = KeyboardType.Uri,
+                    imeAction = ImeAction.Done,
+                ),
             singleLine = true,
         )
     }
@@ -91,7 +93,7 @@ fun AddServerAddressDialog(
 @Preview
 @Composable
 private fun AddServerAddressDialogPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         AddServerAddressDialog(
             onAdd = {},
             onDismiss = {},

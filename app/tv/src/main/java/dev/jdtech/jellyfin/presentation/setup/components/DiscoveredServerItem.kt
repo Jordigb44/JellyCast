@@ -24,7 +24,7 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyServer
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.core.R as CoreR
 
@@ -39,30 +39,35 @@ fun DiscoveredServerItem(
     ) {
         Surface(
             onClick = onClick,
-            colors = ClickableSurfaceDefaults.colors(
-                containerColor = Color(0xFF132026),
-                focusedContainerColor = Color(0xFF132026),
-            ),
-            shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(16.dp)),
-            border = ClickableSurfaceDefaults.border(
-                focusedBorder = Border(
-                    BorderStroke(
-                        4.dp,
-                        Color.White,
-                    ),
-                    shape = RoundedCornerShape(16.dp),
+            colors =
+                ClickableSurfaceDefaults.colors(
+                    containerColor = Color(0xFF132026),
+                    focusedContainerColor = Color(0xFF132026),
                 ),
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f),
+            shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(16.dp)),
+            border =
+                ClickableSurfaceDefaults.border(
+                    focusedBorder =
+                        Border(
+                            BorderStroke(
+                                4.dp,
+                                Color.White,
+                            ),
+                            shape = RoundedCornerShape(16.dp),
+                        ),
+                ),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
         ) {
             Icon(
                 painter = painterResource(CoreR.drawable.ic_server),
                 contentDescription = null,
                 tint = Color.White,
-                modifier = Modifier
-                    .align(Alignment.Center),
+                modifier =
+                    Modifier
+                        .align(Alignment.Center),
             )
         }
         Spacer(modifier = Modifier.height(MaterialTheme.spacings.small))
@@ -81,7 +86,7 @@ fun DiscoveredServerItem(
 @Composable
 @Preview
 private fun DiscoveredServerItemPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         DiscoveredServerItem(dummyServer.name)
     }
 }

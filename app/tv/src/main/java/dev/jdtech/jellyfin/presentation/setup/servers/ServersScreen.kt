@@ -35,7 +35,7 @@ import dev.jdtech.jellyfin.models.Server
 import dev.jdtech.jellyfin.models.ServerAddress
 import dev.jdtech.jellyfin.models.ServerWithAddresses
 import dev.jdtech.jellyfin.presentation.setup.components.ServerItem
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.setup.presentation.servers.ServersAction
 import dev.jdtech.jellyfin.setup.presentation.servers.ServersEvent
@@ -85,14 +85,16 @@ private fun ServersScreenLayout(
     var selectedServer by remember { mutableStateOf<Server?>(null) }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize(),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.Center),
         ) {
             Text(
                 text = stringResource(id = SetupR.string.servers),
@@ -160,20 +162,21 @@ private fun ServersScreenLayout(
                     onClick = {
                         openDeleteDialog = false
                     },
-                    modifier = Modifier.onPreviewKeyEvent { event ->
-                        // Long press on server would trigger the cancel button. This fixes that by capturing the first up event.
-                        when (event.nativeKeyEvent.keyCode) {
-                            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_NUMPAD_ENTER -> {
-                                if (firstInteraction) {
-                                    if (event.nativeKeyEvent.action == KeyEvent.ACTION_UP) {
-                                        firstInteraction = false
+                    modifier =
+                        Modifier.onPreviewKeyEvent { event ->
+                            // Long press on server would trigger the cancel button. This fixes that by capturing the first up event.
+                            when (event.nativeKeyEvent.keyCode) {
+                                KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_NUMPAD_ENTER -> {
+                                    if (firstInteraction) {
+                                        if (event.nativeKeyEvent.action == KeyEvent.ACTION_UP) {
+                                            firstInteraction = false
+                                        }
+                                        return@onPreviewKeyEvent true
                                     }
-                                    return@onPreviewKeyEvent true
                                 }
                             }
-                        }
-                        false
-                    },
+                            false
+                        },
                 ) {
                     Text(text = stringResource(SetupR.string.cancel))
                 }
@@ -185,23 +188,26 @@ private fun ServersScreenLayout(
 @Preview(device = "id:tv_1080p")
 @Composable
 private fun ServersScreenLayoutPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         ServersScreenLayout(
-            state = ServersState(
-                servers = listOf(
-                    ServerWithAddresses(
-                        server = dummyServer,
-                        addresses = listOf(
-                            ServerAddress(
-                                id = UUID.randomUUID(),
-                                address = dummyDiscoveredServer.address,
-                                serverId = "",
+            state =
+                ServersState(
+                    servers =
+                        listOf(
+                            ServerWithAddresses(
+                                server = dummyServer,
+                                addresses =
+                                    listOf(
+                                        ServerAddress(
+                                            id = UUID.randomUUID(),
+                                            address = dummyDiscoveredServer.address,
+                                            serverId = "",
+                                        ),
+                                    ),
+                                user = null,
                             ),
                         ),
-                        user = null,
-                    ),
                 ),
-            ),
             onAction = {},
         )
     }
@@ -210,7 +216,7 @@ private fun ServersScreenLayoutPreview() {
 @Preview(device = "id:tv_1080p")
 @Composable
 private fun ServersScreenLayoutPreviewNoServers() {
-    FindroidTheme {
+    JellyCastTheme {
         ServersScreenLayout(
             state = ServersState(),
             onAction = {},

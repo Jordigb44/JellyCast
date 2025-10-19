@@ -102,9 +102,10 @@ fun FilmSearchBar(
                 onSearch = { onExpand(true) },
                 expanded = expanded,
                 onExpandedChange = { onExpand(it) },
-                modifier = Modifier
-                    .padding(start = searchBarInputPaddingStart, end = searchBarInputPaddingEnd)
-                    .focusRequester(focusRequester),
+                modifier =
+                    Modifier
+                        .padding(start = searchBarInputPaddingStart, end = searchBarInputPaddingEnd)
+                        .focusRequester(focusRequester),
                 placeholder = {
                     Text(
                         text = stringResource(FilmR.string.search_placeholder),
@@ -139,8 +140,9 @@ fun FilmSearchBar(
                 trailingIcon = {
                     if (state.loading) {
                         Box(
-                            modifier = Modifier
-                                .size(32.dp),
+                            modifier =
+                                Modifier
+                                    .size(32.dp),
                         ) {
                             CircularProgressIndicator()
                         }
@@ -161,21 +163,23 @@ fun FilmSearchBar(
         },
         expanded = expanded,
         onExpandedChange = { onExpand(it) },
-        modifier = modifier
-            .padding(
-                start = searchBarPaddingStart,
-                end = searchBarPaddingEnd,
-            ),
+        modifier =
+            modifier
+                .padding(
+                    start = searchBarPaddingStart,
+                    end = searchBarPaddingEnd,
+                ),
     ) {
         LazyVerticalGrid(
             columns = GridCellsAdaptiveWithMinColumns(minSize = 160.dp, minColumns = 2),
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(
-                start = safePadding.start + MaterialTheme.spacings.default,
-                top = MaterialTheme.spacings.default,
-                end = safePadding.end + MaterialTheme.spacings.default,
-                bottom = safePadding.bottom + MaterialTheme.spacings.default,
-            ),
+            contentPadding =
+                PaddingValues(
+                    start = safePadding.start + MaterialTheme.spacings.default,
+                    top = MaterialTheme.spacings.default,
+                    end = safePadding.end + MaterialTheme.spacings.default,
+                    bottom = safePadding.bottom + MaterialTheme.spacings.default,
+                ),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.default),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.default),
         ) {

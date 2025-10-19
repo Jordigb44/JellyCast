@@ -20,7 +20,8 @@ class SpeedSelectionDialogFragment(
 
         return activity?.let { activity ->
             val builder = MaterialAlertDialogBuilder(activity)
-            builder.setTitle(getString(R.string.select_playback_speed))
+            builder
+                .setTitle(getString(R.string.select_playback_speed))
                 .setSingleChoiceItems(
                     speedTexts.toTypedArray(),
                     speedNumbers.indexOf(viewModel.playbackSpeed),

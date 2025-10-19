@@ -39,18 +39,24 @@ class JellyfinApi(
     connectTimeout: Long = Constants.NETWORK_DEFAULT_CONNECT_TIMEOUT,
     socketTimeout: Long = Constants.NETWORK_DEFAULT_SOCKET_TIMEOUT,
 ) {
-    val jellyfin = createJellyfin {
-        clientInfo =
-            ClientInfo(name = androidContext.applicationInfo.loadLabel(androidContext.packageManager).toString(), version = BuildConfig.VERSION_NAME)
-        context = androidContext
-    }
-    val api = jellyfin.createApi(
-        httpClientOptions = HttpClientOptions(
-            requestTimeout = requestTimeout.toDuration(DurationUnit.MILLISECONDS),
-            connectTimeout = connectTimeout.toDuration(DurationUnit.MILLISECONDS),
-            socketTimeout = socketTimeout.toDuration(DurationUnit.MILLISECONDS),
-        ),
-    )
+    val jellyfin =
+        createJellyfin {
+            clientInfo =
+                ClientInfo(
+                    name = androidContext.applicationInfo.loadLabel(androidContext.packageManager).toString(),
+                    version = BuildConfig.VERSION_NAME,
+                )
+            context = androidContext
+        }
+    val api =
+        jellyfin.createApi(
+            httpClientOptions =
+                HttpClientOptions(
+                    requestTimeout = requestTimeout.toDuration(DurationUnit.MILLISECONDS),
+                    connectTimeout = connectTimeout.toDuration(DurationUnit.MILLISECONDS),
+                    socketTimeout = socketTimeout.toDuration(DurationUnit.MILLISECONDS),
+                ),
+        )
     var userId: UUID? = null
 
     val brandingApi = api.brandingApi
@@ -72,7 +78,7 @@ class JellyfinApi(
 
     companion object {
         @Volatile
-        private var INSTANCE: JellyfinApi? = null
+        private var instance: JellyfinApi? = null
 
         fun getInstance(
             context: Context,
@@ -81,15 +87,16 @@ class JellyfinApi(
             socketTimeout: Long = Constants.NETWORK_DEFAULT_SOCKET_TIMEOUT,
         ): JellyfinApi {
             synchronized(this) {
-                var instance = INSTANCE
+                var instance = instance
                 if (instance == null) {
-                    instance = JellyfinApi(
-                        androidContext = context.applicationContext,
-                        requestTimeout = requestTimeout,
-                        connectTimeout = connectTimeout,
-                        socketTimeout = socketTimeout,
-                    )
-                    INSTANCE = instance
+                    instance =
+                        JellyfinApi(
+                            androidContext = context.applicationContext,
+                            requestTimeout = requestTimeout,
+                            connectTimeout = connectTimeout,
+                            socketTimeout = socketTimeout,
+                        )
+                    instance = instance
                 }
                 return instance
             }

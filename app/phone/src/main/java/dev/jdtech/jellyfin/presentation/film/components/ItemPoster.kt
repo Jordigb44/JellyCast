@@ -7,17 +7,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import coil3.compose.AsyncImage
-import dev.jdtech.jellyfin.models.FindroidEpisode
-import dev.jdtech.jellyfin.models.FindroidItem
-import dev.jdtech.jellyfin.models.FindroidMovie
+import dev.jdtech.jellyfin.models.JellyCastEpisode
+import dev.jdtech.jellyfin.models.JellyCastItem
+import dev.jdtech.jellyfin.models.JellyCastMovie
 
 enum class Direction {
-    HORIZONTAL, VERTICAL
+    HORIZONTAL,
+    VERTICAL,
 }
 
 @Composable
 fun ItemPoster(
-    item: FindroidItem,
+    item: JellyCastItem,
     direction: Direction,
     modifier: Modifier = Modifier,
 ) {
@@ -25,11 +26,11 @@ fun ItemPoster(
 
     when (direction) {
         Direction.HORIZONTAL -> {
-            if (item is FindroidMovie) imageUri = item.images.backdrop
+            if (item is JellyCastMovie) imageUri = item.images.backdrop
         }
         Direction.VERTICAL -> {
             when (item) {
-                is FindroidEpisode -> imageUri = item.images.showPrimary
+                is JellyCastEpisode -> imageUri = item.images.showPrimary
             }
         }
     }
@@ -38,10 +39,11 @@ fun ItemPoster(
         model = imageUri,
         contentDescription = null,
         contentScale = ContentScale.Crop,
-        modifier = modifier
-            .aspectRatio(if (direction == Direction.HORIZONTAL) 1.77f else 0.66f)
-            .background(
-                MaterialTheme.colorScheme.surfaceContainer,
-            ),
+        modifier =
+            modifier
+                .aspectRatio(if (direction == Direction.HORIZONTAL) 1.77f else 0.66f)
+                .background(
+                    MaterialTheme.colorScheme.surfaceContainer,
+                ),
     )
 }

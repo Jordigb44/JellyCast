@@ -20,7 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.util.fastFilterNotNull
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.settings.presentation.models.Preference
 import dev.jdtech.jellyfin.settings.presentation.models.PreferenceIntInput
@@ -38,13 +38,15 @@ fun SettingsIntInputCard(
         mutableStateOf(false)
     }
 
-    val prefix = preference.prefixRes?.let {
-        stringResource(it)
-    }
+    val prefix =
+        preference.prefixRes?.let {
+            stringResource(it)
+        }
 
-    val suffix = preference.suffixRes?.let {
-        stringResource(it)
-    }
+    val suffix =
+        preference.suffixRes?.let {
+            stringResource(it)
+        }
 
     SettingsNumberInputCard(
         preference = preference,
@@ -79,13 +81,15 @@ fun SettingsLongInputCard(
         mutableStateOf(false)
     }
 
-    val prefix = preference.prefixRes?.let {
-        stringResource(it)
-    }
+    val prefix =
+        preference.prefixRes?.let {
+            stringResource(it)
+        }
 
-    val suffix = preference.suffixRes?.let {
-        stringResource(it)
-    }
+    val suffix =
+        preference.suffixRes?.let {
+            stringResource(it)
+        }
 
     SettingsNumberInputCard(
         preference = preference,
@@ -153,14 +157,15 @@ fun SettingsNumberInputCard(
 @Preview
 @Composable
 private fun SettingsIntInputCardPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         SettingsIntInputCard(
-            preference = PreferenceIntInput(
-                nameStringResource = SettingsR.string.settings_cache_size,
-                backendPreference = PreferenceBackend("", 0),
-                suffixRes = SettingsR.string.mb,
-                value = 25,
-            ),
+            preference =
+                PreferenceIntInput(
+                    nameStringResource = SettingsR.string.settings_cache_size,
+                    backendPreference = PreferenceBackend("", 0),
+                    suffixRes = SettingsR.string.mb,
+                    value = 25,
+                ),
             onUpdate = {},
         )
     }
@@ -169,14 +174,15 @@ private fun SettingsIntInputCardPreview() {
 @Preview
 @Composable
 private fun SettingsLongInputCardPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         SettingsLongInputCard(
-            preference = PreferenceLongInput(
-                nameStringResource = SettingsR.string.settings_cache_size,
-                backendPreference = PreferenceBackend("", 0L),
-                suffixRes = SettingsR.string.mb,
-                value = 25,
-            ),
+            preference =
+                PreferenceLongInput(
+                    nameStringResource = SettingsR.string.settings_cache_size,
+                    backendPreference = PreferenceBackend("", 0L),
+                    suffixRes = SettingsR.string.mb,
+                    value = 25,
+                ),
             onUpdate = {},
         )
     }

@@ -15,7 +15,10 @@ fun Fragment.checkIfLoginRequired(error: String?) {
     }
 }
 
-fun NavController.safeNavigate(directions: NavDirections, navOptions: NavOptions? = null) {
+fun NavController.safeNavigate(
+    directions: NavDirections,
+    navOptions: NavOptions? = null,
+) {
     try {
         navigate(directions, navOptions)
     } catch (e: IllegalArgumentException) {

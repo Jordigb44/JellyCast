@@ -41,13 +41,13 @@ import dev.jdtech.jellyfin.core.presentation.dummy.dummySeason
 import dev.jdtech.jellyfin.film.presentation.season.SeasonAction
 import dev.jdtech.jellyfin.film.presentation.season.SeasonState
 import dev.jdtech.jellyfin.film.presentation.season.SeasonViewModel
-import dev.jdtech.jellyfin.models.FindroidItem
+import dev.jdtech.jellyfin.models.JellyCastItem
 import dev.jdtech.jellyfin.presentation.film.components.Direction
 import dev.jdtech.jellyfin.presentation.film.components.EpisodeCard
 import dev.jdtech.jellyfin.presentation.film.components.ItemButtonsBar
 import dev.jdtech.jellyfin.presentation.film.components.ItemHeader
 import dev.jdtech.jellyfin.presentation.film.components.ItemPoster
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.presentation.utils.rememberSafePadding
 import org.jellyfin.sdk.model.api.BaseItemKind
@@ -58,7 +58,7 @@ import dev.jdtech.jellyfin.core.R as CoreR
 fun SeasonScreen(
     seasonId: UUID,
     navigateBack: () -> Unit,
-    navigateToItem: (item: FindroidItem) -> Unit,
+    navigateToItem: (item: JellyCastItem) -> Unit,
     viewModel: SeasonViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
@@ -105,8 +105,9 @@ private fun SeasonScreenLayout(
     ) {
         state.season?.let { season ->
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
                 state = lazyListState,
                 contentPadding = PaddingValues(bottom = paddingBottom),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.default),
@@ -117,20 +118,22 @@ private fun SeasonScreenLayout(
                         lazyListState = lazyListState,
                         content = {
                             Row(
-                                modifier = Modifier
-                                    .align(Alignment.BottomStart)
-                                    .padding(
-                                        start = paddingStart,
-                                        end = paddingEnd,
-                                    ),
+                                modifier =
+                                    Modifier
+                                        .align(Alignment.BottomStart)
+                                        .padding(
+                                            start = paddingStart,
+                                            end = paddingEnd,
+                                        ),
                                 verticalAlignment = Alignment.Bottom,
                             ) {
                                 ItemPoster(
                                     item = season,
                                     direction = Direction.VERTICAL,
-                                    modifier = Modifier
-                                        .width(120.dp)
-                                        .clip(MaterialTheme.shapes.small),
+                                    modifier =
+                                        Modifier
+                                            .width(120.dp)
+                                            .clip(MaterialTheme.shapes.small),
                                 )
                                 Spacer(Modifier.width(MaterialTheme.spacings.medium))
                                 Column(
@@ -172,12 +175,12 @@ private fun SeasonScreenLayout(
                         },
                         onTrailerClick = {},
                         onDownloadClick = {},
-                        modifier = Modifier
-                            .padding(
-                                start = paddingStart,
-                                end = paddingEnd,
-                            )
-                            .fillMaxWidth(),
+                        modifier =
+                            Modifier
+                                .padding(
+                                    start = paddingStart,
+                                    end = paddingEnd,
+                                ).fillMaxWidth(),
                     )
                 }
                 items(
@@ -189,38 +192,43 @@ private fun SeasonScreenLayout(
                         onClick = {
                             onAction(SeasonAction.NavigateToItem(episode))
                         },
-                        modifier = Modifier
-                            .padding(
-                                start = paddingStart,
-                                end = paddingEnd,
-                            ),
+                        modifier =
+                            Modifier
+                                .padding(
+                                    start = paddingStart,
+                                    end = paddingEnd,
+                                ),
                     )
                 }
             }
         } ?: run {
             CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
+                modifier =
+                    Modifier
+                        .align(Alignment.Center),
             )
         }
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = safePadding.start + MaterialTheme.spacings.small,
-                    top = safePadding.top + MaterialTheme.spacings.small,
-                    end = safePadding.end + MaterialTheme.spacings.small,
-                ),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = safePadding.start + MaterialTheme.spacings.small,
+                        top = safePadding.top + MaterialTheme.spacings.small,
+                        end = safePadding.end + MaterialTheme.spacings.small,
+                    ),
         ) {
             IconButton(
                 onClick = { onAction(SeasonAction.OnBackClick) },
-                modifier = Modifier
-                    .alpha(0.7f),
-                colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White,
-                ),
+                modifier =
+                    Modifier
+                        .alpha(0.7f),
+                colors =
+                    IconButtonDefaults.iconButtonColors(
+                        containerColor = Color.Black,
+                        contentColor = Color.White,
+                    ),
             ) {
                 Icon(
                     painter = painterResource(CoreR.drawable.ic_arrow_left),
@@ -234,11 +242,12 @@ private fun SeasonScreenLayout(
 @PreviewScreenSizes
 @Composable
 private fun SeasonScreenLayoutPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         SeasonScreenLayout(
-            state = SeasonState(
-                season = dummySeason,
-            ),
+            state =
+                SeasonState(
+                    season = dummySeason,
+                ),
             onAction = {},
         )
     }

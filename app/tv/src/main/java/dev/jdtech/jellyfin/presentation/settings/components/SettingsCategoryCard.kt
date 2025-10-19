@@ -24,7 +24,7 @@ import androidx.tv.material3.Icon
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.settings.presentation.models.PreferenceCategory
 import dev.jdtech.jellyfin.settings.R as SettingsR
@@ -40,19 +40,22 @@ fun SettingsCategoryCard(
         },
         enabled = preference.enabled,
         shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(10.dp)),
-        colors = ClickableSurfaceDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            focusedContainerColor = MaterialTheme.colorScheme.surface,
-        ),
-        border = ClickableSurfaceDefaults.border(
-            focusedBorder = Border(
-                BorderStroke(
-                    4.dp,
-                    Color.White,
-                ),
-                shape = RoundedCornerShape(10.dp),
+        colors =
+            ClickableSurfaceDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.surface,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
             ),
-        ),
+        border =
+            ClickableSurfaceDefaults.border(
+                focusedBorder =
+                    Border(
+                        BorderStroke(
+                            4.dp,
+                            Color.White,
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                    ),
+            ),
         scale = ClickableSurfaceScale.None,
         modifier = modifier,
     ) {
@@ -92,12 +95,13 @@ fun SettingsCategoryCard(
 @Preview
 @Composable
 private fun SettingsCategoryCardPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         SettingsCategoryCard(
-            preference = PreferenceCategory(
-                nameStringResource = SettingsR.string.settings_category_player,
-                iconDrawableId = SettingsR.drawable.ic_play,
-            ),
+            preference =
+                PreferenceCategory(
+                    nameStringResource = SettingsR.string.settings_category_player,
+                    iconDrawableId = SettingsR.drawable.ic_play,
+                ),
         )
     }
 }

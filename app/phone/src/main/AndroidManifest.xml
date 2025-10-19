@@ -5,10 +5,31 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-feature
         android:name="android.hardware.wifi"
         android:required="false" />
+
+    <!-- Queries for video player apps -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="video/*" />
+        </intent>
+        
+        <!-- Known video players -->
+        <package android:name="org.videolan.vlc" />
+        <package android:name="com.mxtech.videoplayer.ad" />
+        <package android:name="com.mxtech.videoplayer.pro" />
+        <package android:name="org.xbmc.kodi" />
+        <package android:name="com.bsplayer.bspandroid.free" />
+        <package android:name="com.kmplayer" />
+        <package android:name="net.gtvbox.videoplayer" />
+    </queries>
 
     <application
         android:name=".BaseApplication"
@@ -20,7 +41,12 @@
         android:localeConfig="@xml/locales_config"
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Findroid">
+        android:theme="@style/Theme.JellyCast">
+
+        <!-- Cast Configuration -->
+        <meta-data
+            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+            android:value="dev.jdtech.jellyfin.cast.CastOptionsProvider" />
 
         <activity
             android:name=".PlayerActivity"
@@ -29,7 +55,18 @@
             android:launchMode="singleTask"
             android:supportsPictureInPicture="true"
             android:autoRemoveFromRecents="true"
-            android:theme="@style/Theme.Findroid.Player" />
+            android:theme="@style/Theme.JellyCast.Player" />
+
+        <activity
+            android:name=".TrailerActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|uiMode|keyboard|keyboardHidden|navigation"
+            android:theme="@style/Theme.JellyCast.Player"
+            android:exported="false" />
+
+        <activity
+            android:name=".PlayerPickerActivity"
+            android:exported="false"
+            android:theme="@style/Theme.JellyCast" />
 
         <activity
             android:name=".MainActivity"

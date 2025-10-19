@@ -25,7 +25,7 @@ import dev.jdtech.jellyfin.core.presentation.dummy.dummySeason
 import dev.jdtech.jellyfin.film.presentation.season.SeasonAction
 import dev.jdtech.jellyfin.film.presentation.season.SeasonState
 import dev.jdtech.jellyfin.film.presentation.season.SeasonViewModel
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.ui.components.EpisodeCard
 import java.util.UUID
@@ -68,13 +68,14 @@ private fun SeasonScreenLayout(
                 modifier = Modifier.fillMaxSize(),
             ) {
                 Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(
-                            start = MaterialTheme.spacings.extraLarge,
-                            top = MaterialTheme.spacings.large,
-                            end = MaterialTheme.spacings.large,
-                        ),
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .padding(
+                                start = MaterialTheme.spacings.extraLarge,
+                                top = MaterialTheme.spacings.large,
+                                end = MaterialTheme.spacings.large,
+                            ),
                 ) {
                     Text(
                         text = season.name,
@@ -86,14 +87,16 @@ private fun SeasonScreenLayout(
                     )
                 }
                 LazyColumn(
-                    contentPadding = PaddingValues(
-                        top = MaterialTheme.spacings.large,
-                        bottom = MaterialTheme.spacings.large,
-                    ),
+                    contentPadding =
+                        PaddingValues(
+                            top = MaterialTheme.spacings.large,
+                            bottom = MaterialTheme.spacings.large,
+                        ),
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.medium),
-                    modifier = Modifier
-                        .weight(2f)
-                        .padding(end = MaterialTheme.spacings.extraLarge),
+                    modifier =
+                        Modifier
+                            .weight(2f)
+                            .padding(end = MaterialTheme.spacings.extraLarge),
                 ) {
                     items(state.episodes) { episode ->
                         EpisodeCard(
@@ -107,8 +110,9 @@ private fun SeasonScreenLayout(
             }
         } ?: run {
             CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
+                modifier =
+                    Modifier
+                        .align(Alignment.Center),
             )
         }
     }
@@ -117,12 +121,13 @@ private fun SeasonScreenLayout(
 @Preview(device = "id:tv_1080p")
 @Composable
 private fun SeasonScreenLayoutPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         SeasonScreenLayout(
-            state = SeasonState(
-                season = dummySeason,
-                episodes = dummyEpisodes,
-            ),
+            state =
+                SeasonState(
+                    season = dummySeason,
+                    episodes = dummyEpisodes,
+                ),
             onAction = {},
         )
     }

@@ -41,7 +41,7 @@ import dev.jdtech.jellyfin.models.ServerWithAddresses
 import dev.jdtech.jellyfin.presentation.setup.components.RootLayout
 import dev.jdtech.jellyfin.presentation.setup.components.ServerBottomSheet
 import dev.jdtech.jellyfin.presentation.setup.components.ServerItem
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.setup.presentation.servers.ServersAction
 import dev.jdtech.jellyfin.setup.presentation.servers.ServersEvent
 import dev.jdtech.jellyfin.setup.presentation.servers.ServersState
@@ -103,19 +103,21 @@ private fun ServersScreenLayout(
 
     RootLayout {
         Column(
-            modifier = Modifier
-                .padding(horizontal = 24.dp)
-                .widthIn(max = 480.dp)
-                .fillMaxWidth()
-                .align(Alignment.Center),
+            modifier =
+                Modifier
+                    .padding(horizontal = 24.dp)
+                    .widthIn(max = 480.dp)
+                    .fillMaxWidth()
+                    .align(Alignment.Center),
         ) {
             Spacer(modifier = Modifier.weight(0.2f))
             Image(
                 painter = painterResource(id = CoreR.drawable.ic_banner),
                 contentDescription = null,
-                modifier = Modifier
-                    .width(250.dp)
-                    .align(Alignment.CenterHorizontally),
+                modifier =
+                    Modifier
+                        .width(250.dp)
+                        .align(Alignment.CenterHorizontally),
             )
             Spacer(modifier = Modifier.height(32.dp))
             Text(text = stringResource(SetupR.string.servers), style = MaterialTheme.typography.headlineMedium)
@@ -129,9 +131,10 @@ private fun ServersScreenLayout(
             } else {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
                 ) {
                     items(state.servers) { server ->
                         ServerItem(
@@ -164,9 +167,10 @@ private fun ServersScreenLayout(
             onClick = { onAction(ServersAction.OnAddClick) },
             icon = { Icon(painterResource(CoreR.drawable.ic_plus), contentDescription = null) },
             text = { Text(text = stringResource(SetupR.string.servers_btn_add_server)) },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(24.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(24.dp),
         )
     }
 
@@ -230,19 +234,22 @@ private fun ServersScreenLayout(
 @PreviewScreenSizes
 @Composable
 private fun ServersScreenLayoutPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         ServersScreenLayout(
-            state = ServersState(
-                servers = listOf(
-                    ServerWithAddresses(
-                        server = dummyServer,
-                        addresses = listOf(
-                            dummyServerAddress,
+            state =
+                ServersState(
+                    servers =
+                        listOf(
+                            ServerWithAddresses(
+                                server = dummyServer,
+                                addresses =
+                                    listOf(
+                                        dummyServerAddress,
+                                    ),
+                                user = null,
+                            ),
                         ),
-                        user = null,
-                    ),
                 ),
-            ),
             onAction = {},
         )
     }

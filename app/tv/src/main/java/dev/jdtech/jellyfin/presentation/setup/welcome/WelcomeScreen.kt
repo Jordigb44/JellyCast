@@ -26,14 +26,12 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.OutlinedButton
 import androidx.tv.material3.Text
 import dev.jdtech.jellyfin.core.R
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.setup.presentation.welcome.WelcomeAction
 
 @Composable
-fun WelcomeScreen(
-    onContinueClick: () -> Unit,
-) {
+fun WelcomeScreen(onContinueClick: () -> Unit) {
     val uriHandler = LocalUriHandler.current
 
     WelcomeScreenLayout(
@@ -49,9 +47,7 @@ fun WelcomeScreen(
 }
 
 @Composable
-private fun WelcomeScreenLayout(
-    onAction: (WelcomeAction) -> Unit,
-) {
+private fun WelcomeScreenLayout(onAction: (WelcomeAction) -> Unit) {
     val focusRequester = remember { FocusRequester() }
 
     Box(
@@ -100,7 +96,7 @@ private fun WelcomeScreenLayout(
 @Preview(device = "id:tv_1080p")
 @Composable
 private fun WelcomeScreenLayoutPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         WelcomeScreenLayout(
             onAction = {},
         )

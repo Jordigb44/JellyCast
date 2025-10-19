@@ -1,0 +1,285 @@
+name: Release Build
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 0.15.3.1)'
+        required: false
+        type: string
+
+jobs:
+  build-release:
+    name: Build Release APKs
+    runs-on: ubuntu-latest
+    
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: gradle
+          
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+        
+      - name: Get version
+        id: version
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]] && [[ -n "${{ github.event.inputs.version }}" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          else
+            # Extraer versión del archivo de versiones
+            VERSION=$(grep "APP_NAME" buildSrc/src/main/kotlin/Versions.kt | sed 's/.*"\(.*\)".*/\1/')
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+          
+      - name: Build Phone Release APK
+        run: ./gradlew :app:phone:assembleLibreRelease
+        env:
+          GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true
+          
+      - name: Build TV Release APK
+        run: ./gradlew :app:tv:assembleLibreRelease
+        env:
+          GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true
+          
+      - name: Create release directory
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          mkdir -p release/v$VERSION
+          
+      - name: Copy and rename APKs
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          
+          # Buscar y copiar APK de móvil
+          PHONE_APK=$(find app/phone/build/outputs/apk/libre/release -name "*.apk" -type f | head -n 1)
+          if [ -f "$PHONE_APK" ]; then
+            cp "$PHONE_APK" "release/v$VERSION/jellycast-mobile-v$VERSION.apk"
+            echo "✅ Copied mobile APK"
+          else
+            echo "❌ Mobile APK not found"
+            exit 1
+          fi
+          
+          # Buscar y copiar APK de TV
+          TV_APK=$(find app/tv/build/outputs/apk/libre/release -name "*.apk" -type f | head -n 1)
+          if [ -f "$TV_APK" ]; then
+            cp "$TV_APK" "release/v$VERSION/jellycast-tv-v$VERSION.apk"
+            echo "✅ Copied TV APK"
+          else
+            echo "❌ TV APK not found"
+            exit 1
+          fi
+          
+          # Listar archivos
+          ls -lh "release/v$VERSION/"
+          
+      - name: Generate checksums
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          cd "release/v$VERSION"
+          sha256sum *.apk > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+          
+      - name: Get APK info
+        id: apk-info
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          
+          MOBILE_SIZE=$(stat -f%z "release/v$VERSION/jellycast-mobile-v$VERSION.apk" 2>/dev/null || stat -c%s "release/v$VERSION/jellycast-mobile-v$VERSION.apk")
+          TV_SIZE=$(stat -f%z "release/v$VERSION/jellycast-tv-v$VERSION.apk" 2>/dev/null || stat -c%s "release/v$VERSION/jellycast-tv-v$VERSION.apk")
+          
+          MOBILE_SIZE_MB=$(echo "scale=1; $MOBILE_SIZE / 1048576" | bc)
+          TV_SIZE_MB=$(echo "scale=1; $TV_SIZE / 1048576" | bc)
+          
+          echo "mobile-size=$MOBILE_SIZE_MB MB" >> $GITHUB_OUTPUT
+          echo "tv-size=$TV_SIZE_MB MB" >> $GITHUB_OUTPUT
+          
+      - name: Generate release notes
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          MOBILE_SIZE="${{ steps.apk-info.outputs.mobile-size }}"
+          TV_SIZE="${{ steps.apk-info.outputs.tv-size }}"
+          
+          cat > "release/v$VERSION/RELEASE_NOTES.md" << EOF
+          # JellyCast v$VERSION
+          
+          ## 📱 Release Files
+          
+          - **jellycast-mobile-v$VERSION.apk** - Android phone/tablet version ($MOBILE_SIZE)
+          - **jellycast-tv-v$VERSION.apk** - Android TV version ($TV_SIZE)
+          
+          ## 🆕 What's New
+          
+          ### Complete Rebrand: Findroid → JellyCast
+          - ✅ All classes, files, and references renamed
+          - ✅ New Application ID: \`dev.jdtech.jellycast\`
+          - ✅ Now a completely independent app from Findroid
+          
+          ### New Features
+          
+          #### 🎬 External Player Selection (Mobile)
+          - ✅ **Improved external player detection** (VLC, MX Player, etc.)
+            - Support for Android 11+ with package queries
+            - Player detection via HTTP, File, and Content URIs
+            - Fallback list of known players
+          
+          - ✅ **Enhanced player selection UI**
+            - Highlighted selected player with colored background
+            - Check mark (✓) for active player
+            - Dynamic description in settings showing selected player
+          
+          - ✅ **Smart configuration management**
+            - Button only enabled when "Use external player" is active
+            - Selection persists in SharedPreferences
+            - Automatic description update when returning to settings
+          
+          #### 📡 Offline Mode (Mobile)
+          - ✅ **Smart filtering in "Continue Watching"**
+            - When in offline mode, only shows downloaded content
+            - Doesn't display items unavailable without connection
+          
+          ## 🔧 Technical Details
+          
+          ### Compatibility
+          - **Minimum Android**: SDK 27 (Android 8.1)
+          - **Target Android**: SDK 36
+          - **Application ID**: \`dev.jdtech.jellycast\`
+          
+          ### Architecture
+          - Jetpack Compose with Material3
+          - Hilt for dependency injection
+          - Kotlin Coroutines and StateFlow
+          - Android 11+ package visibility queries
+          
+          ## 📦 Installation
+          
+          ### Mobile
+          \`\`\`bash
+          adb install -r jellycast-mobile-v$VERSION.apk
+          \`\`\`
+          
+          ### Android TV
+          \`\`\`bash
+          adb install -r jellycast-tv-v$VERSION.apk
+          \`\`\`
+          
+          ## 🔐 Checksums
+          
+          \`\`\`
+          $(cat release/v$VERSION/SHA256SUMS.txt)
+          \`\`\`
+          
+          ## ⚠️ Important Notes
+          
+          1. **Independent App**: JellyCast installs as a separate application from Findroid
+          2. **First Launch**: You'll need to configure your Jellyfin servers again
+          3. **External Player**: External player selection feature only available on mobile version
+          4. **Offline Mode**: Make sure to download content before enabling offline mode
+          
+          ---
+          
+          **Release Date**: $(date +"%B %d, %Y")
+          **Build**: Release signed with debug keystore
+          **Commit**: ${{ github.sha }}
+          EOF
+          
+          cat "release/v$VERSION/RELEASE_NOTES.md"
+          
+      - name: Upload Release Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apks-v${{ steps.version.outputs.version }}
+          path: |
+            release/v${{ steps.version.outputs.version }}/*.apk
+            release/v${{ steps.version.outputs.version }}/SHA256SUMS.txt
+            release/v${{ steps.version.outputs.version }}/RELEASE_NOTES.md
+          retention-days: 90
+
+  create-github-release:
+    name: Create GitHub Release
+    needs: build-release
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+    
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-apks-v${{ needs.build-release.outputs.version }}
+          path: release-artifacts
+          
+      - name: Display structure
+        run: ls -R release-artifacts
+        
+      - name: Read release notes
+        id: release-notes
+        run: |
+          if [ -f "release-artifacts/RELEASE_NOTES.md" ]; then
+            {
+              echo 'notes<<EOF'
+              cat release-artifacts/RELEASE_NOTES.md
+              echo EOF
+            } >> $GITHUB_OUTPUT
+          else
+            echo "notes=Release v${{ needs.build-release.outputs.version }}" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ needs.build-release.outputs.version }}
+          name: JellyCast v${{ needs.build-release.outputs.version }}
+          body: ${{ steps.release-notes.outputs.notes }}
+          draft: false
+          prerelease: false
+          files: |
+            release-artifacts/*.apk
+            release-artifacts/SHA256SUMS.txt
+            release-artifacts/RELEASE_NOTES.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Notify success
+        if: success()
+        run: |
+          echo "✅ Release v${{ needs.build-release.outputs.version }} created successfully!"
+          echo "📦 APKs uploaded to GitHub Releases"
+
+  cleanup-old-artifacts:
+    name: Cleanup Old Artifacts
+    needs: create-github-release
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Delete old workflow artifacts
+        uses: c-hive/gha-remove-artifacts@v1
+        with:
+          age: '30 days'
+          skip-recent: 5

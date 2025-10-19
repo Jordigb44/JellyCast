@@ -47,16 +47,14 @@ import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import dev.jdtech.jellyfin.BuildConfig
 import dev.jdtech.jellyfin.R
-import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.JellyCastTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.settings.R as SettingsR
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun AboutScreen(
-    navigateBack: () -> Unit,
-) {
+fun AboutScreen(navigateBack: () -> Unit) {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
     val density = LocalDensity.current
@@ -73,9 +71,10 @@ fun AboutScreen(
     val libraries by produceLibraries(R.raw.aboutlibraries)
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {
@@ -91,6 +90,10 @@ fun AboutScreen(
                         )
                     }
                 },
+                actions = {
+                    dev.jdtech.jellyfin.presentation.components
+                        .CastButton()
+                },
                 windowInsets = WindowInsets.statusBars.union(WindowInsets.displayCutout),
                 scrollBehavior = scrollBehavior,
             )
@@ -99,12 +102,13 @@ fun AboutScreen(
         LibrariesContainer(
             libraries = libraries,
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(
-                start = paddingStart + innerPadding.calculateStartPadding(layoutDirection),
-                top = innerPadding.calculateTopPadding(),
-                end = paddingEnd + innerPadding.calculateEndPadding(layoutDirection),
-                bottom = innerPadding.calculateBottomPadding(),
-            ),
+            contentPadding =
+                PaddingValues(
+                    start = paddingStart + innerPadding.calculateStartPadding(layoutDirection),
+                    top = innerPadding.calculateTopPadding(),
+                    end = paddingEnd + innerPadding.calculateEndPadding(layoutDirection),
+                    bottom = innerPadding.calculateBottomPadding(),
+                ),
             header = {
                 item {
                     Box(
@@ -112,8 +116,9 @@ fun AboutScreen(
                         contentAlignment = Alignment.Center,
                     ) {
                         Column(
-                            modifier = Modifier
-                                .padding(horizontal = MaterialTheme.spacings.default),
+                            modifier =
+                                Modifier
+                                    .padding(horizontal = MaterialTheme.spacings.default),
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Spacer(Modifier.height(MaterialTheme.spacings.small))
@@ -132,6 +137,12 @@ fun AboutScreen(
                                 text = stringResource(CoreR.string.app_description),
                                 style = MaterialTheme.typography.bodyMedium,
                             )
+                            Spacer(Modifier.height(MaterialTheme.spacings.small))
+                            Text(
+                                text = "Based on JellyCast version 0.15.3",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
                             Spacer(Modifier.height(MaterialTheme.spacings.medium))
                             HorizontalDivider()
                             Spacer(Modifier.height(MaterialTheme.spacings.medium))
@@ -141,7 +152,7 @@ fun AboutScreen(
                                 FilledTonalIconButton(
                                     onClick = {
                                         try {
-                                            uriHandler.openUri("https://github.com/jarnedemeulemeester/findroid")
+                                            uriHandler.openUri("https://github.com/Jordigb44/JellyCast")
                                         } catch (e: IllegalArgumentException) {
                                             Toast.makeText(context, e.localizedMessage, Toast.LENGTH_SHORT).show()
                                         }
@@ -155,7 +166,7 @@ fun AboutScreen(
                                 FilledTonalIconButton(
                                     onClick = {
                                         try {
-                                            uriHandler.openUri("https://ko-fi.com/jarnedemeulemeester")
+                                            uriHandler.openUri("https://www.jordiguix.es")
                                         } catch (e: IllegalArgumentException) {
                                             Toast.makeText(context, e.localizedMessage, Toast.LENGTH_SHORT).show()
                                         }
@@ -179,7 +190,7 @@ fun AboutScreen(
 @Composable
 @PreviewScreenSizes
 private fun AboutScreenPreview() {
-    FindroidTheme {
+    JellyCastTheme {
         AboutScreen(
             navigateBack = {},
         )
