@@ -57,6 +57,7 @@ fun SettingsScreen(
             is SettingsEvent.NavigateToAbout -> Unit
             is SettingsEvent.UpdateTheme -> Unit
             is SettingsEvent.RestartApp -> Unit
+            is SettingsEvent.LaunchPlayerPicker -> Unit // TV doesn't support player picker
             is SettingsEvent.LaunchIntent -> {
                 try {
                     context.startActivity(event.intent)
