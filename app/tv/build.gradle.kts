@@ -58,6 +58,8 @@ android {
             val keystorePath = System.getenv("JELLYCAST_KEYSTORE")
             if (!keystorePath.isNullOrBlank()) {
                 signingConfig = signingConfigs.getByName("release")
+            } else {
+                signingConfig = signingConfigs.getByName("debug")
             }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
