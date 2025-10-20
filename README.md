@@ -1,4 +1,4 @@
-![JellyCast banner](images/jellycast-banner.png)
+![JellyCast banner](images/jellycast_banner.png)
 
 # JellyCast
 
